@@ -5,7 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PeriodoLetivoModule } from './periodo-letivo/periodo-letivo.module';
+import { PeriodoLetivoModule } from './entities/periodo-letivo/periodo-letivo.module';
+import { DisciplinaModule } from './entities/disciplina/disciplina.module';
+import { TurmasModule } from './entities/turmas/turmas.module';
+import { UsuariosModule } from './entities/usuario/usuarios.module'; // ajuste o path se necessário
 
 
 @Module({
@@ -19,23 +22,12 @@ import { PeriodoLetivoModule } from './periodo-letivo/periodo-letivo.module';
         return { uri };
       },
     }),
-    // Conexão com MySQL
-    TypeOrmModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        type: 'mysql', // Tipo de banco
-        host: configService.get<string>('MYSQL_HOST'), // Host do MySQL
-        port: configService.get<number>('MYSQL_PORT'), // Porta do MySQL
-        username: configService.get<string>('MYSQL_USER'), // Usuário do MySQL
-        password: configService.get<string>('MYSQL_PASSWORD'), // Senha do MySQL
-        database: configService.get<string>('MYSQL_DATABASE'), // Nome do banco
-        autoLoadEntities: true, // Carregar entidades automaticamente
-        synchronize: true, // Sincronizar automaticamente as tabelas (ideal para desenvolvimento)
-      }),
-      inject: [ConfigService], // Injeta o ConfigService para acessar as variáveis
-    }),
     PeriodoLetivoModule,
+    DisciplinaModule,
+    TurmasModule,
+    UsuariosModule
     // Aqui você pode importar seus módulos
-    
+
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -10,11 +10,12 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
-const file_module_1 = require("./file/file.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const assistidos_module_1 = require("./assistidos/assistidos.module");
-const pasta_module_1 = require("./pasta/pasta.module");
+const periodo_letivo_module_1 = require("./entities/periodo-letivo/periodo-letivo.module");
+const disciplina_module_1 = require("./entities/disciplina/disciplina.module");
+const turmas_module_1 = require("./entities/turmas/turmas.module");
+const usuarios_module_1 = require("./entities/usuario/usuarios.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,9 +31,10 @@ exports.AppModule = AppModule = __decorate([
                     return { uri };
                 },
             }),
-            file_module_1.FileModule,
-            assistidos_module_1.AssistidosModule,
-            pasta_module_1.PastaModule,
+            periodo_letivo_module_1.PeriodoLetivoModule,
+            disciplina_module_1.DisciplinaModule,
+            turmas_module_1.TurmasModule,
+            usuarios_module_1.UsuariosModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
