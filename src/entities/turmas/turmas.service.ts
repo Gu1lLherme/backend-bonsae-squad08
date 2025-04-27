@@ -1,13 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Model, Connection } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 
 @Injectable()
 export class TurmasService {
-  constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>) {}
+  constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, @InjectConnection() private readonly connection: Connection,) {}
 
 
   async create(createTurmaDto: CreateTurmaDto): Promise<Turma> {
@@ -51,7 +51,7 @@ export class TurmasService {
     }
     await turma.deleteOne();
   }
-
+// Validação de turmas em lote
   async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
     if (!Array.isArray(createTurmasDto)) {
       throw new BadRequestException('Payload precisa ser um array de objetos Turma.');
@@ -104,4 +104,22 @@ export class TurmasService {
     return insertedTurmas.map(turma => turma.toObject() as Turma);
 
   }
+// Método para criar turmas em lote com transação
+  async bulkCreateWithTransaction(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const turmasCriadas = await this.turmaModel.insertMany(createTurmasDto, { session });
+
+      await session.commitTransaction();
+      session.endSession();
+      return turmasCriadas;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      console.error('Erro no bulkCreateWithTransaction:', error);
+      throw new InternalServerErrorException('Erro ao criar turmas em lote.');
+    }
   }
+}
