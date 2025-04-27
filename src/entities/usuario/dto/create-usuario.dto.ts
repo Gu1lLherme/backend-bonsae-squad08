@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsOptional, IsEnum, IsString } from 'class-validator';
 
 export enum PerfilUsuario {
   Coordenador = 'Coordenador(a)',
@@ -10,50 +10,42 @@ export enum PerfilUsuario {
 }
 
 export class CreateUsuarioDto {
-  @IsEnum(PerfilUsuario, { message: 'Perfil inválido.' })
+  @IsNotEmpty()
+  @IsEnum(PerfilUsuario)
   perfil: PerfilUsuario;
 
   @IsOptional()
   @IsString()
   subperfil?: string;
 
-  @IsNotEmpty({ message: 'Nome é obrigatório.' })
-  @IsString()
+  @IsNotEmpty()
   nome: string;
 
   @IsOptional()
-  @IsString()
   numeroOab?: string;
 
   @IsOptional()
-  @IsString()
-  seccional?: string;
+  seccionalUfOab?: string;
 
-  @IsNotEmpty({ message: 'E-mail é obrigatório.' })
-  @IsEmail({}, { message: 'E-mail inválido.' })
+  @IsNotEmpty()
+  @IsEmail()
   email: string;
 
   @IsOptional()
-  @IsString()
   matriculaIes?: string;
 
   @IsOptional()
-  @IsString()
   telefone?: string;
 
   @IsOptional()
-  @IsString()
   cpf?: string;
 
-  @IsNotEmpty({ message: 'Senha é obrigatória.' })
-  @IsString()
+  @IsNotEmpty()
   senha: string;
 
   @IsOptional()
-  @IsString()
   periodoCurricular?: string;
 
   @IsOptional()
-  @IsString()
   observacoes?: string;
 }
