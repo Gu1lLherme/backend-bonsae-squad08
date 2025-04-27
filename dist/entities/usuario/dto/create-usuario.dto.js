@@ -25,7 +25,7 @@ class CreateUsuarioDto {
     subperfil;
     nome;
     numeroOab;
-    seccional;
+    seccionalUfOab;
     email;
     matriculaIes;
     telefone;
@@ -36,7 +36,8 @@ class CreateUsuarioDto {
 }
 exports.CreateUsuarioDto = CreateUsuarioDto;
 __decorate([
-    (0, class_validator_1.IsEnum)(PerfilUsuario, { message: 'Perfil inválido.' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEnum)(PerfilUsuario),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "perfil", void 0);
 __decorate([
@@ -45,53 +46,44 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "subperfil", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Nome é obrigatório.' }),
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "nome", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "numeroOab", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateUsuarioDto.prototype, "seccional", void 0);
+], CreateUsuarioDto.prototype, "seccionalUfOab", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'E-mail é obrigatório.' }),
-    (0, class_validator_1.IsEmail)({}, { message: 'E-mail inválido.' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "matriculaIes", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "telefone", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "cpf", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Senha é obrigatória.' }),
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "senha", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "periodoCurricular", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "observacoes", void 0);
 //# sourceMappingURL=create-usuario.dto.js.map

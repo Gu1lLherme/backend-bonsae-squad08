@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PeriodoLetivoModule } from './entities/periodo-letivo/periodo-letivo.module';
 import { DisciplinaModule } from './entities/disciplina/disciplina.module';
 import { TurmasModule } from './entities/turmas/turmas.module';
-import { UsuariosModule } from './entities/usuario/usuarios.module'; // ajuste o path se necessário
+import { UsuarioModule } from './entities/usuario/usuarios.module'; // ajuste o path se necessário
 
 
 @Module({
@@ -25,7 +25,7 @@ import { UsuariosModule } from './entities/usuario/usuarios.module'; // ajuste o
     PeriodoLetivoModule,
     DisciplinaModule,
     TurmasModule,
-    UsuariosModule
+    UsuarioModule
     // Aqui você pode importar seus módulos
 
   ],

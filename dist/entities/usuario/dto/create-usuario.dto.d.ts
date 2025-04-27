@@ -11,7 +11,7 @@ export declare class CreateUsuarioDto {
     subperfil?: string;
     nome: string;
     numeroOab?: string;
-    seccional?: string;
+    seccionalUfOab?: string;
     email: string;
     matriculaIes?: string;
     telefone?: string;

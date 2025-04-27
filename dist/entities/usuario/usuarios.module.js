@@ -6,22 +6,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsuariosModule = void 0;
+exports.UsuarioModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const usuarios_service_1 = require("./usuarios.service");
 const usuarios_controller_1 = require("./usuarios.controller");
 const usuario_schema_1 = require("./schemas/usuario.schema");
-let UsuariosModule = class UsuariosModule {
+let UsuarioModule = class UsuarioModule {
 };
-exports.UsuariosModule = UsuariosModule;
-exports.UsuariosModule = UsuariosModule = __decorate([
+exports.UsuarioModule = UsuarioModule;
+exports.UsuarioModule = UsuarioModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: usuario_schema_1.Usuario.name, schema: usuario_schema_1.UsuarioSchema }])
+            mongoose_1.MongooseModule.forFeature([{ name: usuario_schema_1.Usuario.name, schema: usuario_schema_1.UsuarioSchema }]),
         ],
         controllers: [usuarios_controller_1.UsuariosController],
         providers: [usuarios_service_1.UsuariosService],
     })
-], UsuariosModule);
+], UsuarioModule);
 //# sourceMappingURL=usuarios.module.js.map
