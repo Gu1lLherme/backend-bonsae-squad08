@@ -73,7 +73,11 @@ let PeriodoLetivoService = class PeriodoLetivoService {
         const session = await this.connection.startSession();
         session.startTransaction();
         try {
-            const periodosCriados = await this.periodoLetivoModel.insertMany(createPeriodosDto, { session });
+            const periodosValidos = createPeriodosDto.filter(periodo => periodo.codigoPeriodoLetivo && periodo.codigoPeriodoLetivo.trim() !== '');
+            if (periodosValidos.length === 0) {
+                throw new common_1.BadRequestException('Nenhum período letivo válido para inserção.');
+            }
+            const periodosCriados = await this.periodoLetivoModel.insertMany(periodosValidos, { session });
             await session.commitTransaction();
             session.endSession();
             return periodosCriados;
