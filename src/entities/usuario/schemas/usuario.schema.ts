@@ -26,7 +26,7 @@ export class Usuario {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop()
+  @Prop({type: String, unique: true, sparse: true})
   matriculaIes?: string;
 
   @Prop()

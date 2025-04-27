@@ -25,7 +25,7 @@ class CreateUsuarioDto {
     subperfil;
     nome;
     numeroOab;
-    seccionalUfOab;
+    seccional;
     email;
     matriculaIes;
     telefone;
@@ -56,7 +56,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], CreateUsuarioDto.prototype, "seccionalUfOab", void 0);
+], CreateUsuarioDto.prototype, "seccional", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),

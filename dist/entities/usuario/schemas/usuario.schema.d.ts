@@ -7,7 +7,7 @@ export declare class Usuario {
     numeroOAB?: string;
     seccional?: string;
     email: string;
-    matriculaIES?: string;
+    matriculaIes?: string;
     telefone?: string;
     cpf?: string;
     senha: string;

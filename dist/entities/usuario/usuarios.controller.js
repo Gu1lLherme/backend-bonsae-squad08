@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const usuarios_service_1 = require("./usuarios.service");
 const create_usuario_dto_1 = require("./dto/create-usuario.dto");
 const update_usuario_dto_1 = require("./dto/update-usuario.dto");
+const common_2 = require("@nestjs/common");
 let UsuariosController = class UsuariosController {
     usuariosService;
     constructor(usuariosService) {
@@ -25,8 +26,8 @@ let UsuariosController = class UsuariosController {
     create(createUsuarioDto) {
         return this.usuariosService.create(createUsuarioDto);
     }
-    async bulkCreate(usuarios) {
-        return this.usuariosService.bulkCreate(usuarios);
+    async bulkCreate(createUsuariosDto) {
+        return this.usuariosService.bulkCreate(createUsuariosDto);
     }
     findAll() {
         return this.usuariosService.findAll();
@@ -51,6 +52,7 @@ __decorate([
 ], UsuariosController.prototype, "create", null);
 __decorate([
     (0, common_1.Post)('bulk'),
+    (0, common_2.HttpCode)(201),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array]),

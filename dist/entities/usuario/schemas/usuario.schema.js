@@ -18,7 +18,7 @@ let Usuario = class Usuario {
     numeroOAB;
     seccional;
     email;
-    matriculaIES;
+    matriculaIes;
     telefone;
     cpf;
     senha;
@@ -56,7 +56,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
-], Usuario.prototype, "matriculaIES", void 0);
+], Usuario.prototype, "matriculaIes", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
