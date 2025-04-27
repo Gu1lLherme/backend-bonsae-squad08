@@ -4,21 +4,9 @@ import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
 export declare class PeriodoLetivoController {
     private readonly periodoLetivoService;
     constructor(periodoLetivoService: PeriodoLetivoService);
-    create(createPeriodoLetivoDto: CreatePeriodoLetivoDto): Promise<import("mongoose").Document<unknown, {}, import("./schemas/periodo-letivo.schema").PeriodoLetivoDocument, {}> & import("./schemas/periodo-letivo.schema").PeriodoLetivo & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
-        _id: unknown;
-    }> & {
-        __v: number;
-    }>;
-    findAll(): Promise<(import("mongoose").Document<unknown, {}, import("./schemas/periodo-letivo.schema").PeriodoLetivoDocument, {}> & import("./schemas/periodo-letivo.schema").PeriodoLetivo & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
-        _id: unknown;
-    }> & {
-        __v: number;
-    })[]>;
-    findOne(id: string): Promise<import("mongoose").Document<unknown, {}, import("./schemas/periodo-letivo.schema").PeriodoLetivoDocument, {}> & import("./schemas/periodo-letivo.schema").PeriodoLetivo & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
-        _id: unknown;
-    }> & {
-        __v: number;
-    }>;
-    update(id: string, updatePeriodoLetivoDto: UpdatePeriodoLetivoDto): Promise<string>;
+    create(createPeriodoLetivoDto: CreatePeriodoLetivoDto): string;
+    findAll(): string;
+    findOne(id: string): string;
+    update(id: string, updatePeriodoLetivoDto: UpdatePeriodoLetivoDto): string;
     remove(id: string): string;
 }

@@ -5,38 +5,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PeriodoLetivoService = void 0;
 const common_1 = require("@nestjs/common");
-const mongoose_1 = require("mongoose");
-const mongoose_2 = require("@nestjs/mongoose");
-const periodo_letivo_schema_1 = require("./schemas/periodo-letivo.schema");
 let PeriodoLetivoService = class PeriodoLetivoService {
-    PeridoLetivoModel;
-    constructor(PeridoLetivoModel) {
-        this.PeridoLetivoModel = PeridoLetivoModel;
+    create(createPeriodoLetivoDto) {
+        return 'This action adds a new periodoLetivo';
     }
-    async create(dto) {
-        const peridoLetivo = new this.PeridoLetivoModel(dto);
-        return peridoLetivo.save();
+    findAll() {
+        return `This action returns all periodoLetivo`;
     }
-    async findAll() {
-        return this.PeridoLetivoModel.find().exec();
+    findOne(id) {
+        return `This action returns a #${id} periodoLetivo`;
     }
-    async findOne(id) {
-        const periodoLetivo = await this.PeridoLetivoModel.findById(id);
-        if (!periodoLetivo)
-            throw new common_1.NotFoundException('Usuário não encontrado');
-        return periodoLetivo;
-    }
-    async update(id, updatePeriodoLetivoDto) {
-        const peri;
+    update(id, updatePeriodoLetivoDto) {
         return `This action updates a #${id} periodoLetivo`;
     }
     remove(id) {
@@ -45,8 +27,6 @@ let PeriodoLetivoService = class PeriodoLetivoService {
 };
 exports.PeriodoLetivoService = PeriodoLetivoService;
 exports.PeriodoLetivoService = PeriodoLetivoService = __decorate([
-    (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_2.InjectModel)(periodo_letivo_schema_1.PeriodoLetivo.name)),
-    __metadata("design:paramtypes", [mongoose_1.Model])
+    (0, common_1.Injectable)()
 ], PeriodoLetivoService);
 //# sourceMappingURL=periodo-letivo.service.js.map

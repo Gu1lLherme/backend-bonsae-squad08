@@ -29,7 +29,7 @@ let PeriodoLetivoController = class PeriodoLetivoController {
         return this.periodoLetivoService.findAll();
     }
     findOne(id) {
-        return this.periodoLetivoService.findOne(id);
+        return this.periodoLetivoService.findOne(+id);
     }
     update(id, updatePeriodoLetivoDto) {
         return this.periodoLetivoService.update(+id, updatePeriodoLetivoDto);
