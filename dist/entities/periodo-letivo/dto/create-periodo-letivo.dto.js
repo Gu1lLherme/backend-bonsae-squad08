@@ -12,26 +12,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreatePeriodoLetivoDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreatePeriodoLetivoDto {
-    codigo_periodo_letivo;
-    periodo_letivo;
-    data_incial;
-    data_final;
+    codigoPeriodoLetivo;
+    periodoLetivo;
+    dataInicial;
+    dataFinal;
 }
 exports.CreatePeriodoLetivoDto = CreatePeriodoLetivoDto;
 __decorate([
-    (0, class_validator_1.IsEmpty)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreatePeriodoLetivoDto.prototype, "codigo_periodo_letivo", void 0);
+], CreatePeriodoLetivoDto.prototype, "codigoPeriodoLetivo", void 0);
 __decorate([
-    (0, class_validator_1.IsEmpty)(),
-    __metadata("design:type", Number)
-], CreatePeriodoLetivoDto.prototype, "periodo_letivo", void 0);
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreatePeriodoLetivoDto.prototype, "periodoLetivo", void 0);
 __decorate([
-    (0, class_validator_1.IsEmpty)(),
+    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Date)
-], CreatePeriodoLetivoDto.prototype, "data_incial", void 0);
+], CreatePeriodoLetivoDto.prototype, "dataInicial", void 0);
 __decorate([
-    (0, class_validator_1.IsEmpty)(),
+    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Date)
-], CreatePeriodoLetivoDto.prototype, "data_final", void 0);
+], CreatePeriodoLetivoDto.prototype, "dataFinal", void 0);
 //# sourceMappingURL=create-periodo-letivo.dto.js.map

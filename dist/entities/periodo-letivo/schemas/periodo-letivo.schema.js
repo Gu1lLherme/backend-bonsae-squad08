@@ -12,28 +12,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PeriodoLetivoSchema = exports.PeriodoLetivo = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 let PeriodoLetivo = class PeriodoLetivo {
-    codigo_periodo_letivo;
-    periodo_letivo;
-    data_incial;
-    data_final;
+    codigoPeriodoLetivo;
+    periodoLetivo;
+    dataInicial;
+    dataFinal;
 };
 exports.PeriodoLetivo = PeriodoLetivo;
 __decorate([
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", String)
-], PeriodoLetivo.prototype, "codigo_periodo_letivo", void 0);
+], PeriodoLetivo.prototype, "codigoPeriodoLetivo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true }),
-    __metadata("design:type", Number)
-], PeriodoLetivo.prototype, "periodo_letivo", void 0);
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], PeriodoLetivo.prototype, "periodoLetivo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Date)
-], PeriodoLetivo.prototype, "data_incial", void 0);
+], PeriodoLetivo.prototype, "dataInicial", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Date)
-], PeriodoLetivo.prototype, "data_final", void 0);
+], PeriodoLetivo.prototype, "dataFinal", void 0);
 exports.PeriodoLetivo = PeriodoLetivo = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], PeriodoLetivo);

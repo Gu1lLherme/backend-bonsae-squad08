@@ -22,60 +22,67 @@ let PeriodoLetivoController = class PeriodoLetivoController {
     constructor(periodoLetivoService) {
         this.periodoLetivoService = periodoLetivoService;
     }
-    create(createPeriodoLetivoDto) {
-        return this.periodoLetivoService.create(createPeriodoLetivoDto);
+    async create(createPeriodoLetivoDto) {
+        const periodo = await this.periodoLetivoService.create(createPeriodoLetivoDto);
+        return { message: 'Período letivo criado com sucesso!', data: periodo };
     }
-    findAll() {
-        return this.periodoLetivoService.findAll();
+    async findAll() {
+        const periodos = await this.periodoLetivoService.findAll();
+        return { message: 'Lista de períodos letivos!', data: periodos };
     }
-    findOne(id) {
-        return this.periodoLetivoService.findOne(id);
+    async findOne(id) {
+        const periodo = await this.periodoLetivoService.findOne(id);
+        return { message: 'Detalhes do período letivo!', data: periodo };
     }
-    update(id, updatePeriodoLetivoDto) {
-        return this.periodoLetivoService.update(+id, updatePeriodoLetivoDto);
+    async update(id, updatePeriodoLetivoDto) {
+        const periodo = await this.periodoLetivoService.update(id, updatePeriodoLetivoDto);
+        return { message: 'Período letivo atualizado com sucesso!', data: periodo };
     }
-    remove(id) {
-        return this.periodoLetivoService.remove(+id);
+    async remove(id) {
+        await this.periodoLetivoService.remove(id);
+        return { message: 'Período letivo removido com sucesso!' };
     }
 };
 exports.PeriodoLetivoController = PeriodoLetivoController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_periodo_letivo_dto_1.CreatePeriodoLetivoDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_periodo_letivo_dto_1.UpdatePeriodoLetivoDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "remove", null);
 exports.PeriodoLetivoController = PeriodoLetivoController = __decorate([
-    (0, common_1.Controller)('periodo-letivo'),
+    (0, common_1.Controller)('periodos-letivos'),
     __metadata("design:paramtypes", [periodo_letivo_service_1.PeriodoLetivoService])
 ], PeriodoLetivoController);
 //# sourceMappingURL=periodo-letivo.controller.js.map
