@@ -14,6 +14,8 @@ export class PeriodoLetivoController {
     return { message: 'Período letivo criado com sucesso!', data: periodo };
   }
 
+
+  //Need FIX PORRAAA
   @Post('bulk')
     @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
     async bulkCreate(@Body() createPeriodoLetivoDto: CreatePeriodoLetivoDto[]) {

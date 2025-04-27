@@ -12,6 +12,11 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
+  @Post('bulk')
+  async bulkCreate(@Body() usuarios: CreateUsuarioDto[]) {
+    return this.usuariosService.bulkCreate(usuarios);
+  }
+
   @Get()
   findAll() {
     return this.usuariosService.findAll();

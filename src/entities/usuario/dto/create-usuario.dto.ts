@@ -1,23 +1,59 @@
-import { IsString, IsEmail, IsIn, IsOptional } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+export enum PerfilUsuario {
+  Coordenador = 'Coordenador(a)',
+  Professor = 'Professor(a)',
+  Aluno = 'Aluno(a)',
+  Secretario = 'Secretário(a)',
+  Estagiario = 'Estagiário(a)',
+  Advogado = 'Advogado(a)',
+}
 
 export class CreateUsuarioDto {
-  @IsString()
-  nome: string;  
+  @IsEnum(PerfilUsuario, { message: 'Perfil inválido.' })
+  perfil: PerfilUsuario;
 
-  @IsEmail()
+  @IsOptional()
+  @IsString()
+  subperfil?: string;
+
+  @IsNotEmpty({ message: 'Nome é obrigatório.' })
+  @IsString()
+  nome: string;
+
+  @IsOptional()
+  @IsString()
+  numeroOab?: string;
+
+  @IsOptional()
+  @IsString()
+  seccional?: string;
+
+  @IsNotEmpty({ message: 'E-mail é obrigatório.' })
+  @IsEmail({}, { message: 'E-mail inválido.' })
   email: string;
 
+  @IsOptional()
   @IsString()
-  matricula: string;
-
-  @IsIn(['aluno', 'professor'])
-  tipo: 'aluno' | 'professor';
+  matriculaIes?: string;
 
   @IsOptional()
   @IsString()
-  curso?: string;
+  telefone?: string;
 
   @IsOptional()
   @IsString()
-  departamento?: string;
+  cpf?: string;
+
+  @IsNotEmpty({ message: 'Senha é obrigatória.' })
+  @IsString()
+  senha: string;
+
+  @IsOptional()
+  @IsString()
+  periodoCurricular?: string;
+
+  @IsOptional()
+  @IsString()
+  observacoes?: string;
 }

@@ -1,30 +1,48 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type UsuarioDocument = Usuario & Document;
 
-@Schema({ timestamps: true })
+@Schema()
 export class Usuario {
+  @Prop({ required: true, enum: [
+    'Coordenador(a)', 'Professor(a)', 'Aluno(a)', 
+    'Secretário(a)', 'Estagiário(a)', 'Advogado(a)'
+  ]})
+  perfil: string;
+
+  @Prop()
+  subperfil?: string;
+
   @Prop({ required: true })
   nome: string;
+
+  @Prop()
+  numeroOAB?: string;
+
+  @Prop()
+  seccional?: string;
 
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true, unique: true })
-  matricula: string;
-
-  @Prop({ required: true, enum: ['aluno', 'professor'] })
-  tipo: 'aluno' | 'professor';
+  @Prop()
+  matriculaIES?: string;
 
   @Prop()
-  curso?: string; // usado para alunos
+  telefone?: string;
 
   @Prop()
-  departamento?: string; // usado para professores
+  cpf?: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Turma' }] })
-  turmas: Types.ObjectId[];
+  @Prop({ required: true })
+  senha: string;
+
+  @Prop()
+  periodoCurricular?: string;
+
+  @Prop()
+  observacoes?: string;
 }
 
 export const UsuarioSchema = SchemaFactory.createForClass(Usuario);
