@@ -52,4 +52,14 @@ export class TurmasController {
       message: 'Turma excluída com sucesso!',
     };
   }
+
+  @Post('bulk')
+  @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
+  async bulkCreate(@Body() createTurmasDto: CreateTurmaDto[]) {
+    const turmasCriadas = await this.turmasService.bulkCreate(createTurmasDto);
+    return {
+      message: 'Turmas criadas com sucesso!',
+      data: turmasCriadas,
+    };
+  }
 }

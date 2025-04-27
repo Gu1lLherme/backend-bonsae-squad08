@@ -51,4 +51,8 @@ export class TurmasService {
     }
     await turma.deleteOne();
   }
+
+  async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
+    const createdTurmas = await this.turmaModel.insertMany(createTurmasDto);
+    return createdTurmas.map(turma => turma.toObject() as Turma);
 }
