@@ -25,6 +25,9 @@ let UsuariosController = class UsuariosController {
     create(createUsuarioDto) {
         return this.usuariosService.create(createUsuarioDto);
     }
+    async bulkCreate(usuarios) {
+        return this.usuariosService.bulkCreate(usuarios);
+    }
     findAll() {
         return this.usuariosService.findAll();
     }
@@ -46,6 +49,13 @@ __decorate([
     __metadata("design:paramtypes", [create_usuario_dto_1.CreateUsuarioDto]),
     __metadata("design:returntype", void 0)
 ], UsuariosController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('bulk'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], UsuariosController.prototype, "bulkCreate", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

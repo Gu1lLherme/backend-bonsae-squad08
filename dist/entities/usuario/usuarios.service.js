@@ -19,12 +19,89 @@ const mongoose_2 = require("mongoose");
 const usuario_schema_1 = require("./schemas/usuario.schema");
 let UsuariosService = class UsuariosService {
     usuarioModel;
-    constructor(usuarioModel) {
+    connection;
+    constructor(usuarioModel, connection) {
         this.usuarioModel = usuarioModel;
+        this.connection = connection;
     }
     async create(dto) {
         const usuario = new this.usuarioModel(dto);
+        const problemas = [];
+        if (!usuario.perfil)
+            problemas.push('Perfil é obrigatório.');
+        if (!usuario.nome)
+            problemas.push('Nome é obrigatório.');
+        if (!usuario.email)
+            problemas.push('Email é obrigatório.');
+        if (!usuario.cpf)
+            problemas.push('CPF é obrigatório.');
+        if (!usuario.senha)
+            problemas.push('Senha é obrigatória.');
+        if (problemas.length > 0) {
+            throw new common_1.BadRequestException({
+                message: 'Erros de validação no usuário.',
+                erros: problemas,
+            });
+        }
+        const usuarioExistente = await this.usuarioModel.findOne({ email: dto.email });
+        if (usuarioExistente) {
+            throw new common_1.BadRequestException('Email já cadastrado.');
+        }
+        const usuarioCpfExistente = await this.usuarioModel.findOne({ cpf: dto.cpf });
+        if (usuarioCpfExistente) {
+            throw new common_1.BadRequestException('CPF já cadastrado.');
+        }
+        const usuarioMatriculaExistente = await this.usuarioModel.findOne({ matriculaIES: dto.matriculaIes });
+        if (usuarioMatriculaExistente) {
+            throw new common_1.BadRequestException('Matrícula já cadastrada.');
+        }
+        const usuarioTelefoneExistente = await this.usuarioModel.findOne({ telefone: dto.telefone });
+        if (usuarioTelefoneExistente) {
+            throw new common_1.BadRequestException('Telefone já cadastrado.');
+        }
         return usuario.save();
+    }
+    async bulkCreate(createUsuariosDto) {
+        if (!Array.isArray(createUsuariosDto) || createUsuariosDto.length === 0) {
+            throw new common_1.BadRequestException('Payload precisa ser uma lista de usuários.');
+        }
+        const erros = [];
+        createUsuariosDto.forEach((usuario, index) => {
+            const problemas = [];
+            if (!usuario.perfil)
+                problemas.push('Perfil é obrigatório.');
+            if (!usuario.nome)
+                problemas.push('Nome é obrigatório.');
+            if (!usuario.email)
+                problemas.push('Email é obrigatório.');
+            if (!usuario.cpf)
+                problemas.push('CPF é obrigatório.');
+            if (!usuario.senha)
+                problemas.push('Senha é obrigatória.');
+            if (problemas.length > 0) {
+                erros.push({ index, error: problemas.join(' | ') });
+            }
+        });
+        if (erros.length > 0) {
+            throw new common_1.BadRequestException({
+                message: 'Erros de validação nos usuários.',
+                erros,
+            });
+        }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto, { session });
+            await session.commitTransaction();
+            session.endSession();
+            return usuariosCriados;
+        }
+        catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            console.error('Erro no bulkCreate de Usuários:', error);
+            throw new common_1.InternalServerErrorException('Erro ao criar usuários em lote.');
+        }
     }
     async findAll() {
         return this.usuarioModel.find().exec();
@@ -52,6 +129,7 @@ exports.UsuariosService = UsuariosService;
 exports.UsuariosService = UsuariosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(usuario_schema_1.Usuario.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectConnection)()),
+    __metadata("design:paramtypes", [mongoose_2.Model, mongoose_2.Connection])
 ], UsuariosService);
 //# sourceMappingURL=usuarios.service.js.map

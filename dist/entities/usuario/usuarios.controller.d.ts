@@ -9,6 +9,7 @@ export declare class UsuariosController {
     }> & {
         __v: number;
     }>;
+    bulkCreate(usuarios: CreateUsuarioDto[]): Promise<import("./schemas/usuario.schema").Usuario[]>;
     findAll(): Promise<(import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;
     }> & {
