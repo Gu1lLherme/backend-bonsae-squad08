@@ -53,8 +53,55 @@ export class TurmasService {
   }
 
   async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
-    const createdTurmas = await this.turmaModel.insertMany(createTurmasDto);
-    return createdTurmas.map(turma => turma.toObject() as Turma);
-}
+    if (!Array.isArray(createTurmasDto)) {
+      throw new BadRequestException('Payload precisa ser um array de objetos Turma.');
+    }
 
-}
+    if (createTurmasDto.length === 0) {
+      throw new BadRequestException('A lista de turmas não pode ser vazia.');
+    }
+
+    const erros: { index: number, error: string }[] = [];
+
+    const turmasValidas = createTurmasDto.filter((turma, index) => {
+      const problemas: string[] = [];
+
+      if (!turma.codigoDisciplina || turma.codigoDisciplina.trim() === '') {
+        problemas.push('Código da disciplina é obrigatório.');
+      }
+      if (!turma.turno || !['Manhã', 'Tarde', 'Noite'].includes(turma.turno)) {
+        problemas.push('Turno inválido. Deve ser Manhã, Tarde ou Noite.');
+      }
+      if (!turma.codigoTurma || turma.codigoTurma.trim() === '') {
+        problemas.push('Código da turma é obrigatório.');
+      }
+      if (!turma.nomeTurma || turma.nomeTurma.trim() === '') {
+        problemas.push('Nome da turma é obrigatório.');
+      }
+      if (!turma.tipo || !['aluno', 'professor'].includes(turma.tipo)) {
+        problemas.push('Tipo inválido. Deve ser aluno ou professor.');
+      }
+
+      if (problemas.length > 0) {
+        erros.push({ index, error: problemas.join(' | ') });
+        return false;
+      }
+      return true;
+    });
+
+    if (turmasValidas.length === 0) {
+      throw new BadRequestException({
+        message: 'Nenhuma turma válida foi enviada.',
+        erros,
+      });
+    }
+
+    if (erros.length > 0) {
+      console.warn('Algumas turmas foram rejeitadas:', erros);
+    }
+
+    const insertedTurmas = await this.turmaModel.insertMany(turmasValidas);
+    return insertedTurmas.map(turma => turma.toObject() as Turma);
+
+  }
+  }
