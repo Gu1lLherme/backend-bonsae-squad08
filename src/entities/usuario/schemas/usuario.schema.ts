@@ -27,7 +27,7 @@ export class Usuario {
   email: string;
 
   @Prop()
-  matriculaIES?: string;
+  matriculaIes?: string;
 
   @Prop()
   telefone?: string;

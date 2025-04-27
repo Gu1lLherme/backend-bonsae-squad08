@@ -5,20 +5,24 @@ import { Usuario, UsuarioDocument } from './schemas/usuario.schema';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
+
 @Injectable()
 export class UsuariosService {
   constructor(
-    @InjectModel(Usuario.name) private usuarioModel: Model<UsuarioDocument>,@InjectConnection() private readonly connection: Connection,
+    @InjectModel(Usuario.name) private usuarioModel: Model<UsuarioDocument>,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
   async create(dto: CreateUsuarioDto) {
-    const usuario = new this.usuarioModel(dto);
     const problemas: string[] = [];
-    if (!usuario.perfil) problemas.push('Perfil é obrigatório.');
-      if (!usuario.nome) problemas.push('Nome é obrigatório.');
-      if (!usuario.email) problemas.push('Email é obrigatório.');
-      if (!usuario.cpf) problemas.push('CPF é obrigatório.');
-      if (!usuario.senha) problemas.push('Senha é obrigatória.');
+
+    // Validações obrigatórias
+    if (!dto.perfil) problemas.push('Perfil é obrigatório.');
+    if (!dto.nome) problemas.push('Nome é obrigatório.');
+    if (!dto.email) problemas.push('Email é obrigatório.');
+    if (!dto.cpf) problemas.push('CPF é obrigatório.');
+    if (!dto.senha) problemas.push('Senha é obrigatória.');
+    if (!dto.matriculaIes) problemas.push('Matrícula (IES) é obrigatória.');
 
     if (problemas.length > 0) {
       throw new BadRequestException({
@@ -26,24 +30,29 @@ export class UsuariosService {
         erros: problemas,
       });
     }
-    const usuarioExistente = await this.usuarioModel.findOne
-({ email: dto.email });
+
+    // Verificações de unicidade
+    const [usuarioExistente, cpfExistente, matriculaExistente, telefoneExistente] = await Promise.all([
+      this.usuarioModel.findOne({ email: dto.email }),
+      this.usuarioModel.findOne({ cpf: dto.cpf }),
+      this.usuarioModel.findOne({ matriculaIes: dto.matriculaIes }),
+      dto.telefone ? this.usuarioModel.findOne({ telefone: dto.telefone }) : null,
+    ]);
+
     if (usuarioExistente) {
       throw new BadRequestException('Email já cadastrado.');
     }
-    const usuarioCpfExistente = await this.usuarioModel.findOne({ cpf: dto.cpf });
-    if (usuarioCpfExistente) {
+    if (cpfExistente) {
       throw new BadRequestException('CPF já cadastrado.');
     }
-    const usuarioMatriculaExistente = await this.usuarioModel.findOne({ matriculaIES: dto.matriculaIes });
-    if (usuarioMatriculaExistente) {
-      throw new BadRequestException('Matrícula já cadastrada.');
+    if (matriculaExistente) {
+      throw new BadRequestException('Matrícula (IES) já cadastrada.');
     }
-    const usuarioTelefoneExistente = await this.usuarioModel.findOne({ telefone: dto.telefone });
-    if (usuarioTelefoneExistente) {
+    if (telefoneExistente) {
       throw new BadRequestException('Telefone já cadastrado.');
     }
-    
+
+    const usuario = new this.usuarioModel(dto);
     return usuario.save();
   }
 
@@ -54,13 +63,16 @@ export class UsuariosService {
 
     const erros: { index: number; error: string }[] = [];
 
+    // Validar todos os usuários
     createUsuariosDto.forEach((usuario, index) => {
       const problemas: string[] = [];
+
       if (!usuario.perfil) problemas.push('Perfil é obrigatório.');
       if (!usuario.nome) problemas.push('Nome é obrigatório.');
       if (!usuario.email) problemas.push('Email é obrigatório.');
       if (!usuario.cpf) problemas.push('CPF é obrigatório.');
       if (!usuario.senha) problemas.push('Senha é obrigatória.');
+      if (!usuario.matriculaIes || usuario.matriculaIes.trim() === '') problemas.push('Matrícula (IES) é obrigatória.');
 
       if (problemas.length > 0) {
         erros.push({ index, error: problemas.join(' | ') });
@@ -77,18 +89,46 @@ export class UsuariosService {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
+      // Antes de inserir, validar se já existem registros conflitantes
+      const emails = createUsuariosDto.map(u => u.email);
+      const cpfs = createUsuariosDto.map(u => u.cpf);
+      const matriculas = createUsuariosDto.map(u => u.matriculaIes);
+      const telefones = createUsuariosDto.map(u => u.telefone).filter(Boolean); // Telefones podem ser nulos
+
+      const existentes = await this.usuarioModel.find({
+        $or: [
+          { email: { $in: emails } },
+          { cpf: { $in: cpfs } },
+          { matriculaIes: { $in: matriculas } },
+          { telefone: { $in: telefones } },
+        ],
+      }).session(session);
+
+      if (existentes.length > 0) {
+        const conflitos = existentes.map(e => ({
+          email: e.email,
+          cpf: e.cpf,
+          matriculaIes: e.matriculaIes,
+          telefone: e.telefone,
+        }));
+        throw new BadRequestException({
+          message: 'Existem conflitos com usuários já cadastrados.',
+          conflitos,
+        });
+      }
+
+      // Inserir usuários
       const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto, { session });
       await session.commitTransaction();
-      session.endSession();
       return usuariosCriados;
     } catch (error) {
       await session.abortTransaction();
-      session.endSession();
       console.error('Erro no bulkCreate de Usuários:', error);
       throw new InternalServerErrorException('Erro ao criar usuários em lote.');
+    } finally {
+      session.endSession();
     }
   }
-
 
   async findAll() {
     return this.usuarioModel.find().exec();
@@ -112,3 +152,7 @@ export class UsuariosService {
     return usuario;
   }
 }
+
+
+ 
+

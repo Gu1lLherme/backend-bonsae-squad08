@@ -25,7 +25,7 @@ export class CreateUsuarioDto {
   numeroOab?: string;
 
   @IsOptional()
-  seccionalUfOab?: string;
+  seccional?: string;
 
   @IsNotEmpty()
   @IsEmail()

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { HttpCode } from '@nestjs/common';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -13,8 +14,9 @@ export class UsuariosController {
   }
 
   @Post('bulk')
-  async bulkCreate(@Body() usuarios: CreateUsuarioDto[]) {
-    return this.usuariosService.bulkCreate(usuarios);
+  @HttpCode(201)
+  async bulkCreate(@Body() createUsuariosDto: CreateUsuarioDto[]) {
+    return this.usuariosService.bulkCreate(createUsuariosDto);
   }
 
   @Get()
@@ -37,3 +39,6 @@ export class UsuariosController {
     return this.usuariosService.remove(id);
   }
 }
+
+
+
