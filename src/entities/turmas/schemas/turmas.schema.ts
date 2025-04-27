@@ -3,17 +3,26 @@ import { Document, Types } from 'mongoose';
 
 export type TurmaDocument = Turma & Document;
 
+@Schema({ timestamps: true, versionKey: false })
+@Schema({ collection: 'turmas' }) // Define o nome da coleção no MongoDB
 export class Turma {
+  
   @Prop({ required: true })
-  nome: string;
+  codigoDisciplina: string; 
 
   @Prop({ required: true })
-  codigo: string;
+  turno: string;
+
+  @Prop({ required: true })
+  codigoTurma: string;
+
+  @Prop({ required: true })
+  nomeTurma: string; 
 
   @Prop({ required: true, enum: ['aluno', 'professor'] })
   tipo: 'aluno' | 'professor';
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Usuario' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Usuario' }] ,default: [] })
   usuarios?: Types.ObjectId[]; // Referência a usuários (alunos ou professores) associados à turma
 }	
 

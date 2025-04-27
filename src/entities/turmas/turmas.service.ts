@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 
 @Injectable()
 export class TurmasService {
-  create(createTurmaDto: CreateTurmaDto) {
-    return 'This action adds a new turma';
+  constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>) {}
+
+
+  async create(createTurmaDto: CreateTurmaDto): Promise<Turma> {
+ 
+
+    // Verifica se a turma já existe
+    const turmaExistente = await this.turmaModel.findOne({ codigoTurma: createTurmaDto.codigoTurma });
+    if (turmaExistente) {
+      throw new BadRequestException('A turma já existe.');
+    }
+
+    // Cria a nova turma
+    const novaTurma = new this.turmaModel(createTurmaDto);
+    return await novaTurma.save();
+    
+  }
+  async findAll(): Promise<Turma[]> {
+    return this.turmaModel.find().populate('usuarios').exec();
   }
 
-  findAll() {
-    return `This action returns all turmas`;
+  async findOne(id: string): Promise<Turma> {
+    const turma = await this.turmaModel.findById(id).populate('usuarios').exec();
+    if (!turma) {
+      throw new NotFoundException('Turma não encontrada.');
+    }
+    return turma;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} turma`;
+  async update(id: string, updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
+    const updated = await this.turmaModel.findByIdAndUpdate(id, updateTurmaDto, { new: true });
+    if (!updated) {
+      throw new NotFoundException('Turma não encontrada para atualização.');
+    }
+    return updated;
   }
 
-  update(id: number, updateTurmaDto: UpdateTurmaDto) {
-    return `This action updates a #${id} turma`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} turma`;
+  async remove(id: string): Promise<void> {
+    const turma = await this.turmaModel.findById(id);
+    if (!turma) {
+      throw new NotFoundException('Turma não encontrada para exclusão.');
+    }
+    await turma.deleteOne();
   }
 }
