@@ -22,57 +22,78 @@ let TurmasController = class TurmasController {
     constructor(turmasService) {
         this.turmasService = turmasService;
     }
-    create(createTurmaDto) {
-        return this.turmasService.create(createTurmaDto);
+    async create(createTurmaDto) {
+        const turma = await this.turmasService.create(createTurmaDto);
+        return {
+            message: 'Turma criada com sucesso!',
+            data: turma,
+        };
     }
-    findAll() {
-        return this.turmasService.findAll();
+    async findAll() {
+        const turmas = await this.turmasService.findAll();
+        return {
+            message: 'Turmas encontradas com sucesso!',
+            data: turmas,
+        };
     }
-    findOne(id) {
-        return this.turmasService.findOne(+id);
+    async findOne(id) {
+        const turma = await this.turmasService.findOne(id);
+        return {
+            message: 'Turma encontrada com sucesso!',
+            data: turma,
+        };
     }
-    update(id, updateTurmaDto) {
-        return this.turmasService.update(+id, updateTurmaDto);
+    async update(id, updateTurmaDto) {
+        const turmaAtualizada = await this.turmasService.update(id, updateTurmaDto);
+        return {
+            message: 'Turma atualizada com sucesso!',
+            data: turmaAtualizada,
+        };
     }
-    remove(id) {
-        return this.turmasService.remove(+id);
+    async remove(id) {
+        await this.turmasService.remove(id);
+        return {
+            message: 'Turma excluída com sucesso!',
+        };
     }
 };
 exports.TurmasController = TurmasController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_turma_dto_1.CreateTurmaDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_turma_dto_1.UpdateTurmaDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "remove", null);
 exports.TurmasController = TurmasController = __decorate([
     (0, common_1.Controller)('turmas'),

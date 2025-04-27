@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PeriodoLetivoService } from './periodo-letivo.service';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
 
-@Controller('periodo-letivo')
+@Controller('periodos-letivos')
 export class PeriodoLetivoController {
   constructor(private readonly periodoLetivoService: PeriodoLetivoService) {}
 
   @Post()
-  create(@Body() createPeriodoLetivoDto: CreatePeriodoLetivoDto) {
-    return this.periodoLetivoService.create(createPeriodoLetivoDto);
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async create(@Body() createPeriodoLetivoDto: CreatePeriodoLetivoDto) {
+    const periodo = await this.periodoLetivoService.create(createPeriodoLetivoDto);
+    return { message: 'Período letivo criado com sucesso!', data: periodo };
   }
 
   @Get()
-  findAll() {
-    return this.periodoLetivoService.findAll();
+  async findAll() {
+    const periodos = await this.periodoLetivoService.findAll();
+    return { message: 'Lista de períodos letivos!', data: periodos };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.periodoLetivoService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const periodo = await this.periodoLetivoService.findOne(id);
+    return { message: 'Detalhes do período letivo!', data: periodo };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePeriodoLetivoDto: UpdatePeriodoLetivoDto) {
-    return this.periodoLetivoService.update(+id, updatePeriodoLetivoDto);
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async update(@Param('id') id: string, @Body() updatePeriodoLetivoDto: UpdatePeriodoLetivoDto) {
+    const periodo = await this.periodoLetivoService.update(id, updatePeriodoLetivoDto);
+    return { message: 'Período letivo atualizado com sucesso!', data: periodo };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.periodoLetivoService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.periodoLetivoService.remove(id);
+    return { message: 'Período letivo removido com sucesso!' };
   }
 }

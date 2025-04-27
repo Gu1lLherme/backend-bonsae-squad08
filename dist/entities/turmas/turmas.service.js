@@ -5,28 +5,60 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TurmasService = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
+const turmas_schema_1 = require("./schemas/turmas.schema");
 let TurmasService = class TurmasService {
-    create(createTurmaDto) {
-        return 'This action adds a new turma';
+    turmaModel;
+    constructor(turmaModel) {
+        this.turmaModel = turmaModel;
     }
-    findAll() {
-        return `This action returns all turmas`;
+    async create(createTurmaDto) {
+        const turmaExistente = await this.turmaModel.findOne({ codigoTurma: createTurmaDto.codigoTurma });
+        if (turmaExistente) {
+            throw new common_1.BadRequestException('A turma já existe.');
+        }
+        const novaTurma = new this.turmaModel(createTurmaDto);
+        return await novaTurma.save();
     }
-    findOne(id) {
-        return `This action returns a #${id} turma`;
+    async findAll() {
+        return this.turmaModel.find().populate('usuarios').exec();
     }
-    update(id, updateTurmaDto) {
-        return `This action updates a #${id} turma`;
+    async findOne(id) {
+        const turma = await this.turmaModel.findById(id).populate('usuarios').exec();
+        if (!turma) {
+            throw new common_1.NotFoundException('Turma não encontrada.');
+        }
+        return turma;
     }
-    remove(id) {
-        return `This action removes a #${id} turma`;
+    async update(id, updateTurmaDto) {
+        const updated = await this.turmaModel.findByIdAndUpdate(id, updateTurmaDto, { new: true });
+        if (!updated) {
+            throw new common_1.NotFoundException('Turma não encontrada para atualização.');
+        }
+        return updated;
+    }
+    async remove(id) {
+        const turma = await this.turmaModel.findById(id);
+        if (!turma) {
+            throw new common_1.NotFoundException('Turma não encontrada para exclusão.');
+        }
+        await turma.deleteOne();
     }
 };
 exports.TurmasService = TurmasService;
 exports.TurmasService = TurmasService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, mongoose_1.InjectModel)(turmas_schema_1.Turma.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model])
 ], TurmasService);
 //# sourceMappingURL=turmas.service.js.map

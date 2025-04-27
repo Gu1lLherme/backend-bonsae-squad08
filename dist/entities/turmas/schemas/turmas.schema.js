@@ -12,28 +12,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TurmaSchema = exports.Turma = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-class Turma {
-    nome;
-    codigo;
+let Turma = class Turma {
+    codigoDisciplina;
+    turno;
+    codigoTurma;
+    nomeTurma;
     tipo;
     usuarios;
-}
+};
 exports.Turma = Turma;
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Turma.prototype, "nome", void 0);
+], Turma.prototype, "codigoDisciplina", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Turma.prototype, "codigo", void 0);
+], Turma.prototype, "turno", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Turma.prototype, "codigoTurma", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Turma.prototype, "nomeTurma", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, enum: ['aluno', 'professor'] }),
     __metadata("design:type", String)
 ], Turma.prototype, "tipo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Usuario' }] }),
+    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Usuario' }], default: [] }),
     __metadata("design:type", Array)
 ], Turma.prototype, "usuarios", void 0);
+exports.Turma = Turma = __decorate([
+    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false }),
+    (0, mongoose_1.Schema)({ collection: 'turmas' })
+], Turma);
 exports.TurmaSchema = mongoose_1.SchemaFactory.createForClass(Turma);
 //# sourceMappingURL=turmas.schema.js.map

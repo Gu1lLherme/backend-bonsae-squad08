@@ -9,21 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PeriodoLetivoService = void 0;
 const common_1 = require("@nestjs/common");
 let PeriodoLetivoService = class PeriodoLetivoService {
-    create(createPeriodoLetivoDto) {
-        return 'This action adds a new periodoLetivo';
-    }
-    findAll() {
-        return `This action returns all periodoLetivo`;
-    }
-    findOne(id) {
-        return `This action returns a #${id} periodoLetivo`;
-    }
-    update(id, updatePeriodoLetivoDto) {
-        return `This action updates a #${id} periodoLetivo`;
-    }
-    remove(id) {
-        return `This action removes a #${id} periodoLetivo`;
-    }
 };
 exports.PeriodoLetivoService = PeriodoLetivoService;
 exports.PeriodoLetivoService = PeriodoLetivoService = __decorate([

@@ -1,14 +1,19 @@
-import { isEmpty, IsDate, IsEmpty, } from "class-validator";
+import { IsString, IsDateString, IsNotEmpty } from 'class-validator';
 
 export class CreatePeriodoLetivoDto {
-    @IsEmpty()
-    codigo_periodo_letivo: string;
-    @IsEmpty()
-    periodo_letivo: number; 
-    @IsEmpty()
-    data_incial: Date;
-    @IsEmpty()
-    data_final:  Date; 
+  @IsString()
+  @IsNotEmpty()
+  codigoPeriodoLetivo: string;
 
+  @IsString()
+  @IsNotEmpty()
+  periodoLetivo: string;
 
+  @IsDateString()
+  @IsNotEmpty()
+  dataInicial: Date;
+
+  @IsDateString()
+  @IsNotEmpty()
+  dataFinal: Date;
 }
