@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Model, Connection } from 'mongoose';
 import { PeriodoLetivo, PeriodoLetivoDocument } from './schemas/periodo-letivo.schema';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
@@ -8,7 +8,7 @@ import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
 @Injectable()
 export class PeriodoLetivoService {
   constructor(
-    @InjectModel(PeriodoLetivo.name) private readonly periodoLetivoModel: Model<PeriodoLetivoDocument>,
+    @InjectModel(PeriodoLetivo.name) private readonly periodoLetivoModel: Model<PeriodoLetivoDocument>,@InjectConnection() private readonly connection: Connection,
   ) {}
 
   async create(createPeriodoLetivoDto: CreatePeriodoLetivoDto): Promise<PeriodoLetivo> {
@@ -23,6 +23,65 @@ export class PeriodoLetivoService {
 
     const created = new this.periodoLetivoModel(createPeriodoLetivoDto);
     return created.save();
+  }
+
+  async bulkCreate(createPeriodosDto: CreatePeriodoLetivoDto[]): Promise<PeriodoLetivo[]> {
+    if (!Array.isArray(createPeriodosDto)) {
+      throw new BadRequestException('Payload precisa ser um array de objetos Periodo Letivo.');
+    }
+
+    if (createPeriodosDto.length === 0) {
+      throw new BadRequestException('A lista de períodos letivos não pode ser vazia.');
+    }
+
+    const erros: { index: number; error: string }[] = [];
+
+    createPeriodosDto.forEach((periodo, index) => {
+      const problemas: string[] = [];
+
+      if (!periodo.codigoPeriodoLetivo || periodo.codigoPeriodoLetivo.trim() === '') {
+        problemas.push('Código do período letivo é obrigatório.');
+      }
+      if (!periodo.periodoLetivo || periodo.periodoLetivo.trim() === '') {
+        problemas.push('Nome do período letivo é obrigatório.');
+      }
+      if (!periodo.dataInicial || isNaN(Date.parse(periodo.dataInicial.toString()))) {
+        problemas.push('Data inicial inválida ou ausente.');
+      }
+      if (!periodo.dataFinal || isNaN(Date.parse(periodo.dataFinal.toString()))) {
+        problemas.push('Data final inválida ou ausente.');
+      }
+      if (new Date(periodo.dataInicial) > new Date(periodo.dataFinal)) {
+        problemas.push('Data inicial não pode ser posterior à data final.');
+      }
+
+      if (problemas.length > 0) {
+        erros.push({ index, error: problemas.join(' | ') });
+      }
+    });
+
+    if (erros.length > 0) {
+      throw new BadRequestException({
+        message: 'Alguns registros de períodos letivos são inválidos.',
+        erros,
+      });
+    }
+
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const periodosCriados = await this.periodoLetivoModel.insertMany(createPeriodosDto, { session });
+
+      await session.commitTransaction();
+      session.endSession();
+      return periodosCriados;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      console.error('Erro no bulkCreate de Períodos Letivos:', error);
+      throw new InternalServerErrorException('Erro ao criar períodos letivos em lote.');
+    }
   }
 
   async findAll(): Promise<PeriodoLetivo[]> {

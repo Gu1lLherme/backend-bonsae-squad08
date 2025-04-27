@@ -3,7 +3,7 @@ import { PeriodoLetivoService } from './periodo-letivo.service';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
 
-@Controller('periodos-letivos')
+@Controller('periodo-letivo')
 export class PeriodoLetivoController {
   constructor(private readonly periodoLetivoService: PeriodoLetivoService) {}
 
@@ -13,6 +13,16 @@ export class PeriodoLetivoController {
     const periodo = await this.periodoLetivoService.create(createPeriodoLetivoDto);
     return { message: 'Período letivo criado com sucesso!', data: periodo };
   }
+
+  @Post('bulk')
+    @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
+    async bulkCreate(@Body() createPeriodoLetivoDto: CreatePeriodoLetivoDto[]) {
+      const periodosCriados = await this.periodoLetivoService.bulkCreate(createPeriodoLetivoDto);
+      return {
+        message: 'Períodos registrados com sucesso!',
+        data: periodosCriados,
+      };
+    }
 
   @Get()
   async findAll() {
