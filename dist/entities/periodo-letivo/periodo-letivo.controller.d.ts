@@ -8,6 +8,10 @@ export declare class PeriodoLetivoController {
         message: string;
         data: import("./schemas/periodo-letivo.schema").PeriodoLetivo;
     }>;
+    bulkCreate(createPeriodoLetivoDto: CreatePeriodoLetivoDto[]): Promise<{
+        message: string;
+        data: import("./schemas/periodo-letivo.schema").PeriodoLetivo[];
+    }>;
     findAll(): Promise<{
         message: string;
         data: import("./schemas/periodo-letivo.schema").PeriodoLetivo[];

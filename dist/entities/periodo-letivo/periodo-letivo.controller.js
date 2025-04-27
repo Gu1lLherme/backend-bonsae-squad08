@@ -26,6 +26,13 @@ let PeriodoLetivoController = class PeriodoLetivoController {
         const periodo = await this.periodoLetivoService.create(createPeriodoLetivoDto);
         return { message: 'Período letivo criado com sucesso!', data: periodo };
     }
+    async bulkCreate(createPeriodoLetivoDto) {
+        const periodosCriados = await this.periodoLetivoService.bulkCreate(createPeriodoLetivoDto);
+        return {
+            message: 'Períodos registrados com sucesso!',
+            data: periodosCriados,
+        };
+    }
     async findAll() {
         const periodos = await this.periodoLetivoService.findAll();
         return { message: 'Lista de períodos letivos!', data: periodos };
@@ -52,6 +59,14 @@ __decorate([
     __metadata("design:paramtypes", [create_periodo_letivo_dto_1.CreatePeriodoLetivoDto]),
     __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('bulk'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], PeriodoLetivoController.prototype, "bulkCreate", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
@@ -82,7 +97,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "remove", null);
 exports.PeriodoLetivoController = PeriodoLetivoController = __decorate([
-    (0, common_1.Controller)('periodos-letivos'),
+    (0, common_1.Controller)('periodo-letivo'),
     __metadata("design:paramtypes", [periodo_letivo_service_1.PeriodoLetivoService])
 ], PeriodoLetivoController);
 //# sourceMappingURL=periodo-letivo.controller.js.map

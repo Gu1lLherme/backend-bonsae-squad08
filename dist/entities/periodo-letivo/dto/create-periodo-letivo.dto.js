@@ -19,23 +19,23 @@ class CreatePeriodoLetivoDto {
 }
 exports.CreatePeriodoLetivoDto = CreatePeriodoLetivoDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)({ message: 'O código do período letivo deve ser uma string.' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'O código do período letivo não pode ser vazio.' }),
     __metadata("design:type", String)
 ], CreatePeriodoLetivoDto.prototype, "codigoPeriodoLetivo", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)({ message: 'O nome do período letivo deve ser uma string.' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'O nome do período letivo não pode ser vazio.' }),
     __metadata("design:type", String)
 ], CreatePeriodoLetivoDto.prototype, "periodoLetivo", void 0);
 __decorate([
     (0, class_validator_1.IsDateString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'A data inicial não pode ser vazia.' }),
     __metadata("design:type", Date)
 ], CreatePeriodoLetivoDto.prototype, "dataInicial", void 0);
 __decorate([
     (0, class_validator_1.IsDateString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'A data final não pode ser vazia.' }),
     __metadata("design:type", Date)
 ], CreatePeriodoLetivoDto.prototype, "dataFinal", void 0);
 //# sourceMappingURL=create-periodo-letivo.dto.js.map

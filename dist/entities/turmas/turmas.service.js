@@ -19,8 +19,10 @@ const mongoose_2 = require("mongoose");
 const turmas_schema_1 = require("./schemas/turmas.schema");
 let TurmasService = class TurmasService {
     turmaModel;
-    constructor(turmaModel) {
+    connection;
+    constructor(turmaModel, connection) {
         this.turmaModel = turmaModel;
+        this.connection = connection;
     }
     async create(createTurmaDto) {
         const turmaExistente = await this.turmaModel.findOne({ codigoTurma: createTurmaDto.codigoTurma });
@@ -55,14 +57,70 @@ let TurmasService = class TurmasService {
         await turma.deleteOne();
     }
     async bulkCreate(createTurmasDto) {
-        const createdTurmas = await this.turmaModel.insertMany(createTurmasDto);
-        return createdTurmas.map(turma => turma.toObject());
+        if (!Array.isArray(createTurmasDto)) {
+            throw new common_1.BadRequestException('Payload precisa ser um array de objetos Turma.');
+        }
+        if (createTurmasDto.length === 0) {
+            throw new common_1.BadRequestException('A lista de turmas não pode ser vazia.');
+        }
+        const erros = [];
+        const turmasValidas = createTurmasDto.filter((turma, index) => {
+            const problemas = [];
+            if (!turma.codigoDisciplina || turma.codigoDisciplina.trim() === '') {
+                problemas.push('Código da disciplina é obrigatório.');
+            }
+            if (!turma.turno || !['Manhã', 'Tarde', 'Noite'].includes(turma.turno)) {
+                problemas.push('Turno inválido. Deve ser Manhã, Tarde ou Noite.');
+            }
+            if (!turma.codigoTurma || turma.codigoTurma.trim() === '') {
+                problemas.push('Código da turma é obrigatório.');
+            }
+            if (!turma.nomeTurma || turma.nomeTurma.trim() === '') {
+                problemas.push('Nome da turma é obrigatório.');
+            }
+            if (!turma.tipo || !['aluno', 'professor'].includes(turma.tipo)) {
+                problemas.push('Tipo inválido. Deve ser aluno ou professor.');
+            }
+            if (problemas.length > 0) {
+                erros.push({ index, error: problemas.join(' | ') });
+                return false;
+            }
+            return true;
+        });
+        if (turmasValidas.length === 0) {
+            throw new common_1.BadRequestException({
+                message: 'Nenhuma turma válida foi enviada.',
+                erros,
+            });
+        }
+        if (erros.length > 0) {
+            console.warn('Algumas turmas foram rejeitadas:', erros);
+        }
+        const insertedTurmas = await this.turmaModel.insertMany(turmasValidas);
+        return insertedTurmas.map(turma => turma.toObject());
+    }
+    async bulkCreateWithTransaction(createTurmasDto) {
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            const turmasCriadas = await this.turmaModel.insertMany(createTurmasDto, { session });
+            await session.commitTransaction();
+            session.endSession();
+            return turmasCriadas;
+        }
+        catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            console.error('Erro no bulkCreateWithTransaction:', error);
+            throw new common_1.InternalServerErrorException('Erro ao criar turmas em lote.');
+        }
     }
 };
 exports.TurmasService = TurmasService;
 exports.TurmasService = TurmasService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(turmas_schema_1.Turma.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectConnection)()),
+    __metadata("design:paramtypes", [mongoose_2.Model, mongoose_2.Connection])
 ], TurmasService);
 //# sourceMappingURL=turmas.service.js.map

@@ -19,8 +19,10 @@ const mongoose_2 = require("mongoose");
 const periodo_letivo_schema_1 = require("./schemas/periodo-letivo.schema");
 let PeriodoLetivoService = class PeriodoLetivoService {
     periodoLetivoModel;
-    constructor(periodoLetivoModel) {
+    connection;
+    constructor(periodoLetivoModel, connection) {
         this.periodoLetivoModel = periodoLetivoModel;
+        this.connection = connection;
     }
     async create(createPeriodoLetivoDto) {
         const periodoExistente = await this.periodoLetivoModel.findOne({ codigoPeriodoLetivo: createPeriodoLetivoDto.codigoPeriodoLetivo });
@@ -32,6 +34,56 @@ let PeriodoLetivoService = class PeriodoLetivoService {
         }
         const created = new this.periodoLetivoModel(createPeriodoLetivoDto);
         return created.save();
+    }
+    async bulkCreate(createPeriodosDto) {
+        if (!Array.isArray(createPeriodosDto)) {
+            throw new common_1.BadRequestException('Payload precisa ser um array de objetos Periodo Letivo.');
+        }
+        if (createPeriodosDto.length === 0) {
+            throw new common_1.BadRequestException('A lista de períodos letivos não pode ser vazia.');
+        }
+        const erros = [];
+        createPeriodosDto.forEach((periodo, index) => {
+            const problemas = [];
+            if (!periodo.codigoPeriodoLetivo || periodo.codigoPeriodoLetivo.trim() === '') {
+                problemas.push('Código do período letivo é obrigatório.');
+            }
+            if (!periodo.periodoLetivo || periodo.periodoLetivo.trim() === '') {
+                problemas.push('Nome do período letivo é obrigatório.');
+            }
+            if (!periodo.dataInicial || isNaN(Date.parse(periodo.dataInicial.toString()))) {
+                problemas.push('Data inicial inválida ou ausente.');
+            }
+            if (!periodo.dataFinal || isNaN(Date.parse(periodo.dataFinal.toString()))) {
+                problemas.push('Data final inválida ou ausente.');
+            }
+            if (new Date(periodo.dataInicial) > new Date(periodo.dataFinal)) {
+                problemas.push('Data inicial não pode ser posterior à data final.');
+            }
+            if (problemas.length > 0) {
+                erros.push({ index, error: problemas.join(' | ') });
+            }
+        });
+        if (erros.length > 0) {
+            throw new common_1.BadRequestException({
+                message: 'Alguns registros de períodos letivos são inválidos.',
+                erros,
+            });
+        }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            const periodosCriados = await this.periodoLetivoModel.insertMany(createPeriodosDto, { session });
+            await session.commitTransaction();
+            session.endSession();
+            return periodosCriados;
+        }
+        catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            console.error('Erro no bulkCreate de Períodos Letivos:', error);
+            throw new common_1.InternalServerErrorException('Erro ao criar períodos letivos em lote.');
+        }
     }
     async findAll() {
         return this.periodoLetivoModel.find().exec();
@@ -58,6 +110,7 @@ exports.PeriodoLetivoService = PeriodoLetivoService;
 exports.PeriodoLetivoService = PeriodoLetivoService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(periodo_letivo_schema_1.PeriodoLetivo.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, mongoose_1.InjectConnection)()),
+    __metadata("design:paramtypes", [mongoose_2.Model, mongoose_2.Connection])
 ], PeriodoLetivoService);
 //# sourceMappingURL=periodo-letivo.service.js.map

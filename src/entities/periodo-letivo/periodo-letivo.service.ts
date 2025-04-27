@@ -34,6 +34,8 @@ export class PeriodoLetivoService {
       throw new BadRequestException('A lista de períodos letivos não pode ser vazia.');
     }
 
+    
+
     const erros: { index: number; error: string }[] = [];
 
     createPeriodosDto.forEach((periodo, index) => {
@@ -70,9 +72,19 @@ export class PeriodoLetivoService {
     const session = await this.connection.startSession();
     session.startTransaction();
 
-    try {
-      const periodosCriados = await this.periodoLetivoModel.insertMany(createPeriodosDto, { session });
 
+    try {
+    
+      const periodosValidos = createPeriodosDto.filter(periodo => 
+        periodo.codigoPeriodoLetivo && periodo.codigoPeriodoLetivo.trim() !== ''
+      );
+    
+      if (periodosValidos.length === 0) {
+        throw new BadRequestException('Nenhum período letivo válido para inserção.');
+      }
+    
+      const periodosCriados = await this.periodoLetivoModel.insertMany(periodosValidos, { session });
+    
       await session.commitTransaction();
       session.endSession();
       return periodosCriados;
