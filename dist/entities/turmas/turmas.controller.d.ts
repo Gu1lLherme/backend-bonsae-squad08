@@ -23,4 +23,8 @@ export declare class TurmasController {
     remove(id: string): Promise<{
         message: string;
     }>;
+    bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<{
+        message: string;
+        data: import("./schemas/turmas.schema").Turma[];
+    }>;
 }

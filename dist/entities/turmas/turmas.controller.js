@@ -56,6 +56,13 @@ let TurmasController = class TurmasController {
             message: 'Turma excluída com sucesso!',
         };
     }
+    async bulkCreate(createTurmasDto) {
+        const turmasCriadas = await this.turmasService.bulkCreate(createTurmasDto);
+        return {
+            message: 'Turmas criadas com sucesso!',
+            data: turmasCriadas,
+        };
+    }
 };
 exports.TurmasController = TurmasController;
 __decorate([
@@ -95,6 +102,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Post)('bulk'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], TurmasController.prototype, "bulkCreate", null);
 exports.TurmasController = TurmasController = __decorate([
     (0, common_1.Controller)('turmas'),
     __metadata("design:paramtypes", [turmas_service_1.TurmasService])

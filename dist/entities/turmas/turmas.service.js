@@ -54,6 +54,10 @@ let TurmasService = class TurmasService {
         }
         await turma.deleteOne();
     }
+    async bulkCreate(createTurmasDto) {
+        const createdTurmas = await this.turmaModel.insertMany(createTurmasDto);
+        return createdTurmas.map(turma => turma.toObject());
+    }
 };
 exports.TurmasService = TurmasService;
 exports.TurmasService = TurmasService = __decorate([

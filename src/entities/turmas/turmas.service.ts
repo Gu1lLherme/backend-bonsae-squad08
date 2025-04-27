@@ -56,3 +56,5 @@ export class TurmasService {
     const createdTurmas = await this.turmaModel.insertMany(createTurmasDto);
     return createdTurmas.map(turma => turma.toObject() as Turma);
 }
+
+}
