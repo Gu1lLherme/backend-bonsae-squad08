@@ -54,7 +54,7 @@ __decorate([
     __metadata("design:type", String)
 ], Usuario.prototype, "email", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ type: String, unique: true, sparse: true }),
     __metadata("design:type", String)
 ], Usuario.prototype, "matriculaIes", void 0);
 __decorate([
