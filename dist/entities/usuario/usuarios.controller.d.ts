@@ -4,12 +4,14 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 export declare class UsuariosController {
     private readonly usuariosService;
     constructor(usuariosService: UsuariosService);
-    create(createUsuarioDto: CreateUsuarioDto): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
-        _id: unknown;
-    }> & {
-        __v: number;
+    create(createUsuarioDto: CreateUsuarioDto): Promise<{
+        message: string;
+        data: import("./schemas/usuario.schema").Usuario;
     }>;
-    bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<import("./schemas/usuario.schema").Usuario[]>;
+    bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<{
+        message: string;
+        data: import("./schemas/usuario.schema").Usuario[];
+    }>;
     findAll(): Promise<(import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;
     }> & {

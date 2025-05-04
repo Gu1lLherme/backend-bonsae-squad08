@@ -31,13 +31,13 @@ export class CreateUsuarioDto {
   @IsEmail()
   email: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   matriculaIes?: string;
 
   @IsOptional()
   telefone?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   cpf?: string;
 
   @IsNotEmpty()

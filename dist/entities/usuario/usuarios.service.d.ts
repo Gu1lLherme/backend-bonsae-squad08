@@ -6,11 +6,7 @@ export declare class UsuariosService {
     private usuarioModel;
     private readonly connection;
     constructor(usuarioModel: Model<UsuarioDocument>, connection: Connection);
-    create(dto: CreateUsuarioDto): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
-        _id: unknown;
-    }> & {
-        __v: number;
-    }>;
+    create(dto: CreateUsuarioDto): Promise<Usuario>;
     bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]>;
     findAll(): Promise<(import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;
