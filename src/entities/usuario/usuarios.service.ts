@@ -50,12 +50,7 @@ export class UsuariosService {
       return true; // Incluir este usuário na inserção
     });
     
-    if (erros.length === 0) {
-      throw new BadRequestException({message: 'Nenhum usuário válido para inserção.',
-        erros,
-      }
-        );
-    }
+  
 
     if (erros.length > 0) {
       throw new BadRequestException({
