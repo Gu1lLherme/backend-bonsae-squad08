@@ -15,7 +15,7 @@ export class CreateDisciplinaDto {
 
   @IsNotEmpty()
   @IsString()
-  disciplina?: string;
+  disciplina: string;
 
   @IsNotEmpty({ message: 'Código da Disciplina é obrigatório.' })
   @IsString()
