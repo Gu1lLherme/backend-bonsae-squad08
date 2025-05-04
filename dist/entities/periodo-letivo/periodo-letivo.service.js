@@ -43,7 +43,7 @@ let PeriodoLetivoService = class PeriodoLetivoService {
             throw new common_1.BadRequestException('A lista de períodos letivos não pode ser vazia.');
         }
         const erros = [];
-        createPeriodosDto.forEach((periodo, index) => {
+        const periodosValidados = createPeriodosDto.filter((periodo, index) => {
             const problemas = [];
             if (!periodo.codigoPeriodoLetivo || periodo.codigoPeriodoLetivo.trim() === '') {
                 problemas.push('Código do período letivo é obrigatório.');
@@ -70,14 +70,14 @@ let PeriodoLetivoService = class PeriodoLetivoService {
                 erros,
             });
         }
+        const periodosInseridos = await this.periodoLetivoModel.insertMany(periodosValidados);
+        return periodosInseridos.map((periodo) => periodo.toObject());
+    }
+    async bulkCreateWithTransaction(createPeriodosDto) {
         const session = await this.connection.startSession();
         session.startTransaction();
         try {
-            const periodosValidos = createPeriodosDto.filter(periodo => periodo.codigoPeriodoLetivo && periodo.codigoPeriodoLetivo.trim() !== '');
-            if (periodosValidos.length === 0) {
-                throw new common_1.BadRequestException('Nenhum período letivo válido para inserção.');
-            }
-            const periodosCriados = await this.periodoLetivoModel.insertMany(periodosValidos, { session });
+            const periodosCriados = await this.periodoLetivoModel.insertMany(createPeriodosDto, { session });
             await session.commitTransaction();
             session.endSession();
             return periodosCriados;
@@ -85,8 +85,7 @@ let PeriodoLetivoService = class PeriodoLetivoService {
         catch (error) {
             await session.abortTransaction();
             session.endSession();
-            console.error('Erro no bulkCreate de Períodos Letivos:', error);
-            throw new common_1.InternalServerErrorException('Erro ao criar períodos letivos em lote.');
+            throw new common_1.InternalServerErrorException('Erro ao criar períodos letivos em lote.', error.message);
         }
     }
     async findAll() {

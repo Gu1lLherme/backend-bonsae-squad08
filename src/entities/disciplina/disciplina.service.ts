@@ -12,18 +12,17 @@ export class DisciplinaService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  create(createDisciplinaDto: CreateDisciplinaDto) {
-    const problemas: string[] = [];
-    if (!createDisciplinaDto.codigoDisciplina) problemas.push('Código da disciplina é obrigatório.');
-    if (!createDisciplinaDto.dataInicial || isNaN(Date.parse(createDisciplinaDto.dataInicial.toString()))) problemas.push('Data inicial inválida.');
-    if (!createDisciplinaDto.dataFinal || isNaN(Date.parse(createDisciplinaDto.dataFinal.toString()))) problemas.push('Data final inválida.');
-    if (!createDisciplinaDto.categoria) problemas.push('Categoria é obrigatória.');
+  async create(createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina> {
+    // Verifica se a disciplina já existe
 
-    if (problemas.length > 0) {
-      throw new BadRequestException(problemas.join(' | '));
-    }
+    const disciplinaExistente = await this.disciplinaModel.findOne({ codigoDisciplina: createDisciplinaDto.codigoDisciplina });
+        if (disciplinaExistente) {
+          throw new BadRequestException('A disciplina já existe.');
+        }
 
-    return this.disciplinaModel.create(createDisciplinaDto);
+    // Cria a nova disciplina
+    const novaDisciplina = new this.disciplinaModel(createDisciplinaDto);
+    return novaDisciplina.save();
   }
 
   async bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<Disciplina[]> {
@@ -33,7 +32,7 @@ export class DisciplinaService {
 
     const erros: { index: number; error: string }[] = [];
 
-    createDisciplinasDto.forEach((disciplina, index) => {
+     const disciplinasValidas = createDisciplinasDto.filter((disciplina, index) => {
       const problemas: string[] = [];
       if (!disciplina.codigoDisciplina) problemas.push('Código da disciplina é obrigatório.');
       if (!disciplina.dataInicial || isNaN(Date.parse(disciplina.dataInicial.toString()))) problemas.push('Data inicial inválida.');
@@ -42,7 +41,9 @@ export class DisciplinaService {
 
       if (problemas.length > 0) {
         erros.push({ index, error: problemas.join(' | ') });
+        return false; // Remove a disciplina da lista se houver erros
       }
+      return true; // Mantém a disciplina na lista se não houver erros
     });
 
     if (erros.length > 0) {
@@ -52,19 +53,19 @@ export class DisciplinaService {
       });
     }
 
-    const session = await this.connection.startSession();
-    session.startTransaction();
-    try {
-      const disciplinasCriadas = await this.disciplinaModel.insertMany(createDisciplinasDto, { session });
-      await session.commitTransaction();
-      session.endSession();
-      return disciplinasCriadas;
-    } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      console.error('Erro no bulkCreate de Disciplinas:', error);
-      throw new InternalServerErrorException('Erro ao criar disciplinas em lote.');
-    }
+    if (disciplinasValidas.length === 0) {
+          throw new BadRequestException({
+            message: 'Nenhuma disciplina válida foi enviada.',
+            erros,
+          });
+        }
+    
+        if (erros.length > 0) {
+          console.warn('Algumas disciplinas foram rejeitadas:', erros);
+        }
+    
+        const insertedDisciplinas = await this.disciplinaModel.insertMany(disciplinasValidas);
+        return insertedDisciplinas.map(disciplina => disciplina.toObject() as Disciplina);
   }
 
   findAll() {
