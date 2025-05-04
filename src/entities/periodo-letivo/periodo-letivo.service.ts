@@ -8,7 +8,7 @@ import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
 @Injectable()
 export class PeriodoLetivoService {
   constructor(
-    @InjectModel(PeriodoLetivo.name) private readonly periodoLetivoModel: Model<PeriodoLetivoDocument>,@InjectConnection() private readonly connection: Connection,
+    @InjectModel(PeriodoLetivo.name) private periodoLetivoModel: Model<PeriodoLetivoDocument>,@InjectConnection() private readonly connection: Connection,
   ) {}
 
   async create(createPeriodoLetivoDto: CreatePeriodoLetivoDto): Promise<PeriodoLetivo> {
@@ -38,7 +38,7 @@ export class PeriodoLetivoService {
 
     const erros: { index: number; error: string }[] = [];
 
-    createPeriodosDto.forEach((periodo, index) => {
+    const periodosValidados = createPeriodosDto.filter((periodo, index) => {
       const problemas: string[] = [];
 
       if (!periodo.codigoPeriodoLetivo || periodo.codigoPeriodoLetivo.trim() === '') {
@@ -69,32 +69,25 @@ export class PeriodoLetivoService {
       });
     }
 
+    const periodosInseridos = await this.periodoLetivoModel.insertMany(periodosValidados);
+    return periodosInseridos.map((periodo) => periodo.toObject() as PeriodoLetivo);
+  }
+
+  async bulkCreateWithTransaction(createPeriodosDto: CreatePeriodoLetivoDto[]): Promise<PeriodoLetivo[]> {
     const session = await this.connection.startSession();
     session.startTransaction();
 
 
     try {
-    
-      const periodosValidos = createPeriodosDto.filter(periodo => 
-        periodo.codigoPeriodoLetivo && periodo.codigoPeriodoLetivo.trim() !== ''
-      );
-    
-      if (periodosValidos.length === 0) {
-        throw new BadRequestException('Nenhum período letivo válido para inserção.');
-      }
-    
-      const periodosCriados = await this.periodoLetivoModel.insertMany(periodosValidos, { session });
-    
+      const periodosCriados = await this.periodoLetivoModel.insertMany(createPeriodosDto, { session });
       await session.commitTransaction();
       session.endSession();
       return periodosCriados;
     } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      console.error('Erro no bulkCreate de Períodos Letivos:', error);
-      throw new InternalServerErrorException('Erro ao criar períodos letivos em lote.');
-    }
-  }
+        await session.abortTransaction();
+        session.endSession();
+        throw new InternalServerErrorException('Erro ao criar períodos letivos em lote.', error.message);}
+      }
 
   async findAll(): Promise<PeriodoLetivo[]> {
     return this.periodoLetivoModel.find().exec();

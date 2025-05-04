@@ -15,7 +15,6 @@ export class PeriodoLetivoController {
   }
 
 
-  //Need FIX PORRAAA
   @Post('bulk')
     @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
     async bulkCreate(@Body() createPeriodoLetivoDto: CreatePeriodoLetivoDto[]) {
