@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -9,14 +9,25 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  create(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.usuariosService.create(createUsuarioDto);
+  @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
+  async create(@Body() createUsuarioDto: CreateUsuarioDto) {
+    const usuario = await this.usuariosService.create(createUsuarioDto);
+    return {
+      message: 'Usuário criado com sucesso!',
+      data: usuario,
+    };
+    
   }
 
   @Post('bulk')
-  @HttpCode(201)
+  @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
   async bulkCreate(@Body() createUsuariosDto: CreateUsuarioDto[]) {
-    return this.usuariosService.bulkCreate(createUsuariosDto);
+    const usuariosCriados = await this.usuariosService.bulkCreate(createUsuariosDto);
+    return {
+      message: 'Usuários criados com sucesso!',
+      data: usuariosCriados,
+    };
+
   }
 
   @Get()
