@@ -17,6 +17,8 @@ export class TurmasController {
     };
   }
 
+ 
+
   @Get()
   async findAll() {
     const turmas = await this.turmasService.findAll();

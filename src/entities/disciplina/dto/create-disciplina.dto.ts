@@ -1,3 +1,4 @@
+import { Prop } from '@nestjs/mongoose';
 import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export enum CategoriaDisciplina {
@@ -12,7 +13,7 @@ export class CreateDisciplinaDto {
   @IsString()
   periodoLetivo: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   disciplina?: string;
 
