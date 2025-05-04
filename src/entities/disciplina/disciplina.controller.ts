@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DisciplinaService } from './disciplina.service';
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
@@ -11,6 +11,15 @@ export class DisciplinaController {
   create(@Body() createDisciplinaDto: CreateDisciplinaDto) {
     return this.disciplinaService.create(createDisciplinaDto);
   }
+  @Post('bulk')
+    @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
+    async bulkCreate(@Body() createDisciplinasDto: CreateDisciplinaDto[]) {
+      const disciplinasCriadas = await this.disciplinaService.bulkCreate(createDisciplinasDto);
+      return {
+        message: 'Disciplinas criadas com sucesso!',
+        data: disciplinasCriadas,
+      };
+    }
 
   @Get()
   findAll() {
