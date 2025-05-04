@@ -24,27 +24,20 @@ let DisciplinaService = class DisciplinaService {
         this.disciplinaModel = disciplinaModel;
         this.connection = connection;
     }
-    create(createDisciplinaDto) {
-        const problemas = [];
-        if (!createDisciplinaDto.codigoDisciplina)
-            problemas.push('Código da disciplina é obrigatório.');
-        if (!createDisciplinaDto.dataInicial || isNaN(Date.parse(createDisciplinaDto.dataInicial.toString())))
-            problemas.push('Data inicial inválida.');
-        if (!createDisciplinaDto.dataFinal || isNaN(Date.parse(createDisciplinaDto.dataFinal.toString())))
-            problemas.push('Data final inválida.');
-        if (!createDisciplinaDto.categoria)
-            problemas.push('Categoria é obrigatória.');
-        if (problemas.length > 0) {
-            throw new common_1.BadRequestException(problemas.join(' | '));
+    async create(createDisciplinaDto) {
+        const disciplinaExistente = await this.disciplinaModel.findOne({ codigoDisciplina: createDisciplinaDto.codigoDisciplina });
+        if (disciplinaExistente) {
+            throw new common_1.BadRequestException('A disciplina já existe.');
         }
-        return this.disciplinaModel.create(createDisciplinaDto);
+        const novaDisciplina = new this.disciplinaModel(createDisciplinaDto);
+        return novaDisciplina.save();
     }
     async bulkCreate(createDisciplinasDto) {
         if (!Array.isArray(createDisciplinasDto) || createDisciplinasDto.length === 0) {
             throw new common_1.BadRequestException('Payload precisa ser uma lista de disciplinas.');
         }
         const erros = [];
-        createDisciplinasDto.forEach((disciplina, index) => {
+        const disciplinasValidas = createDisciplinasDto.filter((disciplina, index) => {
             const problemas = [];
             if (!disciplina.codigoDisciplina)
                 problemas.push('Código da disciplina é obrigatório.');
@@ -56,7 +49,9 @@ let DisciplinaService = class DisciplinaService {
                 problemas.push('Categoria é obrigatória.');
             if (problemas.length > 0) {
                 erros.push({ index, error: problemas.join(' | ') });
+                return false;
             }
+            return true;
         });
         if (erros.length > 0) {
             throw new common_1.BadRequestException({
@@ -64,20 +59,17 @@ let DisciplinaService = class DisciplinaService {
                 erros,
             });
         }
-        const session = await this.connection.startSession();
-        session.startTransaction();
-        try {
-            const disciplinasCriadas = await this.disciplinaModel.insertMany(createDisciplinasDto, { session });
-            await session.commitTransaction();
-            session.endSession();
-            return disciplinasCriadas;
+        if (disciplinasValidas.length === 0) {
+            throw new common_1.BadRequestException({
+                message: 'Nenhuma disciplina válida foi enviada.',
+                erros,
+            });
         }
-        catch (error) {
-            await session.abortTransaction();
-            session.endSession();
-            console.error('Erro no bulkCreate de Disciplinas:', error);
-            throw new common_1.InternalServerErrorException('Erro ao criar disciplinas em lote.');
+        if (erros.length > 0) {
+            console.warn('Algumas disciplinas foram rejeitadas:', erros);
         }
+        const insertedDisciplinas = await this.disciplinaModel.insertMany(disciplinasValidas);
+        return insertedDisciplinas.map(disciplina => disciplina.toObject());
     }
     findAll() {
         return `This action returns all disciplina`;

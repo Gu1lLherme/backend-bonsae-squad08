@@ -6,11 +6,7 @@ export declare class DisciplinaService {
     private readonly disciplinaModel;
     private readonly connection;
     constructor(disciplinaModel: Model<DisciplinaDocument>, connection: Connection);
-    create(createDisciplinaDto: CreateDisciplinaDto): Promise<import("mongoose").Document<unknown, {}, DisciplinaDocument> & Disciplina & import("mongoose").Document<unknown, any, any> & Required<{
-        _id: unknown;
-    }> & {
-        __v: number;
-    }>;
+    create(createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina>;
     bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<Disciplina[]>;
     findAll(): string;
     findOne(id: number): string;

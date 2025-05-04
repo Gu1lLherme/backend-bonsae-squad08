@@ -25,6 +25,13 @@ let DisciplinaController = class DisciplinaController {
     create(createDisciplinaDto) {
         return this.disciplinaService.create(createDisciplinaDto);
     }
+    async bulkCreate(createDisciplinasDto) {
+        const disciplinasCriadas = await this.disciplinaService.bulkCreate(createDisciplinasDto);
+        return {
+            message: 'Disciplinas criadas com sucesso!',
+            data: disciplinasCriadas,
+        };
+    }
     findAll() {
         return this.disciplinaService.findAll();
     }
@@ -46,6 +53,14 @@ __decorate([
     __metadata("design:paramtypes", [create_disciplina_dto_1.CreateDisciplinaDto]),
     __metadata("design:returntype", void 0)
 ], DisciplinaController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('bulk'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], DisciplinaController.prototype, "bulkCreate", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

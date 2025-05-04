@@ -8,9 +8,16 @@ export class DisciplinaController {
   constructor(private readonly disciplinaService: DisciplinaService) {}
 
   @Post()
-  create(@Body() createDisciplinaDto: CreateDisciplinaDto) {
-    return this.disciplinaService.create(createDisciplinaDto);
+  @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
+  async create(@Body() createDisciplinaDto: CreateDisciplinaDto) {
+    const disciplina = await this.disciplinaService.create(createDisciplinaDto);
+    return {
+      message: 'Disciplina criada com sucesso!',
+      data: disciplina,
+    };
   }
+
+
   @Post('bulk')
     @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
     async bulkCreate(@Body() createDisciplinasDto: CreateDisciplinaDto[]) {
