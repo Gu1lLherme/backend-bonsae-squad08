@@ -13,48 +13,17 @@ export class UsuariosService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  async create(dto: CreateUsuarioDto) {
-    const problemas: string[] = [];
+  async create(dto: CreateUsuarioDto): Promise<Usuario> {
 
-    // Validações obrigatórias
-    if (!dto.perfil) problemas.push('Perfil é obrigatório.');
-    if (!dto.nome) problemas.push('Nome é obrigatório.');
-    if (!dto.email) problemas.push('Email é obrigatório.');
-    if (!dto.cpf) problemas.push('CPF é obrigatório.');
-    if (!dto.senha) problemas.push('Senha é obrigatória.');
-    if (!dto.matriculaIes) problemas.push('Matrícula (IES) é obrigatória.');
-
-    if (problemas.length > 0) {
-      throw new BadRequestException({
-        message: 'Erros de validação no usuário.',
-        erros: problemas,
-      });
+    const emailExistente = await this.usuarioModel.findOne({ email: dto.email });
+    if (emailExistente) {
+      throw new BadRequestException('Email do usuário já cadastrado.');
     }
 
-    // Verificações de unicidade
-    const [usuarioExistente, cpfExistente, matriculaExistente, telefoneExistente] = await Promise.all([
-      this.usuarioModel.findOne({ email: dto.email }),
-      this.usuarioModel.findOne({ cpf: dto.cpf }),
-      this.usuarioModel.findOne({ matriculaIes: dto.matriculaIes }),
-      dto.telefone ? this.usuarioModel.findOne({ telefone: dto.telefone }) : null,
-    ]);
-
-    if (usuarioExistente) {
-      throw new BadRequestException('Email já cadastrado.');
-    }
-    if (cpfExistente) {
-      throw new BadRequestException('CPF já cadastrado.');
-    }
-    if (matriculaExistente) {
-      throw new BadRequestException('Matrícula (IES) já cadastrada.');
-    }
-    if (telefoneExistente) {
-      throw new BadRequestException('Telefone já cadastrado.');
-    }
-
-    const usuario = new this.usuarioModel(dto);
-    return usuario.save();
-  }
+    const novoUsuario = new this.usuarioModel(dto);
+    return await novoUsuario.save();
+}
+    
 
   async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {
     if (!Array.isArray(createUsuariosDto) || createUsuariosDto.length === 0) {
@@ -64,7 +33,7 @@ export class UsuariosService {
     const erros: { index: number; error: string }[] = [];
 
     // Validar todos os usuários
-    createUsuariosDto.forEach((usuario, index) => {
+    createUsuariosDto.filter((usuario, index) => {
       const problemas: string[] = [];
 
       if (!usuario.perfil) problemas.push('Perfil é obrigatório.');
@@ -76,8 +45,17 @@ export class UsuariosService {
 
       if (problemas.length > 0) {
         erros.push({ index, error: problemas.join(' | ') });
+        return false; // Ignorar este usuário na inserção
       }
+      return true; // Incluir este usuário na inserção
     });
+    
+    if (erros.length === 0) {
+      throw new BadRequestException({message: 'Nenhum usuário válido para inserção.',
+        erros,
+      }
+        );
+    }
 
     if (erros.length > 0) {
       throw new BadRequestException({
@@ -86,48 +64,11 @@ export class UsuariosService {
       });
     }
 
-    const session = await this.connection.startSession();
-    session.startTransaction();
-    try {
-      // Antes de inserir, validar se já existem registros conflitantes
-      const emails = createUsuariosDto.map(u => u.email);
-      const cpfs = createUsuariosDto.map(u => u.cpf);
-      const matriculas = createUsuariosDto.map(u => u.matriculaIes);
-      const telefones = createUsuariosDto.map(u => u.telefone).filter(Boolean); // Telefones podem ser nulos
-
-      const existentes = await this.usuarioModel.find({
-        $or: [
-          { email: { $in: emails } },
-          { cpf: { $in: cpfs } },
-          { matriculaIes: { $in: matriculas } },
-          { telefone: { $in: telefones } },
-        ],
-      }).session(session);
-
-      if (existentes.length > 0) {
-        const conflitos = existentes.map(e => ({
-          email: e.email,
-          cpf: e.cpf,
-          matriculaIes: e.matriculaIes,
-          telefone: e.telefone,
-        }));
-        throw new BadRequestException({
-          message: 'Existem conflitos com usuários já cadastrados.',
-          conflitos,
-        });
-      }
 
       // Inserir usuários
-      const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto, { session });
-      await session.commitTransaction();
-      return usuariosCriados;
-    } catch (error) {
-      await session.abortTransaction();
-      console.error('Erro no bulkCreate de Usuários:', error);
-      throw new InternalServerErrorException('Erro ao criar usuários em lote.');
-    } finally {
-      session.endSession();
-    }
+      const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto);
+      return usuariosCriados.map(usuario => usuario.toObject() as Usuario);
+    
   }
 
   async findAll() {
