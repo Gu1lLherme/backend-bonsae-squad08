@@ -6,7 +6,7 @@ export declare enum CategoriaDisciplina {
 }
 export declare class CreateDisciplinaDto {
     periodoLetivo: string;
-    disciplina?: string;
+    disciplina: string;
     codigoDisciplina: string;
     dataInicial: string;
     dataFinal: string;

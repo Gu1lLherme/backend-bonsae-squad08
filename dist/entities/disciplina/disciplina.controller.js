@@ -22,8 +22,12 @@ let DisciplinaController = class DisciplinaController {
     constructor(disciplinaService) {
         this.disciplinaService = disciplinaService;
     }
-    create(createDisciplinaDto) {
-        return this.disciplinaService.create(createDisciplinaDto);
+    async create(createDisciplinaDto) {
+        const disciplina = await this.disciplinaService.create(createDisciplinaDto);
+        return {
+            message: 'Disciplina criada com sucesso!',
+            data: disciplina,
+        };
     }
     async bulkCreate(createDisciplinasDto) {
         const disciplinasCriadas = await this.disciplinaService.bulkCreate(createDisciplinasDto);
@@ -48,10 +52,11 @@ let DisciplinaController = class DisciplinaController {
 exports.DisciplinaController = DisciplinaController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_disciplina_dto_1.CreateDisciplinaDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], DisciplinaController.prototype, "create", null);
 __decorate([
     (0, common_1.Post)('bulk'),

@@ -34,7 +34,8 @@ export class DisciplinaService {
 
      const disciplinasValidas = createDisciplinasDto.filter((disciplina, index) => {
       const problemas: string[] = [];
-      if (!disciplina.codigoDisciplina) problemas.push('Código da disciplina é obrigatório.');
+      if (typeof disciplina.codigoDisciplina !== 'string' || disciplina.codigoDisciplina.trim() === '') {
+        problemas.push('Código da disciplina é obrigatório.');}
       if (!disciplina.dataInicial || isNaN(Date.parse(disciplina.dataInicial.toString()))) problemas.push('Data inicial inválida.');
       if (!disciplina.dataFinal || isNaN(Date.parse(disciplina.dataFinal.toString()))) problemas.push('Data final inválida.');
       if (!disciplina.categoria) problemas.push('Categoria é obrigatória.');
@@ -61,12 +62,24 @@ export class DisciplinaService {
         }
     
         if (erros.length > 0) {
-          console.warn('Algumas disciplinas foram rejeitadas:', erros);
+          throw new BadRequestException({
+            message: 'Algumas disciplinas foram rejeitadas.',
+            erros,
+          });
         }
-    
-        const insertedDisciplinas = await this.disciplinaModel.insertMany(disciplinasValidas);
-        return insertedDisciplinas.map(disciplina => disciplina.toObject() as Disciplina);
+
+        const disciplinasSanitizadas = disciplinasValidas.map(d => ({
+          ...d,
+          codigoDisciplina: d.codigoDisciplina.trim(),
+        }));
+        try {
+        const insertedDisciplinas = await this.disciplinaModel.insertMany(disciplinasSanitizadas);
+        return insertedDisciplinas.map(d => d.toObject() as Disciplina);
+  } catch (error) {
+    console.error('Erro ao inserir disciplinas em lote:', error);
+    throw new InternalServerErrorException('Erro ao salvar disciplinas.');
   }
+}
 
   findAll() {
     return `This action returns all disciplina`;

@@ -11,7 +11,7 @@ export class Disciplina {
   @Prop({ required: true })
   disciplina: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, sparse: true })
   codigoDisciplina: string;
 
   @Prop({ required: true })

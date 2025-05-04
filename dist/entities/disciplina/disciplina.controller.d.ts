@@ -4,7 +4,10 @@ import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 export declare class DisciplinaController {
     private readonly disciplinaService;
     constructor(disciplinaService: DisciplinaService);
-    create(createDisciplinaDto: CreateDisciplinaDto): Promise<import("./schemas/disciplina.schema").Disciplina>;
+    create(createDisciplinaDto: CreateDisciplinaDto): Promise<{
+        message: string;
+        data: import("./schemas/disciplina.schema").Disciplina;
+    }>;
     bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<{
         message: string;
         data: import("./schemas/disciplina.schema").Disciplina[];
