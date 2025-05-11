@@ -57,11 +57,6 @@ let UsuariosService = class UsuariosService {
             }
             return true;
         });
-        if (erros.length === 0) {
-            throw new common_1.BadRequestException({ message: 'Nenhum usuário válido para inserção.',
-                erros,
-            });
-        }
         if (erros.length > 0) {
             throw new common_1.BadRequestException({
                 message: 'Erros de validação nos usuários.',
