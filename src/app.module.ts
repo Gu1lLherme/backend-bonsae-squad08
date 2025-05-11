@@ -9,6 +9,7 @@ import { PeriodoLetivoModule } from './entities/periodo-letivo/periodo-letivo.mo
 import { DisciplinaModule } from './entities/disciplina/disciplina.module';
 import { TurmasModule } from './entities/turmas/turmas.module';
 import { UsuarioModule } from './entities/usuario/usuarios.module'; // ajuste o path se necessário
+import { LoteImportacaoModule } from './entities/lote-importacao/lote-importacao.module';
 
 
 @Module({
@@ -25,7 +26,8 @@ import { UsuarioModule } from './entities/usuario/usuarios.module'; // ajuste o 
     PeriodoLetivoModule,
     DisciplinaModule,
     TurmasModule,
-    UsuarioModule
+    UsuarioModule,
+    LoteImportacaoModule,
     // Aqui você pode importar seus módulos
 
   ],
