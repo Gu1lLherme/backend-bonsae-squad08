@@ -16,6 +16,7 @@ const periodo_letivo_module_1 = require("./entities/periodo-letivo/periodo-letiv
 const disciplina_module_1 = require("./entities/disciplina/disciplina.module");
 const turmas_module_1 = require("./entities/turmas/turmas.module");
 const usuarios_module_1 = require("./entities/usuario/usuarios.module");
+const lote_importacao_module_1 = require("./entities/lote-importacao/lote-importacao.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,7 +35,8 @@ exports.AppModule = AppModule = __decorate([
             periodo_letivo_module_1.PeriodoLetivoModule,
             disciplina_module_1.DisciplinaModule,
             turmas_module_1.TurmasModule,
-            usuarios_module_1.UsuarioModule
+            usuarios_module_1.UsuarioModule,
+            lote_importacao_module_1.LoteImportacaoModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
