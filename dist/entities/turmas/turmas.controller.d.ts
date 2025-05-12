@@ -27,20 +27,6 @@ export declare class TurmasController {
     }>;
     createBatch(dto: CreateTurmaBatchDto): Promise<{
         batchId: string;
-        turmas: import("mongoose").MergeType<import("mongoose").Document<unknown, {}, import("./schemas/turmas.schema").TurmaDocument> & Turma & import("mongoose").Document<unknown, any, any> & Required<{
-            _id: unknown;
-        }> & {
-            __v: number;
-        }, Omit<{
-            batchId: string;
-            valid: boolean;
-            validationErrors: string[];
-            codigoDisciplina: string;
-            turno: "Manh\u00E3" | "Tarde" | "Noite";
-            codigoTurma: string;
-            nomeTurma: string;
-            tipo: "aluno" | "professor";
-            usuarios?: string[];
-        }[], "_id">>[];
+        turmas: any[];
     }>;
 }

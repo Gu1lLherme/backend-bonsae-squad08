@@ -14,10 +14,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TurmasService = void 0;
 const common_1 = require("@nestjs/common");
+const create_turma_dto_1 = require("./dto/create-turma.dto");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const turmas_schema_1 = require("./schemas/turmas.schema");
 const uuid_1 = require("uuid");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
 let TurmasService = class TurmasService {
     turmaModel;
     connection;
@@ -100,27 +103,23 @@ let TurmasService = class TurmasService {
         const insertedTurmas = await this.turmaModel.insertMany(turmasValidas);
         return insertedTurmas.map(turma => turma.toObject());
     }
-    async createBatch(dto) {
+    async createBatch(turmas) {
         const batchId = (0, uuid_1.v4)();
-        const documents = dto.turmas.map(turma => {
-            const errors = [];
-            if (!['manhã', 'tarde', 'noite'].includes(turma.turno.toLowerCase())) {
-                errors.push(`Turno inválido: ${turma.turno}`);
-            }
-            if (!turma.codigoDisciplina || !turma.codigoTurma || !turma.nomeTurma) {
-                errors.push('Campos obrigatórios ausentes');
-            }
+        const turmasComStatus = turmas.map((turma) => {
+            const instance = (0, class_transformer_1.plainToInstance)(create_turma_dto_1.CreateTurmaDto, turma);
+            const errors = (0, class_validator_1.validateSync)(instance);
+            const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
             return {
                 ...turma,
                 batchId,
-                valid: errors.length === 0,
-                validationErrors: errors,
+                valid: validationErrors.length === 0,
+                validationErrors,
             };
         });
-        const saved = await this.turmaModel.insertMany(documents, { ordered: false });
+        await this.turmaModel.insertMany(turmasComStatus);
         return {
             batchId,
-            turmas: saved,
+            turmas: turmasComStatus,
         };
     }
 };

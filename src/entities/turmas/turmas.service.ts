@@ -154,8 +154,9 @@ return {
   turmas: saved,
 };
 }*/
-async createBatch(turmas: any[]): Promise<{ batchId: string; turmas: any[] }> {
+async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: any[] }> {
   const batchId = uuidv4();
+  const turmas = dto.turmas;
 
   const turmasComStatus = turmas.map((turma) => {
     const instance = plainToInstance(CreateTurmaDto, turma);
