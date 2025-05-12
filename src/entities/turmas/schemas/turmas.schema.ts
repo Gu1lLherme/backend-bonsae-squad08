@@ -25,11 +25,11 @@ export class Turma {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Usuario' }] ,default: [] })
   usuarios?: Types.ObjectId[]; // Referência a usuários (alunos ou professores) associados à turma
 
-  @Prop()
-  loteId?: string;
+  @Prop({ required: true }) batchId: string; // Identificador do lote
 
-  @Prop({ enum: ['valido', 'invalido'], default: 'valido' })
-  statusValidacao?: string;
-}	
+  @Prop({ default: true }) valid: boolean;
+
+  @Prop({ default: null, type: [String] }) validationErrors?: string[];
+}
 
 export const TurmaSchema = SchemaFactory.createForClass(Turma); 

@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, Validation
 import { TurmasService } from './turmas.service';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
+import { CreateTurmaBatchDto } from './dto/create-turma-batch.dto';
+import { Turma } from './schemas/turmas.schema';
 
 @Controller('turmas')
 export class TurmasController {
@@ -65,12 +67,9 @@ export class TurmasController {
     };
   }*/
 
-  @Post('bulklote')
-async importarTurmasEmLote(
-  @Body() turmas: CreateTurmaDto[],
-  @Query('arquivo') nomeArquivo: string
-) {
-  return await this.turmasService.bulkCreateWithLote(turmas, nomeArquivo);
+ @Post('batch')
+createBatch(@Body() dto: CreateTurmaBatchDto) {
+return this.turmasService.createBatch(dto);
 }
 
 }

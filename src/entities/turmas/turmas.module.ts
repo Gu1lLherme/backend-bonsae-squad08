@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TurmasService } from './turmas.service';
 import { TurmasController } from './turmas.controller';
 import { Turma, TurmaSchema } from './schemas/turmas.schema';
-import { LoteImportacao } from '../lote-importacao/schemas/lote-importacao.schema';
 import { LoteImportacaoModule } from '../lote-importacao/lote-importacao.module';
 
 @Module({

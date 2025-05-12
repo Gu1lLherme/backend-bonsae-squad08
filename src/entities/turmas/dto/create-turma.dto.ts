@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsIn, Matches, IsMongoId, IsArray, IsOptional, IsEnum, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Matches, IsMongoId, IsArray, IsOptional, IsEnum, Length } from 'class-validator';
 
 
 
@@ -34,4 +34,6 @@ export class CreateTurmaDto {
     usuarios?: string[]; 
 
 }
+
+
 

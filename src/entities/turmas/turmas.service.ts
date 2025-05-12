@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
+import { CreateTurmaBatchDto } from './dto/create-turma-batch.dto';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
@@ -56,7 +57,7 @@ export class TurmasService {
     await turma.deleteOne();
   }
 // Validação de turmas em lote
-  /*async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
+  async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
     if (!Array.isArray(createTurmasDto)) {
       throw new BadRequestException('Payload precisa ser um array de objetos Turma.');
     }
@@ -108,7 +109,7 @@ export class TurmasService {
     return insertedTurmas.map(turma => turma.toObject() as Turma);
 
   }
-// Método para criar turmas em lote com transação
+/* Método para criar turmas em lote com transação
   async bulkCreateWithTransaction(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
     const session = await this.connection.startSession();
     session.startTransaction();
@@ -124,62 +125,34 @@ export class TurmasService {
       session.endSession();
       console.error('Erro no bulkCreateWithTransaction:', error);
       throw new InternalServerErrorException('Erro ao criar turmas em lote.');
+    }*/
+  async createBatch(dto: CreateTurmaBatchDto) {
+    const result: Turma[] = [];
+
+    for (const t of dto.turmas) {
+    const errors: string[] = [];
+
+    if (!['manhã', 'tarde', 'noite'].includes(t.turno.toLowerCase())) {
+      errors.push(`Turno inválido: ${t.turno}`);
     }
-  }*/
- async bulkCreateWithLote(createTurmasDto: CreateTurmaDto[], nomeArquivo: string): Promise<any> {
-  const lote = await this.loteModel.create({
-    loteId: new Date().getTime().toString(), // ou UUID
-    tipo: 'turmas',
-    nomeArquivo,
-    status: 'em_validacao',
-    quantidade_total: createTurmasDto.length,
-    dataEnvio: new Date(),
-  });
 
-  const validas: any[] = [];
-  const invalidas: any[] = [];
-
-  createTurmasDto.forEach((turma, index) => {
-    const erros: string[] = [];
-
-    // regras básicas de validação
-    if (!turma.codigoDisciplina) erros.push('Código da disciplina é obrigatório.');
-    if (!['Manhã', 'Tarde', 'Noite'].includes(turma.turno)) erros.push('Turno inválido.');
-    if (!turma.codigoTurma) erros.push('Código da turma é obrigatório.');
-    if (!turma.nomeTurma) erros.push('Nome da turma é obrigatório.');
-    if (!['aluno', 'professor'].includes(turma.tipo)) erros.push('Tipo inválido.');
-
-    const baseData = {
-      ...turma,
-      loteId: lote.loteId,
-      statusValidacao: erros.length ? 'invalido' : 'valido',
-    };
-
-    if (erros.length) {
-      invalidas.push({ ...baseData });
-      lote.erros?.push({
-        index,
-        mensagens: erros,
-        item: turma,
-      });
-    } else {
-      validas.push({ ...baseData });
+    if (!t.codigoDisciplina || !t.codigoTurma || !t.nomeTurma) {
+      errors.push('Campos obrigatórios ausentes');
     }
-  });
 
-  const todas = [...validas, ...invalidas];
-  await this.turmaModel.insertMany(todas);
+    const valid = errors.length === 0;
 
-  lote.status = invalidas.length ? 'com_erro' : 'importado';
-  lote.quantidade_sucesso = validas.length;
-  await lote.save();
+    const turma = new this.turmaModel({
+      ...t,
+      batchId: dto.batchId,
+      valid,
+      validationErrors: errors,
+    });
 
-  return {
-    message: 'Turmas importadas com sucesso!',
-    loteId: lote.loteId,
-    total: todas.length,
-    sucesso: validas.length,
-    erros: lote.erros,
-  };
-}
+    await turma.save();
+    result.push(turma);
+
+      }
+      return result;
+    }
 }
