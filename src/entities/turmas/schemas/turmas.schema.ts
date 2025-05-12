@@ -19,8 +19,8 @@ export class Turma {
   @Prop()
   nomeTurma: string; 
 
-  @Prop({enum: ['aluno', 'professor'] })
-  tipo: 'aluno' | 'professor';
+  @Prop()
+  tipo: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Usuario' }] ,default: [] })
   usuarios?: Types.ObjectId[]; // Referência a usuários (alunos ou professores) associados à turma
