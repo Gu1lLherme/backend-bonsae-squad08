@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString, Matches, IsMongoId, IsArray, IsOptional, IsEnum, 
 
 
 
-/*export class CreateTurmaDto {
+export class CreateTurmaDto {
 
     @IsNotEmpty({ message: 'O código da disciplina é obrigatório.' }) 
     @IsString({ message: 'O código da disciplina deve ser uma string.' }) 
@@ -33,14 +33,8 @@ import { IsNotEmpty, IsString, Matches, IsMongoId, IsArray, IsOptional, IsEnum, 
     @IsMongoId({ each: true, message: 'Cada usuário deve ter um ID válido.' }) 
     usuarios?: string[]; 
 
-}*/
-export class CreateTurmaDto {
-codigoDisciplina: string;
-turno: string;
-codigoTurma: string;
-nomeTurma: string;
-tipo: string;
 }
+
 
 
 
