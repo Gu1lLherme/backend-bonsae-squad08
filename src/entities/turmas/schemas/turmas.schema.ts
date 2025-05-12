@@ -19,7 +19,7 @@ export class Turma {
   @Prop()
   nomeTurma: string; 
 
-  @Prop({ required: true, enum: ['aluno', 'professor'] })
+  @Prop({enum: ['aluno', 'professor'] })
   tipo: 'aluno' | 'professor';
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Usuario' }] ,default: [] })
