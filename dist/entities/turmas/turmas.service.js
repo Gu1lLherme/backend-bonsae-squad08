@@ -117,7 +117,7 @@ let TurmasService = class TurmasService {
                 validationErrors: errors,
             };
         });
-        const saved = await this.turmaModel.insertMany(documents);
+        const saved = await this.turmaModel.insertMany(documents, { ordered: false });
         return {
             batchId,
             turmas: saved,

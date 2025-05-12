@@ -57,14 +57,13 @@ let TurmasController = class TurmasController {
             message: 'Turma excluída com sucesso!',
         };
     }
-    createBatch(dto) {
+    async createBatch(dto) {
         return this.turmasService.createBatch(dto);
     }
 };
 exports.TurmasController = TurmasController;
 __decorate([
     (0, common_1.Post)(),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_turma_dto_1.CreateTurmaDto]),
@@ -104,7 +103,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_turma_batch_dto_1.CreateTurmaBatchDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "createBatch", null);
 exports.TurmasController = TurmasController = __decorate([
     (0, common_1.Controller)('turmas'),

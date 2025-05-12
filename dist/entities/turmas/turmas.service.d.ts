@@ -29,6 +29,6 @@ export declare class TurmasService {
             nomeTurma: string;
             tipo: "aluno" | "professor";
             usuarios?: string[];
-        }, "_id">>[];
+        }[], "_id">>[];
     }>;
 }

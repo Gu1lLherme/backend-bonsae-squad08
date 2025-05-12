@@ -41,6 +41,6 @@ export declare class TurmasController {
             nomeTurma: string;
             tipo: "aluno" | "professor";
             usuarios?: string[];
-        }, "_id">>[];
+        }[], "_id">>[];
     }>;
 }
