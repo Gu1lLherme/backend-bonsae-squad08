@@ -4,8 +4,8 @@ import { CreateTurmaDto } from './create-turma.dto';
 
 export class CreateTurmaBatchDto {
 
-/*@IsArray()
+@IsArray()
 @ValidateNested({ each: true })
-@Type(() => CreateTurmaDto)*/
+@Type(() => CreateTurmaDto)
 turmas: CreateTurmaDto[];
 }

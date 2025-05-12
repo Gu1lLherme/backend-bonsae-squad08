@@ -67,9 +67,10 @@ export class TurmasController {
     };
   }*/
 
- @Post('batch')
+@Post('batch')
 createBatch(@Body() dto: CreateTurmaBatchDto) {
 return this.turmasService.createBatch(dto);
 }
-
 }
+
+
