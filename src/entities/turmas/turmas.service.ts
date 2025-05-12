@@ -7,6 +7,8 @@ import { Model, Connection } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 import { LoteImportacao, LoteImportacaoDocument } from '../lote-importacao/schemas/lote-importacao.schema';
 import { v4 as uuidv4 } from 'uuid';
+import { plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
 
 @Injectable()
@@ -126,7 +128,7 @@ export class TurmasService {
       console.error('Erro no bulkCreateWithTransaction:', error);
       throw new InternalServerErrorException('Erro ao criar turmas em lote.');
     }*/
-  async createBatch(dto: CreateTurmaBatchDto) {
+  /*async createBatch(dto: CreateTurmaBatchDto) {
     const batchId = uuidv4();
     const documents = dto.turmas.map(turma => {
 
@@ -151,6 +153,33 @@ return {
   batchId,
   turmas: saved,
 };
+}*/
+async createBatch(turmas: any[]): Promise<{ batchId: string; turmas: any[] }> {
+  const batchId = uuidv4();
+
+  const turmasComStatus = turmas.map((turma) => {
+    const instance = plainToInstance(CreateTurmaDto, turma);
+    const errors = validateSync(instance);
+
+    const validationErrors = errors.map((e) =>
+      Object.values(e.constraints || {}).join(', ')
+    );
+
+    return {
+      ...turma,
+      batchId,
+      valid: validationErrors.length === 0,
+      validationErrors,
+    };
+  });
+
+  // Salva todas, válidas ou não
+  await this.turmaModel.insertMany(turmasComStatus);
+
+  return {
+    batchId,
+    turmas: turmasComStatus,
+  };
 }
 }
 
