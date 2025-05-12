@@ -27,7 +27,6 @@ import { LoteImportacaoModule } from './entities/lote-importacao/lote-importacao
     DisciplinaModule,
     TurmasModule,
     UsuarioModule,
-    LoteImportacaoModule,
     // Aqui você pode importar seus módulos
 
   ],

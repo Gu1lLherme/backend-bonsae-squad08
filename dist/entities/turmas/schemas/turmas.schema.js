@@ -19,6 +19,9 @@ let Turma = class Turma {
     nomeTurma;
     tipo;
     usuarios;
+    batchId;
+    valid;
+    validationErrors;
 };
 exports.Turma = Turma;
 __decorate([
@@ -45,6 +48,18 @@ __decorate([
     (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Usuario' }], default: [] }),
     __metadata("design:type", Array)
 ], Turma.prototype, "usuarios", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Turma.prototype, "batchId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: true }),
+    __metadata("design:type", Boolean)
+], Turma.prototype, "valid", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: null, type: [String] }),
+    __metadata("design:type", Array)
+], Turma.prototype, "validationErrors", void 0);
 exports.Turma = Turma = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true, versionKey: false }),
     (0, mongoose_1.Schema)({ collection: 'turmas' })

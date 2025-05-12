@@ -6,12 +6,12 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 import { LoteImportacao, LoteImportacaoDocument } from '../lote-importacao/schemas/lote-importacao.schema';
+import { v4 as uuidv4 } from 'uuid';
 
 
 @Injectable()
 export class TurmasService {
   constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
-  @InjectModel(LoteImportacao.name) private loteModel: Model<LoteImportacaoDocument>,
   @InjectConnection() private readonly connection: Connection,) {}
 
 
@@ -127,32 +127,29 @@ export class TurmasService {
       throw new InternalServerErrorException('Erro ao criar turmas em lote.');
     }*/
   async createBatch(dto: CreateTurmaBatchDto) {
-    const result: Turma[] = [];
+    const batchId = uuidv4();
+    const documents = dto.turmas.map(turma => {
 
-    for (const t of dto.turmas) {
     const errors: string[] = [];
 
-    if (!['manhã', 'tarde', 'noite'].includes(t.turno.toLowerCase())) {
-      errors.push(`Turno inválido: ${t.turno}`);
+    if (!['manhã', 'tarde', 'noite'].includes(turma.turno.toLowerCase())) {
+  errors.push(`Turno inválido: ${turma.turno}`);
     }
-
-    if (!t.codigoDisciplina || !t.codigoTurma || !t.nomeTurma) {
+    if (!turma.codigoDisciplina || !turma.codigoTurma || !turma.nomeTurma) {
       errors.push('Campos obrigatórios ausentes');
     }
 
-    const valid = errors.length === 0;
-
-    const turma = new this.turmaModel({
-      ...t,
-      batchId: dto.batchId,
-      valid,
+    return {
+      ...turma,
+      batchId,
+      valid: errors.length === 0,
       validationErrors: errors,
-    });
-
-    await turma.save();
-    result.push(turma);
-
-      }
-      return result;
-    }
+    };
+});
+const saved = await this.turmaModel.insertMany(documents);
+return {
+  batchId,
+  turmas: saved,
+};
+}
 }

@@ -3,12 +3,9 @@ import { Type } from 'class-transformer';
 import { CreateTurmaDto } from './create-turma.dto';
 
 export class CreateTurmaBatchDto {
-@IsUUID()
-@IsNotEmpty()
-batchId: string;
 
-@IsArray()
+/*@IsArray()
 @ValidateNested({ each: true })
-@Type(() => CreateTurmaDto)
+@Type(() => CreateTurmaDto)*/
 turmas: CreateTurmaDto[];
 }

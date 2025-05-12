@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const turmas_service_1 = require("./turmas.service");
 const create_turma_dto_1 = require("./dto/create-turma.dto");
 const update_turma_dto_1 = require("./dto/update-turma.dto");
+const create_turma_batch_dto_1 = require("./dto/create-turma-batch.dto");
 let TurmasController = class TurmasController {
     turmasService;
     constructor(turmasService) {
@@ -56,12 +57,8 @@ let TurmasController = class TurmasController {
             message: 'Turma excluída com sucesso!',
         };
     }
-    async bulkCreate(createTurmasDto) {
-        const turmasCriadas = await this.turmasService.bulkCreate(createTurmasDto);
-        return {
-            message: 'Turmas criadas com sucesso!',
-            data: turmasCriadas,
-        };
+    createBatch(dto) {
+        return this.turmasService.createBatch(dto);
     }
 };
 exports.TurmasController = TurmasController;
@@ -103,13 +100,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "remove", null);
 __decorate([
-    (0, common_1.Post)('bulk'),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    (0, common_1.Post)('batch'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Array]),
-    __metadata("design:returntype", Promise)
-], TurmasController.prototype, "bulkCreate", null);
+    __metadata("design:paramtypes", [create_turma_batch_dto_1.CreateTurmaBatchDto]),
+    __metadata("design:returntype", void 0)
+], TurmasController.prototype, "createBatch", null);
 exports.TurmasController = TurmasController = __decorate([
     (0, common_1.Controller)('turmas'),
     __metadata("design:paramtypes", [turmas_service_1.TurmasService])

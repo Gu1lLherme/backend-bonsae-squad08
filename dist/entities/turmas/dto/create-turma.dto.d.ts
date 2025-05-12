@@ -1,8 +1,7 @@
 export declare class CreateTurmaDto {
     codigoDisciplina: string;
-    turno: 'Manhã' | 'Tarde' | 'Noite';
+    turno: string;
     codigoTurma: string;
     nomeTurma: string;
-    tipo: 'aluno' | 'professor';
-    usuarios?: string[];
+    tipo: string;
 }

@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const turmas_schema_1 = require("./schemas/turmas.schema");
+const uuid_1 = require("uuid");
 let TurmasService = class TurmasService {
     turmaModel;
     connection;
@@ -99,21 +100,28 @@ let TurmasService = class TurmasService {
         const insertedTurmas = await this.turmaModel.insertMany(turmasValidas);
         return insertedTurmas.map(turma => turma.toObject());
     }
-    async bulkCreateWithTransaction(createTurmasDto) {
-        const session = await this.connection.startSession();
-        session.startTransaction();
-        try {
-            const turmasCriadas = await this.turmaModel.insertMany(createTurmasDto, { session });
-            await session.commitTransaction();
-            session.endSession();
-            return turmasCriadas;
-        }
-        catch (error) {
-            await session.abortTransaction();
-            session.endSession();
-            console.error('Erro no bulkCreateWithTransaction:', error);
-            throw new common_1.InternalServerErrorException('Erro ao criar turmas em lote.');
-        }
+    async createBatch(dto) {
+        const batchId = (0, uuid_1.v4)();
+        const documents = dto.turmas.map(turma => {
+            const errors = [];
+            if (!['manhã', 'tarde', 'noite'].includes(turma.turno.toLowerCase())) {
+                errors.push(`Turno inválido: ${turma.turno}`);
+            }
+            if (!turma.codigoDisciplina || !turma.codigoTurma || !turma.nomeTurma) {
+                errors.push('Campos obrigatórios ausentes');
+            }
+            return {
+                ...turma,
+                batchId,
+                valid: errors.length === 0,
+                validationErrors: errors,
+            };
+        });
+        const saved = await this.turmaModel.insertMany(documents);
+        return {
+            batchId,
+            turmas: saved,
+        };
     }
 };
 exports.TurmasService = TurmasService;
@@ -121,6 +129,7 @@ exports.TurmasService = TurmasService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(turmas_schema_1.Turma.name)),
     __param(1, (0, mongoose_1.InjectConnection)()),
-    __metadata("design:paramtypes", [mongoose_2.Model, mongoose_2.Connection])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Connection])
 ], TurmasService);
 //# sourceMappingURL=turmas.service.js.map
