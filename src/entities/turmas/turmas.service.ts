@@ -4,10 +4,14 @@ import { UpdateTurmaDto } from './dto/update-turma.dto';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
+import { LoteImportacao, LoteImportacaoDocument } from '../lote-importacao/schemas/lote-importacao.schema';
+
 
 @Injectable()
 export class TurmasService {
-  constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, @InjectConnection() private readonly connection: Connection,) {}
+  constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
+  @InjectModel(LoteImportacao.name) private loteModel: Model<LoteImportacaoDocument>,
+  @InjectConnection() private readonly connection: Connection,) {}
 
 
   async create(createTurmaDto: CreateTurmaDto): Promise<Turma> {
@@ -52,7 +56,7 @@ export class TurmasService {
     await turma.deleteOne();
   }
 // Validação de turmas em lote
-  async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
+  /*async bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]> {
     if (!Array.isArray(createTurmasDto)) {
       throw new BadRequestException('Payload precisa ser um array de objetos Turma.');
     }
@@ -121,5 +125,61 @@ export class TurmasService {
       console.error('Erro no bulkCreateWithTransaction:', error);
       throw new InternalServerErrorException('Erro ao criar turmas em lote.');
     }
-  }
+  }*/
+ async bulkCreateWithLote(createTurmasDto: CreateTurmaDto[], nomeArquivo: string): Promise<any> {
+  const lote = await this.loteModel.create({
+    loteId: new Date().getTime().toString(), // ou UUID
+    tipo: 'turmas',
+    nomeArquivo,
+    status: 'em_validacao',
+    quantidade_total: createTurmasDto.length,
+    dataEnvio: new Date(),
+  });
+
+  const validas: any[] = [];
+  const invalidas: any[] = [];
+
+  createTurmasDto.forEach((turma, index) => {
+    const erros: string[] = [];
+
+    // regras básicas de validação
+    if (!turma.codigoDisciplina) erros.push('Código da disciplina é obrigatório.');
+    if (!['Manhã', 'Tarde', 'Noite'].includes(turma.turno)) erros.push('Turno inválido.');
+    if (!turma.codigoTurma) erros.push('Código da turma é obrigatório.');
+    if (!turma.nomeTurma) erros.push('Nome da turma é obrigatório.');
+    if (!['aluno', 'professor'].includes(turma.tipo)) erros.push('Tipo inválido.');
+
+    const baseData = {
+      ...turma,
+      loteId: lote.loteId,
+      statusValidacao: erros.length ? 'invalido' : 'valido',
+    };
+
+    if (erros.length) {
+      invalidas.push({ ...baseData });
+      lote.erros?.push({
+        index,
+        mensagens: erros,
+        item: turma,
+      });
+    } else {
+      validas.push({ ...baseData });
+    }
+  });
+
+  const todas = [...validas, ...invalidas];
+  await this.turmaModel.insertMany(todas);
+
+  lote.status = invalidas.length ? 'com_erro' : 'importado';
+  lote.quantidade_sucesso = validas.length;
+  await lote.save();
+
+  return {
+    message: 'Turmas importadas com sucesso!',
+    loteId: lote.loteId,
+    total: todas.length,
+    sucesso: validas.length,
+    erros: lote.erros,
+  };
+}
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Query} from '@nestjs/common';
 import { TurmasService } from './turmas.service';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
@@ -55,7 +55,7 @@ export class TurmasController {
     };
   }
 
-  @Post('bulk')
+  /*@Post('bulk')
   @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
   async bulkCreate(@Body() createTurmasDto: CreateTurmaDto[]) {
     const turmasCriadas = await this.turmasService.bulkCreate(createTurmasDto);
@@ -63,5 +63,14 @@ export class TurmasController {
       message: 'Turmas criadas com sucesso!',
       data: turmasCriadas,
     };
-  }
+  }*/
+
+  @Post('bulklote')
+async importarTurmasEmLote(
+  @Body() turmas: CreateTurmaDto[],
+  @Query('arquivo') nomeArquivo: string
+) {
+  return await this.turmasService.bulkCreateWithLote(turmas, nomeArquivo);
+}
+
 }
