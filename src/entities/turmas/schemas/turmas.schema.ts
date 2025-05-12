@@ -7,16 +7,16 @@ export type TurmaDocument = Turma & Document;
 @Schema({ collection: 'turmas' }) // Define o nome da coleção no MongoDB
 export class Turma {
   
-  @Prop({ required: true })
+  @Prop()
   codigoDisciplina: string; 
 
-  @Prop({ required: true })
+  @Prop()
   turno: string;
 
-  @Prop({ required: true })
+  @Prop()
   codigoTurma: string;
 
-  @Prop({ required: true })
+  @Prop()
   nomeTurma: string; 
 
   @Prop({ required: true, enum: ['aluno', 'professor'] })
