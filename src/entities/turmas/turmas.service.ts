@@ -175,7 +175,7 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
   });
 
   // Salva todas, válidas ou não
-  await this.turmaModel.insertMany(turmasComStatus);
+  await this.turmaModel.insertMany(turmasComStatus.filter(turma => turma.valid), { ordered: false }); 
 
   return {
     batchId,

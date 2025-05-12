@@ -103,8 +103,9 @@ let TurmasService = class TurmasService {
         const insertedTurmas = await this.turmaModel.insertMany(turmasValidas);
         return insertedTurmas.map(turma => turma.toObject());
     }
-    async createBatch(turmas) {
+    async createBatch(dto) {
         const batchId = (0, uuid_1.v4)();
+        const turmas = dto.turmas;
         const turmasComStatus = turmas.map((turma) => {
             const instance = (0, class_transformer_1.plainToInstance)(create_turma_dto_1.CreateTurmaDto, turma);
             const errors = (0, class_validator_1.validateSync)(instance);

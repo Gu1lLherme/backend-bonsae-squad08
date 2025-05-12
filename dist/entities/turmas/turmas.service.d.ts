@@ -1,5 +1,6 @@
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
+import { CreateTurmaBatchDto } from './dto/create-turma-batch.dto';
 import { Model, Connection } from 'mongoose';
 import { Turma, TurmaDocument } from './schemas/turmas.schema';
 export declare class TurmasService {
@@ -12,7 +13,7 @@ export declare class TurmasService {
     update(id: string, updateTurmaDto: UpdateTurmaDto): Promise<Turma>;
     remove(id: string): Promise<void>;
     bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]>;
-    createBatch(turmas: any[]): Promise<{
+    createBatch(dto: CreateTurmaBatchDto): Promise<{
         batchId: string;
         turmas: any[];
     }>;
