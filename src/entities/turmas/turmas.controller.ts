@@ -10,7 +10,6 @@ export class TurmasController {
   constructor(private readonly turmasService: TurmasService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
   async create(@Body() createTurmaDto: CreateTurmaDto) {
     const turma = await this.turmasService.create(createTurmaDto);
     return {
@@ -68,8 +67,8 @@ export class TurmasController {
   }*/
 
 @Post('batch')
-createBatch(@Body() dto: CreateTurmaBatchDto) {
-return this.turmasService.createBatch(dto);
+async createBatch(@Body() dto: CreateTurmaBatchDto) {
+  return this.turmasService.createBatch(dto);
 }
 }
 

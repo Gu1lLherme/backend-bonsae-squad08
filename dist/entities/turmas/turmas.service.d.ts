@@ -24,10 +24,11 @@ export declare class TurmasService {
             valid: boolean;
             validationErrors: string[];
             codigoDisciplina: string;
-            turno: string;
+            turno: "Manh\u00E3" | "Tarde" | "Noite";
             codigoTurma: string;
             nomeTurma: string;
-            tipo: string;
+            tipo: "aluno" | "professor";
+            usuarios?: string[];
         }, "_id">>[];
     }>;
 }
