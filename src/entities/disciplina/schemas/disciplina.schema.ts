@@ -31,6 +31,13 @@ export class Disciplina {
 
   @Prop()
   campus?: string;
+
+  @Prop({ required: true }) batchId: string; // Identificador do lote
+
+  @Prop({ default: true }) valid: boolean;
+
+  @Prop({ default: null, type: [String] }) validationErrors?: string[];
+  
 }
 
 export const DisciplinaSchema = SchemaFactory.createForClass(Disciplina);

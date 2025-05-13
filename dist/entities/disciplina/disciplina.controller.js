@@ -81,7 +81,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DisciplinaController.prototype, "createBatch", null);
 __decorate([
-    (0, common_1.Patch)(':id/revalidar'),
+    (0, common_1.Patch)(':id/revalida-batch'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
