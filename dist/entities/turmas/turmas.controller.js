@@ -28,9 +28,6 @@ let TurmasController = class TurmasController {
     async revalidarTurma(id, updateDto) {
         return this.turmasService.updateInvalidTurmas(id, updateDto);
     }
-    async persistirValidas(batchId) {
-        return this.turmasService.salvarValidasSql(batchId);
-    }
 };
 exports.TurmasController = TurmasController;
 __decorate([
@@ -48,13 +45,6 @@ __decorate([
     __metadata("design:paramtypes", [String, update_turma_dto_1.UpdateTurmaDto]),
     __metadata("design:returntype", Promise)
 ], TurmasController.prototype, "revalidarTurma", null);
-__decorate([
-    (0, common_1.Post)('persistir-validas/:batchId'),
-    __param(0, (0, common_1.Param)('batchId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], TurmasController.prototype, "persistirValidas", null);
 exports.TurmasController = TurmasController = __decorate([
     (0, common_1.Controller)('turmas'),
     __metadata("design:paramtypes", [turmas_service_1.TurmasService])

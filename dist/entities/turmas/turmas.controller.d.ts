@@ -9,5 +9,4 @@ export declare class TurmasController {
         turmas: any[];
     }>;
     revalidarTurma(id: string, updateDto: UpdateTurmaDto): Promise<any>;
-    persistirValidas(batchId: string): Promise<any>;
 }

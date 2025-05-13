@@ -17,12 +17,13 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TurmasService {
-  
+  /*
   @InjectRepository(TurmaSQLEntity)
   private readonly turmaSqlRepo: Repository<TurmaSQLEntity>;
 
   @InjectModel("Turma")
    private readonly turmaMongoModel: Model<any>;
+   */
 
   constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
   @InjectConnection() private readonly connection: Connection,) {}
