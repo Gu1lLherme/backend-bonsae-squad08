@@ -6,6 +6,8 @@ import { Turma, TurmaDocument } from './schemas/turmas.schema';
 export declare class TurmasService {
     private turmaModel;
     private readonly connection;
+    private readonly turmaSqlRepo;
+    private readonly turmaMongoModel;
     constructor(turmaModel: Model<TurmaDocument>, connection: Connection);
     create(createTurmaDto: CreateTurmaDto): Promise<Turma>;
     findAll(): Promise<Turma[]>;
@@ -18,4 +20,7 @@ export declare class TurmasService {
         turmas: any[];
     }>;
     updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any>;
+    salvarValidasSql(batchId: string): Promise<{
+        count: number;
+    }>;
 }

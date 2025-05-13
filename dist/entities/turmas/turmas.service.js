@@ -22,9 +22,14 @@ const turmas_schema_1 = require("./schemas/turmas.schema");
 const uuid_1 = require("uuid");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const typeorm_1 = require("@nestjs/typeorm");
+const turma_sql_entity_1 = require("./entities/turma-sql.entity");
+const typeorm_2 = require("typeorm");
 let TurmasService = class TurmasService {
     turmaModel;
     connection;
+    turmaSqlRepo;
+    turmaMongoModel;
     constructor(turmaModel, connection) {
         this.turmaModel = turmaModel;
         this.connection = connection;
@@ -145,8 +150,29 @@ let TurmasService = class TurmasService {
             data: turma,
         };
     }
+    async salvarValidasSql(batchId) {
+        const turmasValidas = await this.turmaMongoModel.find({ batchId, valid: true }).lean();
+        const entidades = turmasValidas.map((turma) => this.turmaSqlRepo.create({
+            codigoDisciplina: turma.codigoDisciplina,
+            turno: turma.turno,
+            codigoTurma: turma.codigoTurma,
+            nomeTurma: turma.nomeTurma,
+            tipo: turma.tipo,
+            usuarios: turma.usuarios ?? [],
+        }));
+        await this.turmaSqlRepo.save(entidades);
+        return { count: entidades.length };
+    }
 };
 exports.TurmasService = TurmasService;
+__decorate([
+    (0, typeorm_1.InjectRepository)(turma_sql_entity_1.TurmaSQLEntity),
+    __metadata("design:type", typeorm_2.Repository)
+], TurmasService.prototype, "turmaSqlRepo", void 0);
+__decorate([
+    (0, mongoose_1.InjectModel)("Turma"),
+    __metadata("design:type", mongoose_2.Model)
+], TurmasService.prototype, "turmaMongoModel", void 0);
 exports.TurmasService = TurmasService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(turmas_schema_1.Turma.name)),

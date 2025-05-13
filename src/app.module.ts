@@ -14,6 +14,7 @@ import { LoteImportacaoModule } from './entities/lote-importacao/lote-importacao
 
 @Module({
   imports: [
+    /*
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: "localhost",
@@ -21,12 +22,12 @@ import { LoteImportacaoModule } from './entities/lote-importacao/lote-importacao
       username: 'postgres',
       password: 'mat123',
       database: 'bancoteste1',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], // ajuste o path quando houver entidades
-      synchronize: true, // ajuste conforme necessário
-    }),
+      entities: [__dirname + '*.entity{.ts,.js}'], // ajuste o path quando houver entidades
+        
+    }),*/
 
     TurmasModule,
-
+    
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],

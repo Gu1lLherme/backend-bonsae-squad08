@@ -23,6 +23,8 @@ async revalidarTurma(
   return this.turmasService.updateInvalidTurmas(id, updateDto);
 }
 
+
+//Não conecta ao Sql ainda, logo não funciona
 @Post('persistir-validas/:batchId')
 async persistirValidas(@Param('batchId') batchId: string) {
   return this.turmasService.salvarValidasSql(batchId);
