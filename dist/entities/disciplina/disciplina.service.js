@@ -106,7 +106,7 @@ let DisciplinaService = class DisciplinaService {
         const batchId = (0, uuid_1.v4)();
         const disciplinas = dto.disciplinas;
         const disciplinasComStatus = disciplinas.map((disciplina) => {
-            const instance = (0, class_transformer_1.plainToInstance)(create_disciplina_dto_1.CreateDisciplinaDto, disciplinas);
+            const instance = (0, class_transformer_1.plainToInstance)(create_disciplina_dto_1.CreateDisciplinaDto, disciplina);
             const errors = (0, class_validator_1.validateSync)(instance);
             const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
             return {
