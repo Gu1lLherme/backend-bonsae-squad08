@@ -16,11 +16,11 @@ import { LoteImportacaoModule } from './entities/lote-importacao/lote-importacao
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
+      host: "localhost",
       port: 3000, // ajuste a porta se necessário
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      username: 'postgres',
+      password: 'mat123',
+      database: 'bancoteste1',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], // ajuste o path quando houver entidades
       synchronize: true, // ajuste conforme necessário
     }),
