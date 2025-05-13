@@ -1,0 +1,26 @@
+{
+  "disciplinas": [
+    {
+      "periodoLetivo": "2025.1",
+      "disciplina": "Matemática",
+      "codigoDisciplina": "MAT-101",
+      "dataInicial": "2025-01-15T00:00:00.000Z",
+      "dataFinal": "2025-06-15T00:00:00.000Z",
+      "categoria": "TCC",
+      "periodoCurricular": "1°",
+      "estado": "Ativa",
+      "campus": "Campus Central"
+    },
+    {
+      "periodoLetivo": "", //invalido 
+      "disciplina": "História",
+      "codigoDisciplina": "HIS-201",
+      "dataInicial": "2025-01-10T00:00:00.000Z",
+      "dataFinal": "2025-06-10T00:00:00.000Z",
+      "categoria": "", //invalido
+      "periodoCurricular": "2°",
+      "estado": "Inativa",
+      "campus": "Campus Sul"
+    }
+  ]
+}
