@@ -14,6 +14,19 @@ import { LoteImportacaoModule } from './entities/lote-importacao/lote-importacao
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: 3000, // ajuste a porta se necessário
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'], // ajuste o path quando houver entidades
+      synchronize: true, // ajuste conforme necessário
+    }),
+
+    TurmasModule,
+
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],

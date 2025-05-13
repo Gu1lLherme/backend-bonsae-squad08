@@ -9,10 +9,21 @@ import { LoteImportacao, LoteImportacaoDocument } from '../lote-importacao/schem
 import { v4 as uuidv4 } from 'uuid';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { count } from 'console';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TurmaSQLEntity } from './entities/turma-sql.entity';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class TurmasService {
+  
+  @InjectRepository(TurmaSQLEntity)
+  private readonly turmaSqlRepo: Repository<TurmaSQLEntity>;
+
+  @InjectModel("Turma")
+   private readonly turmaMongoModel: Model<any>;
+
   constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
   @InjectConnection() private readonly connection: Connection,) {}
 
@@ -216,5 +227,26 @@ async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
     message: 'Turma atualizada com sucesso!',
     data: turma,
   };
+}
+
+async salvarValidasSql(batchId: string) {
+  const turmasValidas = await this.turmaMongoModel.find(
+    { batchId, valid: true }
+  ).lean();
+
+  
+  const entidades = turmasValidas.map((turma) => 
+    this.turmaSqlRepo.create({ 
+      codigoDisciplina: turma.codigoDisciplina,
+      turno: turma.turno,
+      codigoTurma: turma.codigoTurma,
+      nomeTurma: turma.nomeTurma,
+      tipo: turma.tipo,
+      usuarios: turma.usuarios ?? [],
+     }),
+    );
+ 
+  await this.turmaSqlRepo.save(entidades);
+  return { count: entidades.length };
 }
 }

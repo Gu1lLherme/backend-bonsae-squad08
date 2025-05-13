@@ -9,7 +9,28 @@ import { Turma } from './schemas/turmas.schema';
 export class TurmasController {
   constructor(private readonly turmasService: TurmasService) {}
 
-  @Post()
+  
+
+@Post('batch')
+async createBatch(@Body() dto: CreateTurmaBatchDto) {
+  return this.turmasService.createBatch(dto);
+}
+
+@Patch(':id/revalidar')
+async revalidarTurma(
+  @Param('id') id: string, @Body() updateDto: UpdateTurmaDto
+) {
+  return this.turmasService.updateInvalidTurmas(id, updateDto);
+}
+
+@Post('persistir-validas/:batchId')
+async persistirValidas(@Param('batchId') batchId: string) {
+  return this.turmasService.salvarValidasSql(batchId);
+}
+
+}
+
+/*@Post()
   async create(@Body() createTurmaDto: CreateTurmaDto) {
     const turma = await this.turmasService.create(createTurmaDto);
     return {
@@ -65,16 +86,3 @@ export class TurmasController {
       data: turmasCriadas,
     };
   }*/
-
-@Post('batch')
-async createBatch(@Body() dto: CreateTurmaBatchDto) {
-  return this.turmasService.createBatch(dto);
-}
-
-@Patch(':id/revalidar')
-async revalidarTurma(
-  @Param('id') id: string, @Body() updateDto: UpdateTurmaDto
-) {
-  return this.turmasService.updateInvalidTurmas(id, updateDto);
-}
-}
