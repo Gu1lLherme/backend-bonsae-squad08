@@ -70,6 +70,11 @@ export class TurmasController {
 async createBatch(@Body() dto: CreateTurmaBatchDto) {
   return this.turmasService.createBatch(dto);
 }
+
+@Patch(':id/revalidar')
+async revalidarTurma(
+  @Param('id') id: string, @Body() updateDto: UpdateTurmaDto
+) {
+  return this.turmasService.updateInvalidTurmas(id, updateDto);
 }
-
-
+}
