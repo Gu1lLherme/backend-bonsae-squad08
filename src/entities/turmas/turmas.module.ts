@@ -10,7 +10,7 @@ import { TurmaSQLEntity } from './entities/turma-sql.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Turma.name, schema: TurmaSchema }]),
-    TypeOrmModule.forFeature([TurmaSQLEntity]), // Habilita a injeção de repositórios da entidade
+    //TypeOrmModule.forFeature([TurmaSQLEntity]), // Habilita a injeção de repositórios da entidade
   ],
   controllers: [TurmasController],
   providers: [TurmasService],
