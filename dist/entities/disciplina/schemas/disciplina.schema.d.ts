@@ -10,6 +10,9 @@ export declare class Disciplina {
     periodoCurricular?: string;
     estado?: string;
     campus?: string;
+    batchId: string;
+    valid: boolean;
+    validationErrors?: string[];
 }
 export declare const DisciplinaSchema: import("mongoose").Schema<Disciplina, import("mongoose").Model<Disciplina, any, any, any, Document<unknown, any, Disciplina> & Disciplina & {
     _id: Types.ObjectId;

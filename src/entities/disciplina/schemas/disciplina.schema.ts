@@ -1,9 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Collection, Document, Types } from 'mongoose';
 
 export type DisciplinaDocument = Disciplina & Document;
 
-@Schema()
+
+@Schema({ timestamps: true, versionKey: false })
+@Schema({ collection: 'disciplinas' }) // Define o nome da coleção no MongoDB
 export class Disciplina {
   @Prop()
   periodoLetivo: string; // Identição do período letivo
@@ -37,7 +39,7 @@ export class Disciplina {
   @Prop({ default: true }) valid: boolean;
 
   @Prop({ default: null, type: [String] }) validationErrors?: string[];
-  
+
 }
 
 export const DisciplinaSchema = SchemaFactory.createForClass(Disciplina);

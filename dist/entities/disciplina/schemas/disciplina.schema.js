@@ -21,6 +21,9 @@ let Disciplina = class Disciplina {
     periodoCurricular;
     estado;
     campus;
+    batchId;
+    valid;
+    validationErrors;
 };
 exports.Disciplina = Disciplina;
 __decorate([
@@ -59,6 +62,18 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Disciplina.prototype, "campus", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Disciplina.prototype, "batchId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: true }),
+    __metadata("design:type", Boolean)
+], Disciplina.prototype, "valid", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: null, type: [String] }),
+    __metadata("design:type", Array)
+], Disciplina.prototype, "validationErrors", void 0);
 exports.Disciplina = Disciplina = __decorate([
     (0, mongoose_1.Schema)()
 ], Disciplina);
