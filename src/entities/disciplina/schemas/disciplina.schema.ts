@@ -5,22 +5,22 @@ export type DisciplinaDocument = Disciplina & Document;
 
 @Schema()
 export class Disciplina {
-  @Prop({ required: true })
+  @Prop()
   periodoLetivo: string; // Identição do período letivo
 
-  @Prop({ required: true })
+  @Prop()
   disciplina: string;
 
-  @Prop({ required: true, unique: true, sparse: true })
+  @Prop()
   codigoDisciplina: string;
 
-  @Prop({ required: true })
+  @Prop()
   dataInicial: Date;
 
-  @Prop({ required: true })
+  @Prop()
   dataFinal: Date;
 
-  @Prop({ required: true, enum: ['Curso', 'NPJ', 'Projetos Extensionistas', 'TCC'] })
+  @Prop()
   categoria: string;
 
   @Prop()
