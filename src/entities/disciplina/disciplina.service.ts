@@ -106,7 +106,7 @@ export class DisciplinaService {
     const disciplinas = dto.disciplinas;
     
     const disciplinasComStatus = disciplinas.map((disciplina) => {
-      const instance = plainToInstance(CreateDisciplinaDto, disciplinas);
+      const instance = plainToInstance(CreateDisciplinaDto, disciplina);
       const errors = validateSync(instance);
 
       const validationErrors = errors.map((e) => 

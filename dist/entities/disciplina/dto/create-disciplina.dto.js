@@ -9,15 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateDisciplinaDto = exports.CategoriaDisciplina = void 0;
+exports.CreateDisciplinaDto = void 0;
 const class_validator_1 = require("class-validator");
-var CategoriaDisciplina;
-(function (CategoriaDisciplina) {
-    CategoriaDisciplina["Curso"] = "Curso";
-    CategoriaDisciplina["NPJ"] = "NPJ";
-    CategoriaDisciplina["ProjetosExtensionistas"] = "Projetos Extensionistas";
-    CategoriaDisciplina["TCC"] = "TCC";
-})(CategoriaDisciplina || (exports.CategoriaDisciplina = CategoriaDisciplina = {}));
 class CreateDisciplinaDto {
     periodoLetivo;
     disciplina;
@@ -57,7 +50,7 @@ __decorate([
 ], CreateDisciplinaDto.prototype, "dataFinal", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'Categoria é obrigatória.' }),
-    (0, class_validator_1.IsEnum)(CategoriaDisciplina, { message: 'Categoria inválida.' }),
+    (0, class_validator_1.IsEnum)(["Curso", "TCC", "NPJ", "Projetos Extencionistas"], { message: 'Categoria inválida, a categoria deve se enquadrar em: "Curso","TCC","NPJ","Projetos Extencionistas"' }),
     __metadata("design:type", String)
 ], CreateDisciplinaDto.prototype, "categoria", void 0);
 __decorate([
