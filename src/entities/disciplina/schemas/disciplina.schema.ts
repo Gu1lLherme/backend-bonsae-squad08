@@ -36,7 +36,7 @@ export class Disciplina {
 
   @Prop({ required: true }) batchId: string; // Identificador do lote
 
-  @Prop({ default: true }) valid: boolean;
+  @Prop({ default: false }) valid: boolean;
 
   @Prop({ default: null, type: [String] }) validationErrors?: string[];
 

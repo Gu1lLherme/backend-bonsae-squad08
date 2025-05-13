@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
@@ -140,6 +140,9 @@ async updateInvalidDisciplinas(id: string, updateDto: UpdateDisciplinaDto): Prom
   );
   const valid = validationErrors.length === 0;
 
+  if (!Object.keys(updateDto).length) {
+throw new BadRequestException('Nenhum campo foi enviado para atualização.');
+}
   const disciplina = await this.disciplinaModel.findByIdAndUpdate(
     id,
     {
@@ -149,12 +152,17 @@ async updateInvalidDisciplinas(id: string, updateDto: UpdateDisciplinaDto): Prom
     },
     { new: true }
   );
-
-  if (!disciplina) {
-    throw new BadRequestException('Disciplina não encontrada.');
+    if (!disciplina) {
+throw new NotFoundException('Disciplina não encontrada após tentativa de update.');
+}
+  if (disciplina.valid) {
+    throw new BadRequestException('Disciplina já está válida.');
   }
+
   return {
-    message: 'Disciplina atualizada com sucesso!',
+    message: valid
+? 'Disciplina atualizada e validada com sucesso.'
+: 'Disciplina atualizada, mas ainda contém erros de validação.',
     data: disciplina,
   };
 }
