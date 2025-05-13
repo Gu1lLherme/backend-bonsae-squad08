@@ -27,7 +27,7 @@ export class Turma {
 
   @Prop({ required: true }) batchId: string; // Identificador do lote
 
-  @Prop({ default: false }) valid: boolean;
+  @Prop({ default: true }) valid: boolean;
 
   @Prop({ default: null, type: [String] }) validationErrors?: string[];
 }
