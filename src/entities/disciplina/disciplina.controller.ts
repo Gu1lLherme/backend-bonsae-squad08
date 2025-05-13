@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, Validation
 import { DisciplinaService } from './disciplina.service';
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
+import { CreateDisciplinaBatchDto } from './dto/create-disciplina-batch.dto';
 
 @Controller('disciplina')
 export class DisciplinaController {
@@ -26,6 +27,18 @@ export class DisciplinaController {
         message: 'Disciplinas criadas com sucesso!',
         data: disciplinasCriadas,
       };
+    }
+
+    @Post('batch')
+    async createBatch(@Body() dto: CreateDisciplinaBatchDto) {
+      return this.disciplinaService.createBatch(dto);
+    }
+    
+    @Patch(':id/revalidar')
+    async revalidarTurma(
+      @Param('id') id: string, @Body() updateDto: UpdateDisciplinaDto
+    ) {
+      return this.disciplinaService.updateInvalidDisciplinas(id, updateDto);
     }
 
   @Get()

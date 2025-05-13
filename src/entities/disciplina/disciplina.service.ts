@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { Disciplina, DisciplinaDocument } from './schemas/disciplina.schema';
 import { CreateDisciplinaBatchDto } from './dto/create-disciplina-batch.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -125,9 +125,38 @@ await this.disciplinaModel.insertMany(disciplinasComStatus)
       batchId,
       disciplinas: disciplinasComStatus,
     };
-    
+}
 
+async updateInvalidDisciplinas(id: string, updateDto: UpdateDisciplinaDto): Promise<any> {
+  if (!isValidObjectId(id)) {
+    throw new BadRequestException('ID inválido.');
+  }
+
+  const instance = plainToInstance(UpdateDisciplinaDto, updateDto);
+  const errors = validateSync(instance);
+
+  const validationErrors = errors.map((e) =>
+    Object.values(e.constraints || {}).join(', ')
+  );
+  const valid = validationErrors.length === 0;
+
+  const disciplina = await this.disciplinaModel.findByIdAndUpdate(
+    id,
+    {
+      $set: { ...updateDto, 
+        valid, 
+        validationErrors ,}
+    },
+    { new: true }
+  );
+
+  if (!disciplina) {
+    throw new BadRequestException('Disciplina não encontrada.');
+  }
+  return {
+    message: 'Disciplina atualizada com sucesso!',
+    data: disciplina,
+  };
 }
-}
-  
+  }
 
