@@ -4,6 +4,10 @@ import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { Disciplina, DisciplinaDocument } from './schemas/disciplina.schema';
+import { CreateDisciplinaBatchDto } from './dto/create-disciplina-batch.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
 @Injectable()
 export class DisciplinaService {
@@ -96,4 +100,34 @@ export class DisciplinaService {
   remove(id: number) {
     return `This action removes a #${id} disciplina`;
   }
+
+  async createBatch(dto: CreateDisciplinaBatchDto): Promise<{batchId: string; disciplinas: any[]}> {
+    const batchId = uuidv4();
+    const disciplinas = dto.disciplinas;
+    
+    const disciplinasComStatus = disciplinas.map((disciplina) => {
+      const instance = plainToInstance(CreateDisciplinaDto, disciplinas);
+      const errors = validateSync(instance);
+
+      const validationErrors = errors.map((e) => 
+        Object.values(e.constraints || {}).join(', '));
+      
+      return {
+        ...disciplina,
+        batchId,
+        valid: validationErrors.length === 0,
+        validationErrors,
+      };
+    });
+await this.disciplinaModel.insertMany(disciplinasComStatus)
+
+    return {
+      batchId,
+      disciplinas: disciplinasComStatus,
+    };
+    
+
 }
+}
+  
+
