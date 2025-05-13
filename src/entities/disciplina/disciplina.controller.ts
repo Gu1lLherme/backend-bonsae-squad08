@@ -8,7 +8,7 @@ import { CreateDisciplinaBatchDto } from './dto/create-disciplina-batch.dto';
 export class DisciplinaController {
   constructor(private readonly disciplinaService: DisciplinaService) {}
 
-  @Post()
+  /*@Post()
   @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
   async create(@Body() createDisciplinaDto: CreateDisciplinaDto) {
     const disciplina = await this.disciplinaService.create(createDisciplinaDto);
@@ -27,7 +27,7 @@ export class DisciplinaController {
         message: 'Disciplinas criadas com sucesso!',
         data: disciplinasCriadas,
       };
-    }
+    }*/
 
     @Post('batch')
     async createBatch(@Body() dto: CreateDisciplinaBatchDto) {

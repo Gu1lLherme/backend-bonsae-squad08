@@ -11,7 +11,7 @@ export declare class DisciplinaController {
     }>;
     bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<{
         message: string;
-        data: import("./schemas/disciplina.schema").Disciplina[];
+        data: any;
     }>;
     createBatch(dto: CreateDisciplinaBatchDto): Promise<{
         batchId: string;

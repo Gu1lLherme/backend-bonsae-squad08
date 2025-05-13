@@ -8,7 +8,6 @@ export declare class DisciplinaService {
     private readonly connection;
     constructor(disciplinaModel: Model<DisciplinaDocument>, connection: Connection);
     create(createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina>;
-    bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<Disciplina[]>;
     findAll(): string;
     findOne(id: number): string;
     update(id: number, updateDisciplinaDto: UpdateDisciplinaDto): string;

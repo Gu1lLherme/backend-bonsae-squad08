@@ -37,59 +37,6 @@ let DisciplinaService = class DisciplinaService {
         const novaDisciplina = new this.disciplinaModel(createDisciplinaDto);
         return novaDisciplina.save();
     }
-    async bulkCreate(createDisciplinasDto) {
-        if (!Array.isArray(createDisciplinasDto) || createDisciplinasDto.length === 0) {
-            throw new common_1.BadRequestException('Payload precisa ser uma lista de disciplinas.');
-        }
-        const erros = [];
-        const disciplinasValidas = createDisciplinasDto.filter((disciplina, index) => {
-            const problemas = [];
-            if (typeof disciplina.codigoDisciplina !== 'string' || disciplina.codigoDisciplina.trim() === '') {
-                problemas.push('Código da disciplina é obrigatório.');
-            }
-            if (!disciplina.dataInicial || isNaN(Date.parse(disciplina.dataInicial.toString())))
-                problemas.push('Data inicial inválida.');
-            if (!disciplina.dataFinal || isNaN(Date.parse(disciplina.dataFinal.toString())))
-                problemas.push('Data final inválida.');
-            if (!disciplina.categoria)
-                problemas.push('Categoria é obrigatória.');
-            if (problemas.length > 0) {
-                erros.push({ index, error: problemas.join(' | ') });
-                return false;
-            }
-            return true;
-        });
-        if (erros.length > 0) {
-            throw new common_1.BadRequestException({
-                message: 'Erros de validação nas disciplinas.',
-                erros,
-            });
-        }
-        if (disciplinasValidas.length === 0) {
-            throw new common_1.BadRequestException({
-                message: 'Nenhuma disciplina válida foi enviada.',
-                erros,
-            });
-        }
-        if (erros.length > 0) {
-            throw new common_1.BadRequestException({
-                message: 'Algumas disciplinas foram rejeitadas.',
-                erros,
-            });
-        }
-        const disciplinasSanitizadas = disciplinasValidas.map(d => ({
-            ...d,
-            codigoDisciplina: d.codigoDisciplina.trim(),
-        }));
-        try {
-            const insertedDisciplinas = await this.disciplinaModel.insertMany(disciplinasSanitizadas);
-            return insertedDisciplinas.map(d => d.toObject());
-        }
-        catch (error) {
-            console.error('Erro ao inserir disciplinas em lote:', error);
-            throw new common_1.InternalServerErrorException('Erro ao salvar disciplinas.');
-        }
-    }
     findAll() {
         return `This action returns all disciplina`;
     }
