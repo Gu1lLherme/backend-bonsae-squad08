@@ -1,12 +1,7 @@
 import { Prop } from '@nestjs/mongoose';
 import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export enum CategoriaDisciplina {
-  Curso = 'Curso',
-  NPJ = 'NPJ',
-  ProjetosExtensionistas = 'Projetos Extensionistas',
-  TCC = 'TCC',
-}
+
 
 export class CreateDisciplinaDto {
   @IsNotEmpty({ message: 'Período Letivo é obrigatório.' })
@@ -30,8 +25,8 @@ export class CreateDisciplinaDto {
   dataFinal: string;
 
   @IsNotEmpty({ message: 'Categoria é obrigatória.' })
-  @IsEnum(CategoriaDisciplina, { message: 'Categoria inválida.' })
-  categoria: CategoriaDisciplina;
+  @IsEnum(["Curso","TCC","NPJ","Projetos Extencionistas"], { message: 'Categoria inválida, a categoria deve se enquadrar em: "Curso","TCC","NPJ","Projetos Extencionistas"' })
+  categoria: "Curso"| "TCC"| "NPJ"| "Projetos Extencionistas";
 
   @IsOptional()
   @IsString()
