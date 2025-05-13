@@ -34,7 +34,7 @@ export class DisciplinaController {
       return this.disciplinaService.createBatch(dto);
     }
     
-    @Patch(':id/revalidar')
+    @Patch(':id/revalida-batch')
     async revalidarTurma(
       @Param('id') id: string, @Body() updateDto: UpdateDisciplinaDto
     ) {
