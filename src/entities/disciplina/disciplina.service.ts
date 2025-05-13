@@ -29,7 +29,7 @@ export class DisciplinaService {
     return novaDisciplina.save();
   }
 
-  async bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<Disciplina[]> {
+  /*async bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<Disciplina[]> {
     if (!Array.isArray(createDisciplinasDto) || createDisciplinasDto.length === 0) {
       throw new BadRequestException('Payload precisa ser uma lista de disciplinas.');
     }
@@ -83,7 +83,7 @@ export class DisciplinaService {
     console.error('Erro ao inserir disciplinas em lote:', error);
     throw new InternalServerErrorException('Erro ao salvar disciplinas.');
   }
-}
+}*/
 
   findAll() {
     return `This action returns all disciplina`;
