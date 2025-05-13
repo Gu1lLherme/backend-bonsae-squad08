@@ -25,23 +25,23 @@ let Turma = class Turma {
 };
 exports.Turma = Turma;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Turma.prototype, "codigoDisciplina", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Turma.prototype, "turno", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Turma.prototype, "codigoTurma", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Turma.prototype, "nomeTurma", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, enum: ['aluno', 'professor'] }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Turma.prototype, "tipo", void 0);
 __decorate([

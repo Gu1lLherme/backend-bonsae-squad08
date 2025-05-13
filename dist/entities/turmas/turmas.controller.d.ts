@@ -29,4 +29,5 @@ export declare class TurmasController {
         batchId: string;
         turmas: any[];
     }>;
+    revalidarTurma(id: string, updateDto: UpdateTurmaDto): Promise<any>;
 }

@@ -5,7 +5,7 @@ export declare class Turma {
     turno: string;
     codigoTurma: string;
     nomeTurma: string;
-    tipo: 'aluno' | 'professor';
+    tipo: string;
     usuarios?: Types.ObjectId[];
     batchId: string;
     valid: boolean;

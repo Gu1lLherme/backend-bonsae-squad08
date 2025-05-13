@@ -182,5 +182,22 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
     turmas: turmasComStatus,
   };
 }
+
+async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
+  const instance = plainToInstance(UpdateTurmaDto, updateDto);
+  const errors = validateSync(instance);
+
+  const validationErrors = errors.map((e) =>
+    Object.values(e.constraints || {}).join(', ')
+  );
+
+  const validacao = validationErrors.length === 0;
+
+  const atualizados = await this.turmaModel.findByIdAndUpdate(
+    id,
+    { ...updateDto, validacao, validationErrors },
+    { new: true }
+  );
+  }
 }
 
