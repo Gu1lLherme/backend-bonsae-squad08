@@ -5,17 +5,23 @@ export type PeriodoLetivoDocument = PeriodoLetivo & Document;
 
 @Schema({timestamps:true})
 export class PeriodoLetivo {
-    @Prop({ required: true, unique: true })
+    @Prop()
     codigoPeriodoLetivo: string;
   
-    @Prop({ required: true })
+    @Prop()
     periodoLetivo: string;
   
-    @Prop({ required: true })
+    @Prop()
     dataInicial: Date;
   
-    @Prop({ required: true })
+   @Prop()
     dataFinal: Date;
+
+    @Prop({ required: true }) batchId: string; // Identificador do lote
+
+  @Prop({ default: false }) valid: boolean;
+
+  @Prop({ default: null, type: [String] }) validationErrors?: string[];
   }
   
   export const PeriodoLetivoSchema = SchemaFactory.createForClass(PeriodoLetivo);

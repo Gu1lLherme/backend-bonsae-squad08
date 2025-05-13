@@ -4,6 +4,11 @@ import { Model, Connection } from 'mongoose';
 import { PeriodoLetivo, PeriodoLetivoDocument } from './schemas/periodo-letivo.schema';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
+import { CreateTurmaBatchDto } from '../turmas/dto/create-turma-batch.dto';
+import { plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
+import { v4 as uuidv4 } from 'uuid';
+import { CreatePeriodoLetivoBatchDto } from './dto/create-periodo-letivo-batch.dto';
 
 @Injectable()
 export class PeriodoLetivoService {
@@ -109,4 +114,32 @@ export class PeriodoLetivoService {
     const result = await this.periodoLetivoModel.findByIdAndDelete(id);
     if (!result) throw new NotFoundException('Período letivo não encontrado.');
   }
+
+  async createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<{batchId: string; periodosLetivos:any[]}>{
+    const batchId = uuidv4();
+    const periodos = dto.periodoLetivo;
+
+    const periodosComStatus = periodos.map(periodo => {
+      const instance = plainToInstance(CreatePeriodoLetivoDto, periodo);
+      const errors = validateSync(instance);
+
+    const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+      return {
+        ...periodo,
+        batchId,
+        valid: validationErrors.length === 0,
+        validationErrors,
+      };
+    });
+
+    await this.periodoLetivoModel.insertMany(periodosComStatus);
+    return {
+      batchId,
+      periodosLetivos: periodosComStatus,
+    };
+  };
+
+
+    
+
 }
