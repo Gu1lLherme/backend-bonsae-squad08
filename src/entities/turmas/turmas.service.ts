@@ -3,7 +3,7 @@ import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
 import { CreateTurmaBatchDto } from './dto/create-turma-batch.dto';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 import { LoteImportacao, LoteImportacaoDocument } from '../lote-importacao/schemas/lote-importacao.schema';
 import { v4 as uuidv4 } from 'uuid';
@@ -184,6 +184,11 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
 }
 
 async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
+
+  if (!isValidObjectId(id)) {
+    throw new BadRequestException('ID inválido.');
+  }
+
   const instance = plainToInstance(UpdateTurmaDto, updateDto);
   const errors = validateSync(instance);
 
@@ -193,11 +198,21 @@ async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
 
   const validacao = validationErrors.length === 0;
 
-  const atualizados = await this.turmaModel.findByIdAndUpdate(
+  const turma = await this.turmaModel.findByIdAndUpdate(
     id,
-    { ...updateDto, validacao, validationErrors },
+    { ...updateDto, 
+      validacao, 
+      validationErrors },
     { new: true }
   );
-  }
-}
 
+  if (!turma) {
+    throw new NotFoundException('Turma não encontrada.');
+
+  }
+  return {
+    message: 'Turma atualizada com sucesso!',
+    data: turma,
+  };
+}
+}

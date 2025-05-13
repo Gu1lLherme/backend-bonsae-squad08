@@ -17,4 +17,5 @@ export declare class TurmasService {
         batchId: string;
         turmas: any[];
     }>;
+    updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any>;
 }

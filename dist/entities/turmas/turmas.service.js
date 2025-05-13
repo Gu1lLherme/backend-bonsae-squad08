@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TurmasService = void 0;
 const common_1 = require("@nestjs/common");
 const create_turma_dto_1 = require("./dto/create-turma.dto");
+const update_turma_dto_1 = require("./dto/update-turma.dto");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const turmas_schema_1 = require("./schemas/turmas.schema");
@@ -122,6 +123,13 @@ let TurmasService = class TurmasService {
             batchId,
             turmas: turmasComStatus,
         };
+    }
+    async updateInvalidTurmas(id, updateDto) {
+        const instance = (0, class_transformer_1.plainToInstance)(update_turma_dto_1.UpdateTurmaDto, updateDto);
+        const errors = (0, class_validator_1.validateSync)(instance);
+        const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+        const validacao = validationErrors.length === 0;
+        const atualizados = await this.turmaModel.findByIdAndUpdate(id, { ...updateDto, validacao, validationErrors }, { new: true });
     }
 };
 exports.TurmasService = TurmasService;
