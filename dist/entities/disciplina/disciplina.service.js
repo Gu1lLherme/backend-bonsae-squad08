@@ -73,39 +73,23 @@ let DisciplinaService = class DisciplinaService {
         if (!(0, mongoose_2.isValidObjectId)(id)) {
             throw new common_1.BadRequestException('ID inválido.');
         }
-        if (!Object.keys(updateDto).length) {
-            throw new common_1.BadRequestException('Nenhum campo foi enviado para atualização.');
-        }
-        const original = await this.disciplinaModel.findById(id);
-        if (!original) {
-            throw new common_1.NotFoundException('Disciplina não encontrada.');
-        }
-        if (original.valid) {
-            throw new common_1.BadRequestException('Disciplina já está válida.');
-        }
-        const isEqual = Object.entries(updateDto).every(([key, value]) => {
-            return String(original[key]) === String(value);
-        });
-        if (isEqual) {
-            return {
-                message: 'Nenhuma alteração detectada. Os dados já estão iguais.',
-                data: original,
-            };
-        }
         const instance = (0, class_transformer_1.plainToInstance)(update_disciplina_dto_1.UpdateDisciplinaDto, updateDto);
         const errors = (0, class_validator_1.validateSync)(instance);
         const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
         const valid = validationErrors.length === 0;
-        const updated = await this.disciplinaModel.findByIdAndUpdate(id, {
+        const disciplina = await this.disciplinaModel.findByIdAndUpdate(id, {
             $set: { ...updateDto,
                 valid,
                 validationErrors, }
         }, { new: true });
+        if (!disciplina) {
+            throw new common_1.NotFoundException('Disciplina não encontrada.');
+        }
         return {
             message: valid
                 ? 'Disciplina atualizada e validada com sucesso.'
                 : 'Disciplina atualizada, mas ainda contém erros de validação.',
-            data: updated,
+            data: disciplina,
         };
     }
 };

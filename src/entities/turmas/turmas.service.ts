@@ -211,6 +211,7 @@ async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
   const valid = validationErrors.length === 0;
 
   const turma = await this.turmaModel.findByIdAndUpdate(
+    
     id,
     {
     $set: { ...updateDto, 
@@ -222,7 +223,7 @@ async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
 
   if (!turma) {
     throw new NotFoundException('Turma não encontrada.');
-
+    
   }
   return {
     message: 'Turma atualizada com sucesso!',

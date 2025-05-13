@@ -29,7 +29,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateDisciplinaDto.prototype, "periodoLetivo", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Disciplina é obrigatória.' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateDisciplinaDto.prototype, "disciplina", void 0);
