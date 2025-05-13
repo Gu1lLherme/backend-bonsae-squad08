@@ -8,7 +8,7 @@ export class CreateDisciplinaDto {
   @IsString()
   periodoLetivo: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty( { message: 'Disciplina é obrigatória.' })
   @IsString()
   disciplina: string;
 

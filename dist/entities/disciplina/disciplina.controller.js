@@ -15,27 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DisciplinaController = void 0;
 const common_1 = require("@nestjs/common");
 const disciplina_service_1 = require("./disciplina.service");
-const create_disciplina_dto_1 = require("./dto/create-disciplina.dto");
 const update_disciplina_dto_1 = require("./dto/update-disciplina.dto");
 const create_disciplina_batch_dto_1 = require("./dto/create-disciplina-batch.dto");
 let DisciplinaController = class DisciplinaController {
     disciplinaService;
     constructor(disciplinaService) {
         this.disciplinaService = disciplinaService;
-    }
-    async create(createDisciplinaDto) {
-        const disciplina = await this.disciplinaService.create(createDisciplinaDto);
-        return {
-            message: 'Disciplina criada com sucesso!',
-            data: disciplina,
-        };
-    }
-    async bulkCreate(createDisciplinasDto) {
-        const disciplinasCriadas = await this.disciplinaService.bulkCreate(createDisciplinasDto);
-        return {
-            message: 'Disciplinas criadas com sucesso!',
-            data: disciplinasCriadas,
-        };
     }
     async createBatch(dto) {
         return this.disciplinaService.createBatch(dto);
@@ -57,22 +42,6 @@ let DisciplinaController = class DisciplinaController {
     }
 };
 exports.DisciplinaController = DisciplinaController;
-__decorate([
-    (0, common_1.Post)(),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_disciplina_dto_1.CreateDisciplinaDto]),
-    __metadata("design:returntype", Promise)
-], DisciplinaController.prototype, "create", null);
-__decorate([
-    (0, common_1.Post)('bulk'),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Array]),
-    __metadata("design:returntype", Promise)
-], DisciplinaController.prototype, "bulkCreate", null);
 __decorate([
     (0, common_1.Post)('batch'),
     __param(0, (0, common_1.Body)()),

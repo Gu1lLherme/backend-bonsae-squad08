@@ -1,18 +1,9 @@
 import { DisciplinaService } from './disciplina.service';
-import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { CreateDisciplinaBatchDto } from './dto/create-disciplina-batch.dto';
 export declare class DisciplinaController {
     private readonly disciplinaService;
     constructor(disciplinaService: DisciplinaService);
-    create(createDisciplinaDto: CreateDisciplinaDto): Promise<{
-        message: string;
-        data: import("./schemas/disciplina.schema").Disciplina;
-    }>;
-    bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<{
-        message: string;
-        data: any;
-    }>;
     createBatch(dto: CreateDisciplinaBatchDto): Promise<{
         batchId: string;
         disciplinas: any[];
