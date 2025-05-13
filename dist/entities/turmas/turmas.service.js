@@ -125,11 +125,23 @@ let TurmasService = class TurmasService {
         };
     }
     async updateInvalidTurmas(id, updateDto) {
+        if (!(0, mongoose_2.isValidObjectId)(id)) {
+            throw new common_1.BadRequestException('ID inválido.');
+        }
         const instance = (0, class_transformer_1.plainToInstance)(update_turma_dto_1.UpdateTurmaDto, updateDto);
         const errors = (0, class_validator_1.validateSync)(instance);
         const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
         const validacao = validationErrors.length === 0;
-        const atualizados = await this.turmaModel.findByIdAndUpdate(id, { ...updateDto, validacao, validationErrors }, { new: true });
+        const turma = await this.turmaModel.findByIdAndUpdate(id, { ...updateDto,
+            validacao,
+            validationErrors }, { new: true });
+        if (!turma) {
+            throw new common_1.NotFoundException('Turma não encontrada.');
+        }
+        return {
+            message: 'Turma atualizada com sucesso!',
+            data: turma,
+        };
     }
 };
 exports.TurmasService = TurmasService;

@@ -196,13 +196,15 @@ async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
     Object.values(e.constraints || {}).join(', ')
   );
 
-  const validacao = validationErrors.length === 0;
+  const valid = validationErrors.length === 0;
 
   const turma = await this.turmaModel.findByIdAndUpdate(
     id,
-    { ...updateDto, 
-      validacao, 
-      validationErrors },
+    {
+    $set: { ...updateDto, 
+      valid, 
+      validationErrors ,}
+    },
     { new: true }
   );
 
