@@ -67,7 +67,7 @@ __decorate([
     __metadata("design:type", String)
 ], Disciplina.prototype, "batchId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: true }),
+    (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)
 ], Disciplina.prototype, "valid", void 0);
 __decorate([
@@ -75,7 +75,8 @@ __decorate([
     __metadata("design:type", Array)
 ], Disciplina.prototype, "validationErrors", void 0);
 exports.Disciplina = Disciplina = __decorate([
-    (0, mongoose_1.Schema)()
+    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false }),
+    (0, mongoose_1.Schema)({ collection: 'disciplinas' })
 ], Disciplina);
 exports.DisciplinaSchema = mongoose_1.SchemaFactory.createForClass(Disciplina);
 //# sourceMappingURL=disciplina.schema.js.map

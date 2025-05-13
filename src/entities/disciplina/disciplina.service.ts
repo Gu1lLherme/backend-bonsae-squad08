@@ -132,6 +132,30 @@ async updateInvalidDisciplinas(id: string, updateDto: UpdateDisciplinaDto): Prom
     throw new BadRequestException('ID inválido.');
   }
 
+  if (!Object.keys(updateDto).length) {
+throw new BadRequestException('Nenhum campo foi enviado para atualização.');
+}
+
+const original = await this.disciplinaModel.findById(id);
+if (!original) {
+throw new NotFoundException('Disciplina não encontrada.');
+}
+
+if (original.valid) {
+throw new BadRequestException('Disciplina já está válida.');
+}
+
+const isEqual = Object.entries(updateDto).every(([key, value]) => {
+return String(original[key as keyof typeof original]) === String(value);
+});
+
+if (isEqual) {
+return {
+message: 'Nenhuma alteração detectada. Os dados já estão iguais.',
+data: original,
+};
+}
+
   const instance = plainToInstance(UpdateDisciplinaDto, updateDto);
   const errors = validateSync(instance);
 
@@ -140,10 +164,10 @@ async updateInvalidDisciplinas(id: string, updateDto: UpdateDisciplinaDto): Prom
   );
   const valid = validationErrors.length === 0;
 
-  if (!Object.keys(updateDto).length) {
-throw new BadRequestException('Nenhum campo foi enviado para atualização.');
-}
-  const disciplina = await this.disciplinaModel.findByIdAndUpdate(
+
+
+
+  const updated = await this.disciplinaModel.findByIdAndUpdate(
     id,
     {
       $set: { ...updateDto, 
@@ -152,18 +176,12 @@ throw new BadRequestException('Nenhum campo foi enviado para atualização.');
     },
     { new: true }
   );
-    if (!disciplina) {
-throw new NotFoundException('Disciplina não encontrada após tentativa de update.');
-}
-  if (disciplina.valid) {
-    throw new BadRequestException('Disciplina já está válida.');
-  }
 
   return {
     message: valid
 ? 'Disciplina atualizada e validada com sucesso.'
 : 'Disciplina atualizada, mas ainda contém erros de validação.',
-    data: disciplina,
+    data: updated,
   };
 }
   }

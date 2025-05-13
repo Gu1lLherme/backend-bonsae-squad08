@@ -130,16 +130,24 @@ let DisciplinaService = class DisciplinaService {
         const errors = (0, class_validator_1.validateSync)(instance);
         const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
         const valid = validationErrors.length === 0;
+        if (!Object.keys(updateDto).length) {
+            throw new common_1.BadRequestException('Nenhum campo foi enviado para atualização.');
+        }
         const disciplina = await this.disciplinaModel.findByIdAndUpdate(id, {
             $set: { ...updateDto,
                 valid,
                 validationErrors, }
         }, { new: true });
         if (!disciplina) {
-            throw new common_1.BadRequestException('Disciplina não encontrada.');
+            throw new common_1.NotFoundException('Disciplina não encontrada após tentativa de update.');
+        }
+        if (disciplina.valid) {
+            throw new common_1.BadRequestException('Disciplina já está válida.');
         }
         return {
-            message: 'Disciplina atualizada com sucesso!',
+            message: valid
+                ? 'Disciplina atualizada e validada com sucesso.'
+                : 'Disciplina atualizada, mas ainda contém erros de validação.',
             data: disciplina,
         };
     }
