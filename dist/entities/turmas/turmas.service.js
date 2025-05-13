@@ -150,19 +150,6 @@ let TurmasService = class TurmasService {
             data: turma,
         };
     }
-    async salvarValidasSql(batchId) {
-        const turmasValidas = await this.turmaMongoModel.find({ batchId, valid: true }).lean();
-        const entidades = turmasValidas.map((turma) => this.turmaSqlRepo.create({
-            codigoDisciplina: turma.codigoDisciplina,
-            turno: turma.turno,
-            codigoTurma: turma.codigoTurma,
-            nomeTurma: turma.nomeTurma,
-            tipo: turma.tipo,
-            usuarios: turma.usuarios ?? [],
-        }));
-        await this.turmaSqlRepo.save(entidades);
-        return { count: entidades.length };
-    }
 };
 exports.TurmasService = TurmasService;
 __decorate([

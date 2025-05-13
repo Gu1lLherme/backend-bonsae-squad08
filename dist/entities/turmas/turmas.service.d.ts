@@ -20,7 +20,4 @@ export declare class TurmasService {
         turmas: any[];
     }>;
     updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any>;
-    salvarValidasSql(batchId: string): Promise<{
-        count: number;
-    }>;
 }
