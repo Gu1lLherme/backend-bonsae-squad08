@@ -14,9 +14,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DisciplinaService = void 0;
 const common_1 = require("@nestjs/common");
+const create_disciplina_dto_1 = require("./dto/create-disciplina.dto");
+const update_disciplina_dto_1 = require("./dto/update-disciplina.dto");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const disciplina_schema_1 = require("./schemas/disciplina.schema");
+const uuid_1 = require("uuid");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
 let DisciplinaService = class DisciplinaService {
     disciplinaModel;
     connection;
@@ -96,6 +101,47 @@ let DisciplinaService = class DisciplinaService {
     }
     remove(id) {
         return `This action removes a #${id} disciplina`;
+    }
+    async createBatch(dto) {
+        const batchId = (0, uuid_1.v4)();
+        const disciplinas = dto.disciplinas;
+        const disciplinasComStatus = disciplinas.map((disciplina) => {
+            const instance = (0, class_transformer_1.plainToInstance)(create_disciplina_dto_1.CreateDisciplinaDto, disciplinas);
+            const errors = (0, class_validator_1.validateSync)(instance);
+            const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+            return {
+                ...disciplina,
+                batchId,
+                valid: validationErrors.length === 0,
+                validationErrors,
+            };
+        });
+        await this.disciplinaModel.insertMany(disciplinasComStatus);
+        return {
+            batchId,
+            disciplinas: disciplinasComStatus,
+        };
+    }
+    async updateInvalidDisciplinas(id, updateDto) {
+        if (!(0, mongoose_2.isValidObjectId)(id)) {
+            throw new common_1.BadRequestException('ID inválido.');
+        }
+        const instance = (0, class_transformer_1.plainToInstance)(update_disciplina_dto_1.UpdateDisciplinaDto, updateDto);
+        const errors = (0, class_validator_1.validateSync)(instance);
+        const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+        const valid = validationErrors.length === 0;
+        const disciplina = await this.disciplinaModel.findByIdAndUpdate(id, {
+            $set: { ...updateDto,
+                valid,
+                validationErrors, }
+        }, { new: true });
+        if (!disciplina) {
+            throw new common_1.BadRequestException('Disciplina não encontrada.');
+        }
+        return {
+            message: 'Disciplina atualizada com sucesso!',
+            data: disciplina,
+        };
     }
 };
 exports.DisciplinaService = DisciplinaService;

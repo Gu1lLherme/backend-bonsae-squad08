@@ -231,6 +231,7 @@ async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
 
 
 // ainda precisa de testes.
+/*
 async salvarValidasSql(batchId: string) {
   const turmasValidas = await this.turmaMongoModel.find(
     { batchId, valid: true }
@@ -250,5 +251,5 @@ async salvarValidasSql(batchId: string) {
  
   await this.turmaSqlRepo.save(entidades);
   return { count: entidades.length };
-}
+}*/
 }

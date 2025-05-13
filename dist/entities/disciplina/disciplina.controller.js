@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const disciplina_service_1 = require("./disciplina.service");
 const create_disciplina_dto_1 = require("./dto/create-disciplina.dto");
 const update_disciplina_dto_1 = require("./dto/update-disciplina.dto");
+const create_disciplina_batch_dto_1 = require("./dto/create-disciplina-batch.dto");
 let DisciplinaController = class DisciplinaController {
     disciplinaService;
     constructor(disciplinaService) {
@@ -35,6 +36,12 @@ let DisciplinaController = class DisciplinaController {
             message: 'Disciplinas criadas com sucesso!',
             data: disciplinasCriadas,
         };
+    }
+    async createBatch(dto) {
+        return this.disciplinaService.createBatch(dto);
+    }
+    async revalidarTurma(id, updateDto) {
+        return this.disciplinaService.updateInvalidDisciplinas(id, updateDto);
     }
     findAll() {
         return this.disciplinaService.findAll();
@@ -66,6 +73,21 @@ __decorate([
     __metadata("design:paramtypes", [Array]),
     __metadata("design:returntype", Promise)
 ], DisciplinaController.prototype, "bulkCreate", null);
+__decorate([
+    (0, common_1.Post)('batch'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_disciplina_batch_dto_1.CreateDisciplinaBatchDto]),
+    __metadata("design:returntype", Promise)
+], DisciplinaController.prototype, "createBatch", null);
+__decorate([
+    (0, common_1.Patch)(':id/revalidar'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_disciplina_dto_1.UpdateDisciplinaDto]),
+    __metadata("design:returntype", Promise)
+], DisciplinaController.prototype, "revalidarTurma", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

@@ -12,7 +12,6 @@ const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const typeorm_1 = require("@nestjs/typeorm");
 const periodo_letivo_module_1 = require("./entities/periodo-letivo/periodo-letivo.module");
 const disciplina_module_1 = require("./entities/disciplina/disciplina.module");
 const turmas_module_1 = require("./entities/turmas/turmas.module");
@@ -23,16 +22,6 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                host: "localhost",
-                port: 3000,
-                username: 'postgres',
-                password: 'mat123',
-                database: 'bancoteste1',
-                entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                synchronize: true,
-            }),
             turmas_module_1.TurmasModule,
             config_1.ConfigModule.forRoot({ isGlobal: true }),
             mongoose_1.MongooseModule.forRootAsync({

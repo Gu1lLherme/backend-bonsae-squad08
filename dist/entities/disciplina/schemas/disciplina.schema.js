@@ -24,27 +24,27 @@ let Disciplina = class Disciplina {
 };
 exports.Disciplina = Disciplina;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Disciplina.prototype, "periodoLetivo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Disciplina.prototype, "disciplina", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true, sparse: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Disciplina.prototype, "codigoDisciplina", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", Date)
 ], Disciplina.prototype, "dataInicial", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", Date)
 ], Disciplina.prototype, "dataFinal", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, enum: ['Curso', 'NPJ', 'Projetos Extensionistas', 'TCC'] }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Disciplina.prototype, "categoria", void 0);
 __decorate([
