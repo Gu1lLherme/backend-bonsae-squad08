@@ -4,6 +4,9 @@ import { Model, Connection } from 'mongoose';
 import { Usuario, UsuarioDocument } from './schemas/usuario.schema';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { CreatePeriodoLetivoBatchDto } from '../periodo-letivo/dto/create-periodo-letivo-batch.dto';
+import {v4 as uuidv4} from "uuid";
+import { CreateUsuarioBatchDto } from './dto/create-usuario-batch.dto';
 
 
 @Injectable()
@@ -23,9 +26,16 @@ export class UsuariosService {
     const novoUsuario = new this.usuarioModel(dto);
     return await novoUsuario.save();
 }
+
+
+
+async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuarios: any[]}> {
+  const batchId = uuidv4();
+  const usuarios = dto.usuarios;
+}
     
 
-  async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {
+  /*async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {
     if (!Array.isArray(createUsuariosDto) || createUsuariosDto.length === 0) {
       throw new BadRequestException('Payload precisa ser uma lista de usuários.');
     }
@@ -64,7 +74,7 @@ export class UsuariosService {
       const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto);
       return usuariosCriados.map(usuario => usuario.toObject() as Usuario);
     
-  }
+  }*/
 
   async findAll() {
     return this.usuarioModel.find().exec();
