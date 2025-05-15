@@ -12,22 +12,22 @@ export declare class UsuariosController {
         message: string;
         data: import("./schemas/usuario.schema").Usuario[];
     }>;
-    findAll(): Promise<(import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    findAll(): Promise<(import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument, {}> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     })[]>;
-    findOne(id: string): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    findOne(id: string): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument, {}> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     }>;
-    update(id: string, updateUsuarioDto: UpdateUsuarioDto): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    update(id: string, updateUsuarioDto: UpdateUsuarioDto): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument, {}> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     }>;
-    remove(id: string): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    remove(id: string): Promise<import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument, {}> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;

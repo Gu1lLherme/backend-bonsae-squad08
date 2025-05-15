@@ -14,11 +14,11 @@ export declare class Disciplina {
     valid: boolean;
     validationErrors?: string[];
 }
-export declare const DisciplinaSchema: import("mongoose").Schema<Disciplina, import("mongoose").Model<Disciplina, any, any, any, Document<unknown, any, Disciplina> & Disciplina & {
+export declare const DisciplinaSchema: import("mongoose").Schema<Disciplina, import("mongoose").Model<Disciplina, any, any, any, Document<unknown, any, Disciplina, any> & Disciplina & {
     _id: Types.ObjectId;
 } & {
     __v: number;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Disciplina, Document<unknown, {}, import("mongoose").FlatRecord<Disciplina>> & import("mongoose").FlatRecord<Disciplina> & {
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Disciplina, Document<unknown, {}, import("mongoose").FlatRecord<Disciplina>, {}> & import("mongoose").FlatRecord<Disciplina> & {
     _id: Types.ObjectId;
 } & {
     __v: number;
