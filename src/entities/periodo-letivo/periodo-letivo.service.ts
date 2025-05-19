@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { PeriodoLetivo, PeriodoLetivoDocument } from './schemas/periodo-letivo.schema';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
@@ -8,6 +8,7 @@ import { CreatePeriodoLetivoBatchDto } from './dto/create-periodo-letivo-batch.d
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 import {v4 as uuidv4} from "uuid";
+import { UpdateUsuarioDto } from '../usuario/dto/update-usuario.dto';
 
 @Injectable()
 export class PeriodoLetivoService {
@@ -120,6 +121,42 @@ export class PeriodoLetivoService {
     batchId,
     periodosLetivos: periodosComStatus,
   };
+}
+
+async updateInvalidPeriodos(id: string, updateDto: UpdatePeriodoLetivoDto): Promise <any> {
+
+  if (!isValidObjectId(id)) {
+    throw new BadRequestException("ID invalido")
+  }
+
+  const instance = plainToInstance(UpdatePeriodoLetivoDto, updateDto);
+  const errors = validateSync(instance);
+
+  const validationErrors = errors.map((e) => 
+  Object.values(e.constraints || {}).join(', '));
+
+  const valid = validationErrors.length ===0;
+
+  const periodo = await this.periodoLetivoModel.findByIdAndUpdate(
+
+    id,
+    {
+      $set: {
+        ...updateDto,
+        valid,
+        validationErrors,}
+      },
+      { new: true}
+    
+  );
+
+  if (!periodo) {
+    throw new NotFoundException('Usuário não encontrado');
+  }
+  return {
+    message: 'Usuario Atualizado com sucesso',
+    date: periodo,
+  }
 }
 
   async findAll(): Promise<PeriodoLetivo[]> {
