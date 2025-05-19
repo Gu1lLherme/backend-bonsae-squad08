@@ -7,6 +7,8 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { CreatePeriodoLetivoBatchDto } from '../periodo-letivo/dto/create-periodo-letivo-batch.dto';
 import {v4 as uuidv4} from "uuid";
 import { CreateUsuarioBatchDto } from './dto/create-usuario-batch.dto';
+import { plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
 
 @Injectable()
@@ -32,7 +34,31 @@ export class UsuariosService {
 async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuarios: any[]}> {
   const batchId = uuidv4();
   const usuarios = dto.usuarios;
+
+  const usuariosComStatus = usuarios.map((usuario) => {
+    const instance = plainToInstance(CreateUsuarioDto, usuario);
+    const errors = validateSync(instance);
+
+    const validationErrors = errors.map((e) =>
+      Object.values(e.constraints || {}).join (', '));
+
+    return {
+      ...usuarios,
+      batchId,
+      valid: validationErrors.length === 0,
+      validationErrors,
+    };
+  });
+
+  await this.usuarioModel.insertMany(usuariosComStatus)
+
+  return {
+    batchId,
+    usuarios: usuariosComStatus,
+  };
 }
+
+
     
 
   /*async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {

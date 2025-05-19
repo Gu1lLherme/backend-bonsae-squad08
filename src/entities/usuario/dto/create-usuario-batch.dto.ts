@@ -8,5 +8,5 @@ export class CreateUsuarioBatchDto {
 @ArrayMinSize(1, { message: 'Deve haver pelo menos uma turma.' })
 @ValidateNested({ each: true })
 @Type(() => CreateUsuarioDto)
-turmas: CreateUsuarioDto[];
+usuarios: CreateUsuarioDto[];
 }
