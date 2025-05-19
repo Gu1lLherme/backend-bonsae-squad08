@@ -32,7 +32,7 @@ export class UsuariosController {
     return this.usuariosService.updateInvalidUsuarios(id,updateDto);
   }
 
-  @Post('bulk')
+  /*@Post('bulk')
   @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
   async bulkCreate(@Body() createUsuariosDto: CreateUsuarioDto[]) {
     const usuariosCriados = await this.usuariosService.bulkCreate(createUsuariosDto);
@@ -41,7 +41,7 @@ export class UsuariosController {
       data: usuariosCriados,
     };
 
-  }
+  }*/
 
   @Get()
   findAll() {
