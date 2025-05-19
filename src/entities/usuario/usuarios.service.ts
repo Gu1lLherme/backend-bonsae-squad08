@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel, InjectConnection} from '@nestjs/mongoose';
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { Usuario, UsuarioDocument } from './schemas/usuario.schema';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -50,6 +50,8 @@ async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuario
     };
   });
 
+  
+
   await this.usuarioModel.insertMany(usuariosComStatus)
 
   return {
@@ -58,7 +60,41 @@ async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuario
   };
 }
 
+async updateInvalidUsuarios(id: string, updateDto: UpdateUsuarioDto): Promise <any> {
 
+  if (!isValidObjectId(id)) {
+    throw new BadRequestException("ID invalido")
+  }
+
+  const instance = plainToInstance(UpdateUsuarioDto, updateDto);
+  const errors = validateSync(instance);
+
+  const validationErrors = errors.map((e) => 
+  Object.values(e.constraints || {}).join(', '));
+
+  const valid = validationErrors.length ===0;
+
+  const usuario = await this.usuarioModel.findByIdAndUpdate(
+
+    id,
+    {
+      $set: {
+        ...updateDto,
+        valid,
+        validationErrors,}
+      },
+      { new: true}
+    
+  );
+
+  if (!usuario) {
+    throw new NotFoundException('Usuário não encontrado');
+  }
+  return {
+    message: 'Usuario Atualizado com sucesso',
+    date: usuario,
+  }
+}
     
 
   /*async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {
