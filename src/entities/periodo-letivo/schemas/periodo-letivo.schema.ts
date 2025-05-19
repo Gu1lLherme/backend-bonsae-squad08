@@ -5,16 +5,16 @@ export type PeriodoLetivoDocument = PeriodoLetivo & Document;
 
 @Schema({timestamps:true})
 export class PeriodoLetivo {
-    @Prop({ required: true, unique: true })
+    @Prop()
     codigoPeriodoLetivo: string;
   
-    @Prop({ required: true })
+    @Prop()
     periodoLetivo: string;
   
-    @Prop({ required: true })
+    @Prop()
     dataInicial: Date;
   
-    @Prop({ required: true })
+    @Prop()
     dataFinal: Date;
   }
   
