@@ -17,6 +17,11 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const usuario_schema_1 = require("./schemas/usuario.schema");
+const create_usuario_dto_1 = require("./dto/create-usuario.dto");
+const update_usuario_dto_1 = require("./dto/update-usuario.dto");
+const uuid_1 = require("uuid");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
 let UsuariosService = class UsuariosService {
     usuarioModel;
     connection;
@@ -32,39 +37,48 @@ let UsuariosService = class UsuariosService {
         const novoUsuario = new this.usuarioModel(dto);
         return await novoUsuario.save();
     }
-    async bulkCreate(createUsuariosDto) {
-        if (!Array.isArray(createUsuariosDto) || createUsuariosDto.length === 0) {
-            throw new common_1.BadRequestException('Payload precisa ser uma lista de usuários.');
-        }
-        const erros = [];
-        createUsuariosDto.filter((usuario, index) => {
-            const problemas = [];
-            if (!usuario.perfil)
-                problemas.push('Perfil é obrigatório.');
-            if (!usuario.nome)
-                problemas.push('Nome é obrigatório.');
-            if (!usuario.email)
-                problemas.push('Email é obrigatório.');
-            if (!usuario.cpf)
-                problemas.push('CPF é obrigatório.');
-            if (!usuario.senha)
-                problemas.push('Senha é obrigatória.');
-            if (!usuario.matriculaIes || usuario.matriculaIes.trim() === '')
-                problemas.push('Matrícula (IES) é obrigatória.');
-            if (problemas.length > 0) {
-                erros.push({ index, error: problemas.join(' | ') });
-                return false;
-            }
-            return true;
+    async createBatch(dto) {
+        const batchId = (0, uuid_1.v4)();
+        const usuarios = dto.usuarios;
+        const usuariosComStatus = usuarios.map((usuario) => {
+            const instance = (0, class_transformer_1.plainToInstance)(create_usuario_dto_1.CreateUsuarioDto, usuario);
+            const errors = (0, class_validator_1.validateSync)(instance);
+            const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+            return {
+                ...usuarios,
+                batchId,
+                valid: validationErrors.length === 0,
+                validationErrors,
+            };
         });
-        if (erros.length > 0) {
-            throw new common_1.BadRequestException({
-                message: 'Erros de validação nos usuários.',
-                erros,
-            });
+        await this.usuarioModel.insertMany(usuariosComStatus);
+        return {
+            batchId,
+            usuarios: usuariosComStatus,
+        };
+    }
+    async updateInvalidUsuarios(id, updateDto) {
+        if (!(0, mongoose_2.isValidObjectId)(id)) {
+            throw new common_1.BadRequestException("ID invalido");
         }
-        const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto);
-        return usuariosCriados.map(usuario => usuario.toObject());
+        const instance = (0, class_transformer_1.plainToInstance)(update_usuario_dto_1.UpdateUsuarioDto, updateDto);
+        const errors = (0, class_validator_1.validateSync)(instance);
+        const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+        const valid = validationErrors.length === 0;
+        const usuario = await this.usuarioModel.findByIdAndUpdate(id, {
+            $set: {
+                ...updateDto,
+                valid,
+                validationErrors,
+            }
+        }, { new: true });
+        if (!usuario) {
+            throw new common_1.NotFoundException('Usuário não encontrado');
+        }
+        return {
+            message: 'Usuario Atualizado com sucesso',
+            date: usuario,
+        };
     }
     async findAll() {
         return this.usuarioModel.find().exec();

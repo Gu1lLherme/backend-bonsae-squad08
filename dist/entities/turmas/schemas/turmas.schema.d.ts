@@ -11,11 +11,11 @@ export declare class Turma {
     valid: boolean;
     validationErrors?: string[];
 }
-export declare const TurmaSchema: import("mongoose").Schema<Turma, import("mongoose").Model<Turma, any, any, any, Document<unknown, any, Turma, any> & Turma & {
+export declare const TurmaSchema: import("mongoose").Schema<Turma, import("mongoose").Model<Turma, any, any, any, Document<unknown, any, Turma> & Turma & {
     _id: Types.ObjectId;
 } & {
     __v: number;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Turma, Document<unknown, {}, import("mongoose").FlatRecord<Turma>, {}> & import("mongoose").FlatRecord<Turma> & {
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Turma, Document<unknown, {}, import("mongoose").FlatRecord<Turma>> & import("mongoose").FlatRecord<Turma> & {
     _id: Types.ObjectId;
 } & {
     __v: number;

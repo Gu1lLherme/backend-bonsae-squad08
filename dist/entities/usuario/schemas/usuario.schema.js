@@ -27,10 +27,7 @@ let Usuario = class Usuario {
 };
 exports.Usuario = Usuario;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, enum: [
-            'Coordenador(a)', 'Professor(a)', 'Aluno(a)',
-            'Secretário(a)', 'Estagiário(a)', 'Advogado(a)'
-        ] }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Usuario.prototype, "perfil", void 0);
 __decorate([
@@ -38,7 +35,7 @@ __decorate([
     __metadata("design:type", String)
 ], Usuario.prototype, "subperfil", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Usuario.prototype, "nome", void 0);
 __decorate([
@@ -50,11 +47,11 @@ __decorate([
     __metadata("design:type", String)
 ], Usuario.prototype, "seccional", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Usuario.prototype, "email", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: String, unique: true, sparse: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Usuario.prototype, "matriculaIes", void 0);
 __decorate([
@@ -66,7 +63,7 @@ __decorate([
     __metadata("design:type", String)
 ], Usuario.prototype, "cpf", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Usuario.prototype, "senha", void 0);
 __decorate([

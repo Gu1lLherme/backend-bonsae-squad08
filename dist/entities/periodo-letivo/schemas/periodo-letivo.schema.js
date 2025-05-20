@@ -19,19 +19,19 @@ let PeriodoLetivo = class PeriodoLetivo {
 };
 exports.PeriodoLetivo = PeriodoLetivo;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], PeriodoLetivo.prototype, "codigoPeriodoLetivo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], PeriodoLetivo.prototype, "periodoLetivo", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", Date)
 ], PeriodoLetivo.prototype, "dataInicial", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", Date)
 ], PeriodoLetivo.prototype, "dataFinal", void 0);
 exports.PeriodoLetivo = PeriodoLetivo = __decorate([

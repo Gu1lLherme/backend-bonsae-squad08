@@ -106,23 +106,36 @@ let TurmasService = class TurmasService {
     }
     async createBatch(dto) {
         const batchId = (0, uuid_1.v4)();
-        const turmas = dto.turmas;
-        const turmasComStatus = turmas.map((turma) => {
+        const turmasComStatus = await Promise.all(dto.turmas.map(async (turma) => {
             const instance = (0, class_transformer_1.plainToInstance)(create_turma_dto_1.CreateTurmaDto, turma);
-            const errors = (0, class_validator_1.validateSync)(instance);
-            const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+            const dtoerrors = (0, class_validator_1.validateSync)(instance);
+            const validationErrors = dtoerrors.map((e) => Object.values(e.constraints || {}).join(', '));
+            const businessErrors = await this.validateBusinessRules(turma);
+            const allErrors = [...validationErrors, ...businessErrors];
             return {
                 ...turma,
                 batchId,
-                valid: validationErrors.length === 0,
-                validationErrors,
+                valid: allErrors.length === 0,
+                validationErrors: allErrors,
             };
-        });
+        }));
         await this.turmaModel.insertMany(turmasComStatus);
         return {
             batchId,
             turmas: turmasComStatus,
         };
+    }
+    async validateBusinessRules(turma) {
+        const errors = [];
+        const existentes = await this.turmaModel.findOne({ codigoTurma: turma.codigoTurma });
+        if (existentes) {
+            errors.push(`O Código ${turma.codigoTurma} já foi registrado no banco`);
+        }
+        const disciplina = await this.turmaModel.findOne({ codigoDisciplina: turma.codigoDisciplina });
+        if (!disciplina) {
+            errors.push(`A disciplina ${turma.codigoDisciplina} não existe`);
+        }
+        return errors;
     }
     async updateInvalidTurmas(id, updateDto) {
         if (!(0, mongoose_2.isValidObjectId)(id)) {

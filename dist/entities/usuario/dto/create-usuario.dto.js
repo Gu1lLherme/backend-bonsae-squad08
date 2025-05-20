@@ -9,17 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUsuarioDto = exports.PerfilUsuario = void 0;
+exports.CreateUsuarioDto = void 0;
 const class_validator_1 = require("class-validator");
-var PerfilUsuario;
-(function (PerfilUsuario) {
-    PerfilUsuario["Coordenador"] = "Coordenador(a)";
-    PerfilUsuario["Professor"] = "Professor(a)";
-    PerfilUsuario["Aluno"] = "Aluno(a)";
-    PerfilUsuario["Secretario"] = "Secret\u00E1rio(a)";
-    PerfilUsuario["Estagiario"] = "Estagi\u00E1rio(a)";
-    PerfilUsuario["Advogado"] = "Advogado(a)";
-})(PerfilUsuario || (exports.PerfilUsuario = PerfilUsuario = {}));
 class CreateUsuarioDto {
     perfil;
     subperfil;
@@ -37,7 +28,7 @@ class CreateUsuarioDto {
 exports.CreateUsuarioDto = CreateUsuarioDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsEnum)(PerfilUsuario),
+    (0, class_validator_1.IsEnum)(['Advogado(a)', 'Coordenador(a)', 'Professor(a)', 'Estagiário(a)', 'Aluno(a)', 'Secretário(a)']),
     __metadata("design:type", String)
 ], CreateUsuarioDto.prototype, "perfil", void 0);
 __decorate([

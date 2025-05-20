@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const periodo_letivo_service_1 = require("./periodo-letivo.service");
 const create_periodo_letivo_dto_1 = require("./dto/create-periodo-letivo.dto");
 const update_periodo_letivo_dto_1 = require("./dto/update-periodo-letivo.dto");
+const create_periodo_letivo_batch_dto_1 = require("./dto/create-periodo-letivo-batch.dto");
 let PeriodoLetivoController = class PeriodoLetivoController {
     periodoLetivoService;
     constructor(periodoLetivoService) {
@@ -32,6 +33,12 @@ let PeriodoLetivoController = class PeriodoLetivoController {
             message: 'Períodos registrados com sucesso!',
             data: periodosCriados,
         };
+    }
+    async createBatch(dto) {
+        return this.periodoLetivoService.createBatch(dto);
+    }
+    async revalidarPeriodo(id, updateDto) {
+        return this.periodoLetivoService.updateInvalidPeriodos(id, updateDto);
     }
     async findAll() {
         const periodos = await this.periodoLetivoService.findAll();
@@ -67,6 +74,21 @@ __decorate([
     __metadata("design:paramtypes", [Array]),
     __metadata("design:returntype", Promise)
 ], PeriodoLetivoController.prototype, "bulkCreate", null);
+__decorate([
+    (0, common_1.Post)('Batch'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_periodo_letivo_batch_dto_1.CreatePeriodoLetivoBatchDto]),
+    __metadata("design:returntype", Promise)
+], PeriodoLetivoController.prototype, "createBatch", null);
+__decorate([
+    (0, common_1.Patch)(':id/revalidar'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_periodo_letivo_dto_1.UpdatePeriodoLetivoDto]),
+    __metadata("design:returntype", Promise)
+], PeriodoLetivoController.prototype, "revalidarPeriodo", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

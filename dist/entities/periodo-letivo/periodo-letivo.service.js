@@ -17,6 +17,11 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const periodo_letivo_schema_1 = require("./schemas/periodo-letivo.schema");
+const update_periodo_letivo_dto_1 = require("./dto/update-periodo-letivo.dto");
+const create_periodo_letivo_batch_dto_1 = require("./dto/create-periodo-letivo-batch.dto");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+const uuid_1 = require("uuid");
 let PeriodoLetivoService = class PeriodoLetivoService {
     periodoLetivoModel;
     connection;
@@ -87,6 +92,49 @@ let PeriodoLetivoService = class PeriodoLetivoService {
             session.endSession();
             throw new common_1.InternalServerErrorException('Erro ao criar períodos letivos em lote.', error.message);
         }
+    }
+    async createBatch(dto) {
+        const batchId = (0, uuid_1.v4)();
+        const periodosLetivos = dto.periodosLetivos;
+        const periodosComStatus = periodosLetivos.map((periodo) => {
+            const instance = (0, class_transformer_1.plainToInstance)(create_periodo_letivo_batch_dto_1.CreatePeriodoLetivoBatchDto, periodo);
+            const errors = (0, class_validator_1.validateSync)(instance);
+            const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+            return {
+                ...periodosLetivos,
+                batchId,
+                valid: validationErrors.length === 0,
+                validationErrors,
+            };
+        });
+        await this.periodoLetivoModel.insertMany(periodosComStatus);
+        return {
+            batchId,
+            periodosLetivos: periodosComStatus,
+        };
+    }
+    async updateInvalidPeriodos(id, updateDto) {
+        if (!(0, mongoose_2.isValidObjectId)(id)) {
+            throw new common_1.BadRequestException("ID invalido");
+        }
+        const instance = (0, class_transformer_1.plainToInstance)(update_periodo_letivo_dto_1.UpdatePeriodoLetivoDto, updateDto);
+        const errors = (0, class_validator_1.validateSync)(instance);
+        const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+        const valid = validationErrors.length === 0;
+        const periodo = await this.periodoLetivoModel.findByIdAndUpdate(id, {
+            $set: {
+                ...updateDto,
+                valid,
+                validationErrors,
+            }
+        }, { new: true });
+        if (!periodo) {
+            throw new common_1.NotFoundException('Usuário não encontrado');
+        }
+        return {
+            message: 'Usuario Atualizado com sucesso',
+            date: periodo,
+        };
     }
     async findAll() {
         return this.periodoLetivoModel.find().exec();

@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const usuarios_service_1 = require("./usuarios.service");
 const create_usuario_dto_1 = require("./dto/create-usuario.dto");
 const update_usuario_dto_1 = require("./dto/update-usuario.dto");
+const create_usuario_batch_dto_1 = require("./dto/create-usuario-batch.dto");
 let UsuariosController = class UsuariosController {
     usuariosService;
     constructor(usuariosService) {
@@ -29,12 +30,11 @@ let UsuariosController = class UsuariosController {
             data: usuario,
         };
     }
-    async bulkCreate(createUsuariosDto) {
-        const usuariosCriados = await this.usuariosService.bulkCreate(createUsuariosDto);
-        return {
-            message: 'Usuários criados com sucesso!',
-            data: usuariosCriados,
-        };
+    async createBatch(dto) {
+        return this.usuariosService.createBatch(dto);
+    }
+    async revalidarUsuario(id, updateDto) {
+        return this.usuariosService.updateInvalidUsuarios(id, updateDto);
     }
     findAll() {
         return this.usuariosService.findAll();
@@ -59,13 +59,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsuariosController.prototype, "create", null);
 __decorate([
-    (0, common_1.Post)('bulk'),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    (0, common_1.Post)('Batch'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Array]),
+    __metadata("design:paramtypes", [create_usuario_batch_dto_1.CreateUsuarioBatchDto]),
     __metadata("design:returntype", Promise)
-], UsuariosController.prototype, "bulkCreate", null);
+], UsuariosController.prototype, "createBatch", null);
+__decorate([
+    (0, common_1.Patch)(':id/revalidar'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_usuario_dto_1.UpdateUsuarioDto]),
+    __metadata("design:returntype", Promise)
+], UsuariosController.prototype, "revalidarUsuario", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

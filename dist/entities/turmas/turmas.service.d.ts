@@ -17,5 +17,6 @@ export declare class TurmasService {
         batchId: string;
         turmas: any[];
     }>;
+    private validateBusinessRules;
     updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any>;
 }
