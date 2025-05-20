@@ -167,23 +167,28 @@ return {
 }*/
 async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: any[] }> {
   const batchId = uuidv4();
-  const turmas = dto.turmas;
+  
 
-  const turmasComStatus = turmas.map((turma) => {
+  const turmasComStatus = await Promise.all(dto.turmas.map(async(turma) => {
     const instance = plainToInstance(CreateTurmaDto, turma);
-    const errors = validateSync(instance);
+    const dtoerrors = validateSync(instance);
 
-    const validationErrors = errors.map((e) =>
+    const validationErrors = dtoerrors.map((e) =>
       Object.values(e.constraints || {}).join(', ')
     );
+
+    const businessErrors = await this.validateBusinessRules(turma);
+
+    const allErrors = [...validationErrors, ...businessErrors];
 
     return {
       ...turma,
       batchId,
-      valid: validationErrors.length === 0,
-      validationErrors,
+      valid: allErrors.length === 0,
+      validationErrors: allErrors,
     };
-  });
+  })
+);
 
   // Salva todas, válidas ou não
   await this.turmaModel.insertMany(turmasComStatus); 
@@ -192,6 +197,22 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
     batchId,
     turmas: turmasComStatus,
   };
+}
+
+private async validateBusinessRules(turma: CreateTurmaDto | UpdateTurmaDto): Promise<string[]> {
+  const errors: string[] = [];
+
+  const existentes = await this.turmaModel.findOne({codigoTurma: turma.codigoTurma});
+  if (existentes) {
+    errors.push(`O Código ${turma.codigoTurma} já foi registrado no banco`)
+  }
+
+  const disciplina = await this.turmaModel.findOne({codigoDisciplina: turma.codigoDisciplina});
+  if (!disciplina) {
+    errors.push(`A disciplina ${turma.codigoDisciplina} não existe`)
+  }
+
+  return errors;
 }
 
 async updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any> {
