@@ -3,6 +3,7 @@ import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { HttpCode } from '@nestjs/common';
+import { CreateUsuarioBatchDto } from './dto/create-usuario-batch.dto';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -19,7 +20,19 @@ export class UsuariosController {
     
   }
 
-  @Post('bulk')
+  @Post('Batch')
+  async createBatch(@Body() dto: CreateUsuarioBatchDto) {
+    return this.usuariosService.createBatch(dto);
+  }
+
+  @Patch(':id/revalidar')
+  async revalidarUsuario(
+    @Param('id') id: string, @Body() updateDto: UpdateUsuarioDto
+  ){
+    return this.usuariosService.updateInvalidUsuarios(id,updateDto);
+  }
+
+  /*@Post('bulk')
   @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
   async bulkCreate(@Body() createUsuariosDto: CreateUsuarioDto[]) {
     const usuariosCriados = await this.usuariosService.bulkCreate(createUsuariosDto);
@@ -28,7 +41,7 @@ export class UsuariosController {
       data: usuariosCriados,
     };
 
-  }
+  }*/
 
   @Get()
   findAll() {

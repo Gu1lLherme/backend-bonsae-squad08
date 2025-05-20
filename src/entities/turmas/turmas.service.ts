@@ -5,7 +5,6 @@ import { CreateTurmaBatchDto } from './dto/create-turma-batch.dto';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection, isValidObjectId } from 'mongoose';
 import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
-import { LoteImportacao, LoteImportacaoDocument } from '../lote-importacao/schemas/lote-importacao.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';

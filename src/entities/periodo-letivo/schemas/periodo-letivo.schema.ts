@@ -14,14 +14,8 @@ export class PeriodoLetivo {
     @Prop()
     dataInicial: Date;
   
-   @Prop()
+    @Prop()
     dataFinal: Date;
-
-    @Prop({ required: true }) batchId: string; // Identificador do lote
-
-  @Prop({ default: false }) valid: boolean;
-
-  @Prop({ default: null, type: [String] }) validationErrors?: string[];
   }
   
   export const PeriodoLetivoSchema = SchemaFactory.createForClass(PeriodoLetivo);

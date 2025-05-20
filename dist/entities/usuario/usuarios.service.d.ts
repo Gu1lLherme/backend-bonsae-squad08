@@ -8,22 +8,22 @@ export declare class UsuariosService {
     constructor(usuarioModel: Model<UsuarioDocument>, connection: Connection);
     create(dto: CreateUsuarioDto): Promise<Usuario>;
     bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]>;
-    findAll(): Promise<(import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    findAll(): Promise<(import("mongoose").Document<unknown, {}, UsuarioDocument, {}> & Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     })[]>;
-    findOne(id: string): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    findOne(id: string): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument, {}> & Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     }>;
-    update(id: string, dto: UpdateUsuarioDto): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    update(id: string, dto: UpdateUsuarioDto): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument, {}> & Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     }>;
-    remove(id: string): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
+    remove(id: string): Promise<import("mongoose").Document<unknown, {}, UsuarioDocument, {}> & Usuario & import("mongoose").Document<unknown, any, any, Record<string, any>> & Required<{
         _id: unknown;
     }> & {
         __v: number;

@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
-import { Model, Connection } from 'mongoose';
+import { Model, Connection, isValidObjectId } from 'mongoose';
 import { PeriodoLetivo, PeriodoLetivoDocument } from './schemas/periodo-letivo.schema';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
-import { CreateTurmaBatchDto } from '../turmas/dto/create-turma-batch.dto';
+import { CreatePeriodoLetivoBatchDto } from './dto/create-periodo-letivo-batch.dto';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import { v4 as uuidv4 } from 'uuid';
-import { CreatePeriodoLetivoBatchDto } from './dto/create-periodo-letivo-batch.dto';
+import {v4 as uuidv4} from "uuid";
+import { UpdateUsuarioDto } from '../usuario/dto/update-usuario.dto';
 
 @Injectable()
 export class PeriodoLetivoService {
@@ -94,9 +94,75 @@ export class PeriodoLetivoService {
         throw new InternalServerErrorException('Erro ao criar períodos letivos em lote.', error.message);}
       }
 
+  async createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<{batchId: string; periodosLetivos: any[]}> {
+  const batchId = uuidv4();
+  const periodosLetivos = dto.periodosLetivos;
+
+  const periodosComStatus = periodosLetivos.map((periodo) => {
+    const instance = plainToInstance(CreatePeriodoLetivoBatchDto, periodo);
+    const errors = validateSync(instance);
+
+    const validationErrors = errors.map((e) =>
+      Object.values(e.constraints || {}).join (', '));
+
+    return {
+      ...periodosLetivos,
+      batchId,
+      valid: validationErrors.length === 0,
+      validationErrors,
+    };
+  });
+
+  
+
+  await this.periodoLetivoModel.insertMany(periodosComStatus)
+
+  return {
+    batchId,
+    periodosLetivos: periodosComStatus,
+  };
+}
+
+async updateInvalidPeriodos(id: string, updateDto: UpdatePeriodoLetivoDto): Promise <any> {
+
+  if (!isValidObjectId(id)) {
+    throw new BadRequestException("ID invalido")
+  }
+
+  const instance = plainToInstance(UpdatePeriodoLetivoDto, updateDto);
+  const errors = validateSync(instance);
+
+  const validationErrors = errors.map((e) => 
+  Object.values(e.constraints || {}).join(', '));
+
+  const valid = validationErrors.length ===0;
+
+  const periodo = await this.periodoLetivoModel.findByIdAndUpdate(
+
+    id,
+    {
+      $set: {
+        ...updateDto,
+        valid,
+        validationErrors,}
+      },
+      { new: true}
+    
+  );
+
+  if (!periodo) {
+    throw new NotFoundException('Usuário não encontrado');
+  }
+  return {
+    message: 'Usuario Atualizado com sucesso',
+    date: periodo,
+  }
+}
+
   async findAll(): Promise<PeriodoLetivo[]> {
     return this.periodoLetivoModel.find().exec();
   }
+
 
   async findOne(id: string): Promise<PeriodoLetivo> {
     const periodo = await this.periodoLetivoModel.findById(id);
@@ -114,32 +180,4 @@ export class PeriodoLetivoService {
     const result = await this.periodoLetivoModel.findByIdAndDelete(id);
     if (!result) throw new NotFoundException('Período letivo não encontrado.');
   }
-
-  async createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<{batchId: string; periodosLetivos:any[]}>{
-    const batchId = uuidv4();
-    const periodos = dto.periodoLetivo;
-
-    const periodosComStatus = periodos.map(periodo => {
-      const instance = plainToInstance(CreatePeriodoLetivoDto, periodo);
-      const errors = validateSync(instance);
-
-    const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
-      return {
-        ...periodo,
-        batchId,
-        valid: validationErrors.length === 0,
-        validationErrors,
-      };
-    });
-
-    await this.periodoLetivoModel.insertMany(periodosComStatus);
-    return {
-      batchId,
-      periodosLetivos: periodosComStatus,
-    };
-  };
-
-
-    
-
 }

@@ -5,16 +5,13 @@ export type UsuarioDocument = Usuario & Document;
 
 @Schema()
 export class Usuario {
-  @Prop({ required: true, enum: [
-    'Coordenador(a)', 'Professor(a)', 'Aluno(a)', 
-    'Secretário(a)', 'Estagiário(a)', 'Advogado(a)'
-  ]})
+  @Prop()
   perfil: string;
 
   @Prop()
   subperfil?: string;
 
-  @Prop({ required: true })
+  @Prop()
   nome: string;
 
   @Prop()
@@ -23,10 +20,10 @@ export class Usuario {
   @Prop()
   seccional?: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop()
   email: string;
 
-  @Prop({type: String, unique: true, sparse: true})
+  @Prop()
   matriculaIes?: string;
 
   @Prop()
@@ -35,7 +32,7 @@ export class Usuario {
   @Prop()
   cpf?: string;
 
-  @Prop({ required: true })
+  @Prop()
   senha: string;
 
   @Prop()

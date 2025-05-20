@@ -1,13 +1,12 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreatePeriodoLetivoDto } from './create-periodo-letivo.dto';
+import { CreateUsuarioDto } from './create-usuario.dto';
 
-
-export class CreatePeriodoLetivoBatchDto {
+export class CreateUsuarioBatchDto {
 
 @IsArray()
 @ArrayMinSize(1, { message: 'Deve haver pelo menos uma turma.' })
 @ValidateNested({ each: true })
-@Type(() => CreatePeriodoLetivoDto)
-periodosLetivos: CreatePeriodoLetivoDto[];
+@Type(() => CreateUsuarioDto)
+usuarios: CreateUsuarioDto[];
 }

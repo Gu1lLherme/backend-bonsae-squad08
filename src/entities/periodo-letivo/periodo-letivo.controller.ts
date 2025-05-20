@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, Validation
 import { PeriodoLetivoService } from './periodo-letivo.service';
 import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
+import { CreatePeriodoLetivoBatchDto } from './dto/create-periodo-letivo-batch.dto';
 
 @Controller('periodo-letivo')
 export class PeriodoLetivoController {
@@ -23,6 +24,18 @@ export class PeriodoLetivoController {
         message: 'Períodos registrados com sucesso!',
         data: periodosCriados,
       };
+    }
+
+  @Post('Batch')
+    async createBatch(@Body() dto: CreatePeriodoLetivoBatchDto) {
+      return this.periodoLetivoService.createBatch(dto);
+    }
+  
+    @Patch(':id/revalidar')
+    async revalidarPeriodo(
+      @Param('id') id: string, @Body() updateDto: UpdatePeriodoLetivoDto
+    ){
+      return this.periodoLetivoService.updateInvalidPeriodos(id,updateDto);
     }
 
   @Get()

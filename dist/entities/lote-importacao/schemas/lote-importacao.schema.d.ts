@@ -14,11 +14,11 @@ export declare class LoteImportacao {
     quantidade_sucesso?: number;
     dataEnvio: Date;
 }
-export declare const LoteImportacaoSchema: import("mongoose").Schema<LoteImportacao, import("mongoose").Model<LoteImportacao, any, any, any, Document<unknown, any, LoteImportacao> & LoteImportacao & {
+export declare const LoteImportacaoSchema: import("mongoose").Schema<LoteImportacao, import("mongoose").Model<LoteImportacao, any, any, any, Document<unknown, any, LoteImportacao, any> & LoteImportacao & {
     _id: import("mongoose").Types.ObjectId;
 } & {
     __v: number;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, LoteImportacao, Document<unknown, {}, import("mongoose").FlatRecord<LoteImportacao>> & import("mongoose").FlatRecord<LoteImportacao> & {
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, LoteImportacao, Document<unknown, {}, import("mongoose").FlatRecord<LoteImportacao>, {}> & import("mongoose").FlatRecord<LoteImportacao> & {
     _id: import("mongoose").Types.ObjectId;
 } & {
     __v: number;

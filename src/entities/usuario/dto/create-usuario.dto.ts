@@ -1,18 +1,12 @@
 import { IsNotEmpty, IsEmail, IsOptional, IsEnum, IsString } from 'class-validator';
 
-export enum PerfilUsuario {
-  Coordenador = 'Coordenador(a)',
-  Professor = 'Professor(a)',
-  Aluno = 'Aluno(a)',
-  Secretario = 'Secretário(a)',
-  Estagiario = 'Estagiário(a)',
-  Advogado = 'Advogado(a)',
-}
+
+  
 
 export class CreateUsuarioDto {
   @IsNotEmpty()
-  @IsEnum(PerfilUsuario)
-  perfil: PerfilUsuario;
+  @IsEnum(['Advogado(a)','Coordenador(a)','Professor(a)','Estagiário(a)','Aluno(a)','Secretário(a)'])
+  perfil: string;
 
   @IsOptional()
   @IsString()
