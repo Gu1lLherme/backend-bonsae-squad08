@@ -40,6 +40,12 @@ export class Usuario {
 
   @Prop()
   observacoes?: string;
+
+  @Prop({ required: true }) batchId: string; // Identificador do lote
+
+  @Prop({ default: false }) valid: boolean;
+
+  @Prop({ default: null, type: [String] }) validationErrors?: string[];
 }
 
 export const UsuarioSchema = SchemaFactory.createForClass(Usuario);
