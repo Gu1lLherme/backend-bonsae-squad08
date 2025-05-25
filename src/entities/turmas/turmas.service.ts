@@ -8,7 +8,7 @@ import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import { ProcessoImportacaoService } from '../processo-importacao/processo-importacao.service';
+import { ProcessoImportacaoService } from '../../processo-importacao/processo-importacao.service';
 import { count } from 'console';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TurmaSQLEntity } from './entities/turma-sql.entity';

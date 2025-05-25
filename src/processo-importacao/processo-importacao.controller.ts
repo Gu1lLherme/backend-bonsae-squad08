@@ -2,8 +2,8 @@
 import { Controller, Post, Body, UsePipes, ValidationPipe, Req } from "@nestjs/common";
 import { ProcessoImportacaoService } from "./processo-importacao.service";
 import { v4 as uuidv4 } from 'uuid';
-import { PeriodoLetivoService } from "../periodo-letivo/periodo-letivo.service";
-import { ImportPeriodoLetivoDto } from "../periodo-letivo/dto/import-periodo-letivo.dto";
+import { PeriodoLetivoService } from "../entities/periodo-letivo/periodo-letivo.service";
+import { ImportPeriodoLetivoDto } from "../entities/periodo-letivo/dto/import-periodo-letivo.dto";
 
 
 @Controller('processo-importacao')

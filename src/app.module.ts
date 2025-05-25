@@ -9,7 +9,7 @@ import { PeriodoLetivoModule } from './entities/periodo-letivo/periodo-letivo.mo
 import { DisciplinaModule } from './entities/disciplina/disciplina.module';
 import { TurmasModule } from './entities/turmas/turmas.module';
 import { UsuarioModule } from './entities/usuario/usuarios.module'; // ajuste o path se necessário
-import { ProcessoImportacaoModule } from './entities/processo-importacao/processo-importacao.module';
+import { ProcessoImportacaoModule } from './processo-importacao/processo-importacao.module';
 
 
 
