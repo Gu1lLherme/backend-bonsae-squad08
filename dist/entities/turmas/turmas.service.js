@@ -22,12 +22,15 @@ const turmas_schema_1 = require("./schemas/turmas.schema");
 const uuid_1 = require("uuid");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const processo_importacao_service_1 = require("../processo-importacao/processo-importacao.service");
 let TurmasService = class TurmasService {
     turmaModel;
     connection;
-    constructor(turmaModel, connection) {
+    processoImportacaoService;
+    constructor(turmaModel, connection, processoImportacaoService) {
         this.turmaModel = turmaModel;
         this.connection = connection;
+        this.processoImportacaoService = processoImportacaoService;
     }
     async create(createTurmaDto) {
         const turmaExistente = await this.turmaModel.findOne({ codigoTurma: createTurmaDto.codigoTurma });
@@ -114,12 +117,15 @@ let TurmasService = class TurmasService {
             const allErrors = [...validationErrors, ...businessErrors];
             return {
                 ...turma,
-                batchId,
+                processID: batchId,
                 valid: allErrors.length === 0,
                 validationErrors: allErrors,
             };
         }));
         await this.turmaModel.insertMany(turmasComStatus);
+        await this.processoImportacaoService.updateStatus(batchId, 'arquivo-enviado', {
+            totalRegistros: turmasComStatus.length,
+        });
         return {
             batchId,
             turmas: turmasComStatus,
@@ -130,10 +136,6 @@ let TurmasService = class TurmasService {
         const existentes = await this.turmaModel.findOne({ codigoTurma: turma.codigoTurma });
         if (existentes) {
             errors.push(`O Código ${turma.codigoTurma} já foi registrado no banco`);
-        }
-        const disciplina = await this.turmaModel.findOne({ codigoDisciplina: turma.codigoDisciplina });
-        if (!disciplina) {
-            errors.push(`A disciplina ${turma.codigoDisciplina} não existe`);
         }
         return errors;
     }
@@ -165,6 +167,6 @@ exports.TurmasService = TurmasService = __decorate([
     __param(0, (0, mongoose_1.InjectModel)(turmas_schema_1.Turma.name)),
     __param(1, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Connection])
+        mongoose_2.Connection, processo_importacao_service_1.ProcessoImportacaoService])
 ], TurmasService);
 //# sourceMappingURL=turmas.service.js.map

@@ -14,14 +14,20 @@ const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const create_periodo_letivo_dto_1 = require("./create-periodo-letivo.dto");
 class CreatePeriodoLetivoBatchDto {
-    periodosLetivos;
+    processId;
+    periodos;
 }
 exports.CreatePeriodoLetivoBatchDto = CreatePeriodoLetivoBatchDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUUID)('4', { message: 'ID do lote deve ser um UUID válido.' }),
+    __metadata("design:type", String)
+], CreatePeriodoLetivoBatchDto.prototype, "processId", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ArrayMinSize)(1, { message: 'Deve haver pelo menos uma turma.' }),
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, class_transformer_1.Type)(() => create_periodo_letivo_dto_1.CreatePeriodoLetivoDto),
     __metadata("design:type", Array)
-], CreatePeriodoLetivoBatchDto.prototype, "periodosLetivos", void 0);
+], CreatePeriodoLetivoBatchDto.prototype, "periodos", void 0);
 //# sourceMappingURL=create-periodo-letivo-batch.dto.js.map

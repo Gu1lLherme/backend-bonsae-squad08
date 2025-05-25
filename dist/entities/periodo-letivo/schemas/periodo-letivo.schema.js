@@ -16,6 +16,9 @@ let PeriodoLetivo = class PeriodoLetivo {
     periodoLetivo;
     dataInicial;
     dataFinal;
+    batchId;
+    valid;
+    validationErrors;
 };
 exports.PeriodoLetivo = PeriodoLetivo;
 __decorate([
@@ -34,6 +37,18 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", Date)
 ], PeriodoLetivo.prototype, "dataFinal", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], PeriodoLetivo.prototype, "batchId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], PeriodoLetivo.prototype, "valid", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: null, type: [String] }),
+    __metadata("design:type", Array)
+], PeriodoLetivo.prototype, "validationErrors", void 0);
 exports.PeriodoLetivo = PeriodoLetivo = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], PeriodoLetivo);

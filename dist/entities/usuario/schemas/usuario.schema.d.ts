@@ -13,6 +13,9 @@ export declare class Usuario {
     senha: string;
     periodoCurricular?: string;
     observacoes?: string;
+    batchId: string;
+    valid: boolean;
+    validationErrors?: string[];
 }
 export declare const UsuarioSchema: import("mongoose").Schema<Usuario, import("mongoose").Model<Usuario, any, any, any, Document<unknown, any, Usuario> & Usuario & {
     _id: import("mongoose").Types.ObjectId;

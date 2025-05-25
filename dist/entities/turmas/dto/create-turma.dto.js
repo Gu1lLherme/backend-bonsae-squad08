@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateTurmaDto = void 0;
+const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 class CreateTurmaDto {
     codigoDisciplina;
@@ -23,7 +24,9 @@ exports.CreateTurmaDto = CreateTurmaDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'O código da disciplina é obrigatório.' }),
     (0, class_validator_1.IsString)({ message: 'O código da disciplina deve ser uma string.' }),
+    (0, class_transformer_1.Transform)(({ value }) => value?.trim()),
     (0, class_validator_1.Length)(3, 50),
+    (0, class_validator_1.Matches)(/^[A-Za-z0-9_-]+$/, { message: 'O código da disciplina deve conter apenas letras e números, hífen ou underscore.' }),
     __metadata("design:type", String)
 ], CreateTurmaDto.prototype, "codigoDisciplina", void 0);
 __decorate([
@@ -35,18 +38,23 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'O código da turma é obrigatório.' }),
     (0, class_validator_1.IsString)({ message: 'O código da turma deve ser uma string.' }),
+    (0, class_transformer_1.Transform)(({ value }) => value?.trim()),
+    (0, class_validator_1.Length)(2, 20, { message: 'O código da turma deve ter entre 2 e 20 caracteres.' }),
     (0, class_validator_1.Matches)(/^[A-Za=z0-9_-]+$/, { message: 'O código da turma deve conter apenas letras e números, hífen ou underscore.' }),
     __metadata("design:type", String)
 ], CreateTurmaDto.prototype, "codigoTurma", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'O nome da turma é obrigatório.' }),
     (0, class_validator_1.IsString)({ message: 'O nome da turma deve ser uma string.' }),
+    (0, class_transformer_1.Transform)(({ value }) => value?.trim()),
+    (0, class_validator_1.Matches)(/^[A-Za-zÀ-ÿ0-9\s-_.()]+$/, { message: 'O nome da turma contém caracteres inválidos.', }),
     (0, class_validator_1.Length)(3, 100),
     __metadata("design:type", String)
 ], CreateTurmaDto.prototype, "nomeTurma", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'O tipo é obrigatório.' }),
     (0, class_validator_1.IsEnum)(['aluno', 'professor'], { message: 'O tipo deve ser aluno ou professor.', }),
+    (0, class_validator_1.IsString)({ message: 'O tipo deve ser uma string.' }),
     __metadata("design:type", String)
 ], CreateTurmaDto.prototype, "tipo", void 0);
 __decorate([

@@ -53,7 +53,7 @@ let PeriodoLetivoService = class PeriodoLetivoService {
             if (!periodo.codigoPeriodoLetivo || periodo.codigoPeriodoLetivo.trim() === '') {
                 problemas.push('Código do período letivo é obrigatório.');
             }
-            if (!periodo.periodoLetivo || periodo.periodoLetivo.trim() === '') {
+            if (!periodo.periodosLetivos || periodo.periodosLetivos.trim() === '') {
                 problemas.push('Nome do período letivo é obrigatório.');
             }
             if (!periodo.dataInicial || isNaN(Date.parse(periodo.dataInicial.toString()))) {
@@ -94,12 +94,12 @@ let PeriodoLetivoService = class PeriodoLetivoService {
         }
     }
     async createBatch(dto) {
-        const batchId = (0, uuid_1.v4)();
-        const periodosLetivos = dto.periodosLetivos;
+        const batchId = dto.processId || (0, uuid_1.v4)();
+        const periodosLetivos = dto.periodos;
         const periodosComStatus = periodosLetivos.map((periodo) => {
             const instance = (0, class_transformer_1.plainToInstance)(create_periodo_letivo_batch_dto_1.CreatePeriodoLetivoBatchDto, periodo);
             const errors = (0, class_validator_1.validateSync)(instance);
-            const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
+            const validationErrors = errors.flatMap((e) => Object.values(e.constraints || {}).join(', '));
             return {
                 ...periodosLetivos,
                 batchId,

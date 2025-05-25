@@ -19,6 +19,7 @@ let Turma = class Turma {
     nomeTurma;
     tipo;
     usuarios;
+    processId;
     batchId;
     valid;
     validationErrors;
@@ -48,6 +49,10 @@ __decorate([
     (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Usuario' }], default: [] }),
     __metadata("design:type", Array)
 ], Turma.prototype, "usuarios", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Turma.prototype, "processId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)

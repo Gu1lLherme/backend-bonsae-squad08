@@ -7,6 +7,7 @@ export declare class Turma {
     nomeTurma: string;
     tipo: string;
     usuarios?: Types.ObjectId[];
+    processId: string;
     batchId: string;
     valid: boolean;
     validationErrors?: string[];

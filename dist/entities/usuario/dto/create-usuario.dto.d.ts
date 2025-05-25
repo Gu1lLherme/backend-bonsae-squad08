@@ -3,7 +3,7 @@ export declare class CreateUsuarioDto {
     subperfil?: string;
     nome: string;
     numeroOab?: string;
-    seccional?: string;
+    seccionalOab?: string;
     email: string;
     matriculaIes?: string;
     telefone?: string;

@@ -9,25 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateTurmaBatchDto = void 0;
-const class_validator_1 = require("class-validator");
+exports.ImportPeriodoLetivoDto = void 0;
 const class_transformer_1 = require("class-transformer");
-const create_turma_dto_1 = require("./create-turma.dto");
-class CreateTurmaBatchDto {
+const class_validator_1 = require("class-validator");
+const create_periodo_letivo_dto_1 = require("./create-periodo-letivo.dto");
+class ImportPeriodoLetivoDto {
     processId;
-    turmas;
+    periodos;
 }
-exports.CreateTurmaBatchDto = CreateTurmaBatchDto;
+exports.ImportPeriodoLetivoDto = ImportPeriodoLetivoDto;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsUUID)('4', { message: 'ID do lote deve ser um UUID válido.' }),
+    (0, class_validator_1.IsUUID)('4', { message: 'processId deve ser um UUID v4 válido.' }),
     __metadata("design:type", String)
-], CreateTurmaBatchDto.prototype, "processId", void 0);
+], ImportPeriodoLetivoDto.prototype, "processId", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayMinSize)(1, { message: 'Deve haver pelo menos uma turma.' }),
-    (0, class_validator_1.ValidateNested)({ each: true }),
-    (0, class_transformer_1.Type)(() => create_turma_dto_1.CreateTurmaDto),
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => create_periodo_letivo_dto_1.CreatePeriodoLetivoDto),
     __metadata("design:type", Array)
-], CreateTurmaBatchDto.prototype, "turmas", void 0);
-//# sourceMappingURL=create-turma-batch.dto.js.map
+], ImportPeriodoLetivoDto.prototype, "periodos", void 0);
+//# sourceMappingURL=import-periodo-letivo.dto.js.map

@@ -24,6 +24,9 @@ let Usuario = class Usuario {
     senha;
     periodoCurricular;
     observacoes;
+    batchId;
+    valid;
+    validationErrors;
 };
 exports.Usuario = Usuario;
 __decorate([
@@ -74,6 +77,18 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Usuario.prototype, "observacoes", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Usuario.prototype, "batchId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], Usuario.prototype, "valid", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: null, type: [String] }),
+    __metadata("design:type", Array)
+], Usuario.prototype, "validationErrors", void 0);
 exports.Usuario = Usuario = __decorate([
     (0, mongoose_1.Schema)()
 ], Usuario);

@@ -1,6 +1,6 @@
 export declare class CreatePeriodoLetivoDto {
     codigoPeriodoLetivo: string;
-    periodoLetivo: string;
+    periodosLetivos: string;
     dataInicial: Date;
     dataFinal: Date;
 }
