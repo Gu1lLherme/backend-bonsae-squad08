@@ -26,7 +26,7 @@ export class TurmasService {
    */
 
   constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
-  @InjectConnection() private readonly connection: Connection,private readonly processoImportacaoService: ProcessoImportacaoService,) {}
+  @InjectConnection() private readonly connection: Connection) {}
 
 
   async create(createTurmaDto: CreateTurmaDto): Promise<Turma> {
@@ -194,8 +194,8 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
   // Salva todas, válidas ou não
   await this.turmaModel.insertMany(turmasComStatus); 
 
-  await this.processoImportacaoService.updateStatus(batchId, 'arquivo-enviado', {
-    totalRegistros: turmasComStatus.length,});
+  /*await this.processoImportacaoService.updateStatus(batchId, 'arquivo-enviado', {
+    totalRegistros: turmasComStatus.length,}); */
 
   return {
     batchId,

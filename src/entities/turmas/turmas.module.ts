@@ -5,7 +5,7 @@ import { TurmasController } from './turmas.controller';
 import { Turma, TurmaSchema } from './schemas/turmas.schema';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TurmaSQLEntity } from './entities/turma-sql.entity';
-import { ProcessoImportacaoService } from '../processo-importacao/processo-importacao.service';
+//import { ProcessoImportacaoService } from '../processo-importacao/processo-importacao.service';
 
 
 @Module({
@@ -14,6 +14,6 @@ import { ProcessoImportacaoService } from '../processo-importacao/processo-impor
     //TypeOrmModule.forFeature([TurmaSQLEntity]), // Habilita a injeção de repositórios da entidade
   ],
   controllers: [TurmasController],
-  providers: [TurmasService, ProcessoImportacaoService],
+  providers: [TurmasService],
 })
 export class TurmasModule {}
