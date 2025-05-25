@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProcessoImportacaoController = void 0;
 const common_1 = require("@nestjs/common");
 const processo_importacao_service_1 = require("./processo-importacao.service");
-const periodo_letivo_service_1 = require("../periodo-letivo/periodo-letivo.service");
-const import_periodo_letivo_dto_1 = require("../periodo-letivo/dto/import-periodo-letivo.dto");
+const periodo_letivo_service_1 = require("../entities/periodo-letivo/periodo-letivo.service");
+const import_periodo_letivo_dto_1 = require("../entities/periodo-letivo/dto/import-periodo-letivo.dto");
 let ProcessoImportacaoController = class ProcessoImportacaoController {
     processoImportacaoService;
     periodoLetivoService;

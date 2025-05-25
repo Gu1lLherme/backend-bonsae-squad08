@@ -1,6 +1,6 @@
 import { ProcessoImportacaoService } from "./processo-importacao.service";
-import { PeriodoLetivoService } from "../periodo-letivo/periodo-letivo.service";
-import { ImportPeriodoLetivoDto } from "../periodo-letivo/dto/import-periodo-letivo.dto";
+import { PeriodoLetivoService } from "../entities/periodo-letivo/periodo-letivo.service";
+import { ImportPeriodoLetivoDto } from "../entities/periodo-letivo/dto/import-periodo-letivo.dto";
 export declare class ProcessoImportacaoController {
     private readonly processoImportacaoService;
     private readonly periodoLetivoService;

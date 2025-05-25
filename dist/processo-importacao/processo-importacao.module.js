@@ -12,8 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const processo_importacao_schema_1 = require("./schemas/processo-importacao.schema");
 const processo_importacao_service_1 = require("./processo-importacao.service");
 const processo_importacao_controller_1 = require("./processo-importacao.controller");
-const periodo_letivo_module_1 = require("../periodo-letivo/periodo-letivo.module");
-const periodo_letivo_service_1 = require("../periodo-letivo/periodo-letivo.service");
+const periodo_letivo_module_1 = require("../entities/periodo-letivo/periodo-letivo.module");
 let ProcessoImportacaoModule = class ProcessoImportacaoModule {
 };
 exports.ProcessoImportacaoModule = ProcessoImportacaoModule;
@@ -25,7 +24,7 @@ exports.ProcessoImportacaoModule = ProcessoImportacaoModule = __decorate([
             ]),
             periodo_letivo_module_1.PeriodoLetivoModule,
         ],
-        providers: [processo_importacao_service_1.ProcessoImportacaoService, periodo_letivo_service_1.PeriodoLetivoService],
+        providers: [processo_importacao_service_1.ProcessoImportacaoService],
         controllers: [processo_importacao_controller_1.ProcessoImportacaoController],
         exports: [processo_importacao_service_1.ProcessoImportacaoService],
     })
