@@ -14,15 +14,12 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const create_periodo_letivo_dto_1 = require("./create-periodo-letivo.dto");
 class ImportPeriodoLetivoDto {
-    processId;
     periodos;
 }
 exports.ImportPeriodoLetivoDto = ImportPeriodoLetivoDto;
 __decorate([
-    (0, class_validator_1.IsUUID)('4', { message: 'processId deve ser um UUID v4 válido.' }),
-    __metadata("design:type", String)
-], ImportPeriodoLetivoDto.prototype, "processId", void 0);
-__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayNotEmpty)({ message: 'Deve haver pelo menos um período letivo.' }),
     (0, class_validator_1.ValidateNested)(),
     (0, class_transformer_1.Type)(() => create_periodo_letivo_dto_1.CreatePeriodoLetivoDto),
     __metadata("design:type", Array)

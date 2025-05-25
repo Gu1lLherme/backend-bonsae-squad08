@@ -7,6 +7,6 @@ export declare class ProcessoImportacaoController {
     constructor(processoImportacaoService: ProcessoImportacaoService, periodoLetivoService: PeriodoLetivoService);
     iniciarProcessoImportacao(dto: ImportPeriodoLetivoDto, req: any): Promise<{
         message: string;
-        processId: string;
+        processId: any;
     }>;
 }

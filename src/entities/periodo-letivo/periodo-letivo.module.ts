@@ -9,7 +9,7 @@ import { ProcessoImportacaoModule } from '../../processo-importacao/processo-imp
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: PeriodoLetivo.name, schema: PeriodoLetivoSchema }]),
-    forwardRef() => ProcessoImportacaoModule
+    forwardRef(() => ProcessoImportacaoModule),
   ],
   controllers: [PeriodoLetivoController],
   providers: [PeriodoLetivoService],

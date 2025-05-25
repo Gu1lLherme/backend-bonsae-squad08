@@ -4,13 +4,15 @@ import {
   IsNotEmpty,
   IsString,
   ValidateNested,
+  IsArray,
+  ArrayNotEmpty,
 } from 'class-validator';
 import { CreatePeriodoLetivoDto } from './create-periodo-letivo.dto';
 
 export class ImportPeriodoLetivoDto {
-  @IsUUID('4', { message: 'processId deve ser um UUID v4 válido.' })
-  processId: string;
-
+  
+  @IsArray()
+  @ArrayNotEmpty({ message: 'Deve haver pelo menos um período letivo.' })
   @ValidateNested()
   @Type(() => CreatePeriodoLetivoDto)
   periodos: CreatePeriodoLetivoDto[];

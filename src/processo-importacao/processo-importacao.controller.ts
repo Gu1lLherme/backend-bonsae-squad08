@@ -22,10 +22,10 @@ async iniciarProcessoImportacao(
   @Body() dto: ImportPeriodoLetivoDto,
   @Req () req: any,
 ) {	
-    const { processId, periodos } = dto;
-
-    await this.periodoLetivoService.createBatch({ processId, periodos: Array.isArray(periodos) ? periodos : [periodos] });
-
+    const processId = uuidv4();
+    await this.periodoLetivoService.createBatch({ processId, 
+      periodos: dto.periodos });
+      
     await this.processoImportacaoService.createProcesso(
         processId,
         'periodo-letivo', 

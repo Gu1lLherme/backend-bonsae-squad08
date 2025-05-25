@@ -20,7 +20,7 @@ exports.PeriodoLetivoModule = PeriodoLetivoModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: periodo_letivo_schema_1.PeriodoLetivo.name, schema: periodo_letivo_schema_1.PeriodoLetivoSchema }]),
-            (0, common_1.forwardRef)(() => processo_importacao_module_1.ProcessoImportacaoModule)
+            (0, common_1.forwardRef)(() => processo_importacao_module_1.ProcessoImportacaoModule),
         ],
         controllers: [periodo_letivo_controller_1.PeriodoLetivoController],
         providers: [periodo_letivo_service_1.PeriodoLetivoService],

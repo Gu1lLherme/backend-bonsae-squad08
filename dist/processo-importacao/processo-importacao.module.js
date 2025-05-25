@@ -22,7 +22,7 @@ exports.ProcessoImportacaoModule = ProcessoImportacaoModule = __decorate([
             mongoose_1.MongooseModule.forFeature([
                 { name: processo_importacao_schema_1.ProcessoImportacao.name, schema: processo_importacao_schema_1.ProcessoImportacaoSchema },
             ]),
-            periodo_letivo_module_1.PeriodoLetivoModule,
+            (0, common_1.forwardRef)(() => periodo_letivo_module_1.PeriodoLetivoModule),
         ],
         providers: [processo_importacao_service_1.ProcessoImportacaoService],
         controllers: [processo_importacao_controller_1.ProcessoImportacaoController],
