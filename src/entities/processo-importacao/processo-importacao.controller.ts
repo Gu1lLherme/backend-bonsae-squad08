@@ -1,4 +1,4 @@
-import { CreatePeriodoLetivoDto } from "../periodo-letivo/dto/create-periodo-letivo.dto";
+
 import { Controller, Post, Body, UsePipes, ValidationPipe, Req } from "@nestjs/common";
 import { ProcessoImportacaoService } from "./processo-importacao.service";
 import { v4 as uuidv4 } from 'uuid';
@@ -11,14 +11,19 @@ import { ImportPeriodoLetivoDto } from "../periodo-letivo/dto/import-periodo-let
 export class ProcessoImportacaoController {
   constructor(private readonly processoImportacaoService: ProcessoImportacaoService, private readonly periodoLetivoService: PeriodoLetivoService) {}
 
+@UsePipes(new ValidationPipe({
+  whitelist: true,
+  forbidNonWhitelisted: true,
+  transform: true,
+}))
 @Post('iniciar')
 async iniciarProcessoImportacao(
   @Body() dto: ImportPeriodoLetivoDto,
   @Req () req: any,
 ) {	
-    const { processId, periodoLetivo } = dto;
+    const { processId, periodos } = dto;
 
-    await this.periodoLetivoService.create({periodoLetivo});
+    await this.periodoLetivoService.createBatch({ processId, periodos: Array.isArray(periodos) ? periodos : [periodos] });
 
     await this.processoImportacaoService.createProcesso(
         processId,
