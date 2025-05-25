@@ -8,6 +8,7 @@ import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { ProcessoImportacaoService } from '../processo-importacao/processo-importacao.service';
 import { count } from 'console';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TurmaSQLEntity } from './entities/turma-sql.entity';
@@ -25,7 +26,7 @@ export class TurmasService {
    */
 
   constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
-  @InjectConnection() private readonly connection: Connection,) {}
+  @InjectConnection() private readonly connection: Connection,private readonly processoImportacaoService: ProcessoImportacaoService,) {}
 
 
   async create(createTurmaDto: CreateTurmaDto): Promise<Turma> {
@@ -183,7 +184,7 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
 
     return {
       ...turma,
-      batchId,
+      processID: batchId,
       valid: allErrors.length === 0,
       validationErrors: allErrors,
     };
@@ -192,6 +193,9 @@ async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: 
 
   // Salva todas, válidas ou não
   await this.turmaModel.insertMany(turmasComStatus); 
+
+  await this.processoImportacaoService.updateStatus(batchId, 'arquivo-enviado', {
+    totalRegistros: turmasComStatus.length,});
 
   return {
     batchId,
