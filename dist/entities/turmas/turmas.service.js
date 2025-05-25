@@ -22,15 +22,12 @@ const turmas_schema_1 = require("./schemas/turmas.schema");
 const uuid_1 = require("uuid");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
-const processo_importacao_service_1 = require("../processo-importacao/processo-importacao.service");
 let TurmasService = class TurmasService {
     turmaModel;
     connection;
-    processoImportacaoService;
-    constructor(turmaModel, connection, processoImportacaoService) {
+    constructor(turmaModel, connection) {
         this.turmaModel = turmaModel;
         this.connection = connection;
-        this.processoImportacaoService = processoImportacaoService;
     }
     async create(createTurmaDto) {
         const turmaExistente = await this.turmaModel.findOne({ codigoTurma: createTurmaDto.codigoTurma });
@@ -123,9 +120,6 @@ let TurmasService = class TurmasService {
             };
         }));
         await this.turmaModel.insertMany(turmasComStatus);
-        await this.processoImportacaoService.updateStatus(batchId, 'arquivo-enviado', {
-            totalRegistros: turmasComStatus.length,
-        });
         return {
             batchId,
             turmas: turmasComStatus,
@@ -167,6 +161,6 @@ exports.TurmasService = TurmasService = __decorate([
     __param(0, (0, mongoose_1.InjectModel)(turmas_schema_1.Turma.name)),
     __param(1, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Connection, processo_importacao_service_1.ProcessoImportacaoService])
+        mongoose_2.Connection])
 ], TurmasService);
 //# sourceMappingURL=turmas.service.js.map
