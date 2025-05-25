@@ -24,6 +24,7 @@ exports.PeriodoLetivoModule = PeriodoLetivoModule = __decorate([
         ],
         controllers: [periodo_letivo_controller_1.PeriodoLetivoController],
         providers: [periodo_letivo_service_1.PeriodoLetivoService],
+        exports: [periodo_letivo_service_1.PeriodoLetivoService],
     })
 ], PeriodoLetivoModule);
 //# sourceMappingURL=periodo-letivo.module.js.map

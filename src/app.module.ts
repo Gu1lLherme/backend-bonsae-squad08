@@ -28,6 +28,11 @@ import { ProcessoImportacaoModule } from './entities/processo-importacao/process
     }),*/
 
     TurmasModule,
+    PeriodoLetivoModule,
+    DisciplinaModule,
+    TurmasModule,
+    UsuarioModule,
+    ProcessoImportacaoModule,
     
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
@@ -38,11 +43,7 @@ import { ProcessoImportacaoModule } from './entities/processo-importacao/process
         return { uri };
       },
     }),
-    PeriodoLetivoModule,
-    DisciplinaModule,
-    TurmasModule,
-    UsuarioModule,
-    ProcessoImportacaoModule,
+    
     // Aqui você pode importar seus módulos
 
   ],
