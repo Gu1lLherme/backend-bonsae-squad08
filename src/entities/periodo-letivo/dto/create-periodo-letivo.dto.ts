@@ -27,7 +27,7 @@ export class CreatePeriodoLetivoDto {
   @Transform(({ value }) => value?.trim())
   @Length(5,50, { message: 'O nome do período letivo deve ter entre 5 e 50 caracteres.' })
   @Matches(/^[A-Za-zÀ-ÿ0-9\s-().]+$/, {message: 'O nome do período letivo contém caracteres inválidos.',})
-  periodoLetivo: string;
+  periodosLetivos: string;
 
   @IsDateString()
   @IsNotEmpty( { message: 'A data inicial não pode ser vazia.' })
