@@ -11,8 +11,8 @@ export class ProcessoImportacao {
     @Prop ({ required: true })
     status: 'criado' | 'arquivo-enviado' | 'validando' | 'concluido';
 
-    @Prop ({ required: true })
-    usuario: string;
+    @Prop ()
+    usuario?: string;
 
     @Prop ()
     nomeArquivo?: string;

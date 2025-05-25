@@ -47,20 +47,16 @@ __decorate([
     __metadata("design:type", String)
 ], CreatePeriodoLetivoDto.prototype, "periodosLetivos", void 0);
 __decorate([
-    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsDateString)({}, { message: 'A data final deve estar no formato YYYY-MM-DD.' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'A data inicial não pode ser vazia.' }),
-    (0, class_transformer_1.Type)(() => Date),
-    (0, class_validator_1.Matches)(/^\d{4}-\d{2}-\d{2}$/, { message: 'A data final deve estar no formato YYYY-MM-DD.' }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], CreatePeriodoLetivoDto.prototype, "dataInicial", void 0);
 __decorate([
-    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsDateString)({}, { message: 'A data final deve estar no formato YYYY-MM-DD.' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'A data final não pode ser vazia.' }),
     (0, class_validator_1.Validate)(IsAfterStartDate, {
         message: 'A data final deve ser posterior à data inicial.'
     }),
-    (0, class_transformer_1.Type)(() => Date),
-    (0, class_validator_1.Matches)(/^\d{4}-\d{2}-\d{2}$/, { message: 'A data final deve estar no formato YYYY-MM-DD.' }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], CreatePeriodoLetivoDto.prototype, "dataFinal", void 0);
 //# sourceMappingURL=create-periodo-letivo.dto.js.map

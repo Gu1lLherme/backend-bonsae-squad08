@@ -29,19 +29,15 @@ export class CreatePeriodoLetivoDto {
   @Matches(/^[A-Za-zÀ-ÿ0-9\s-().]+$/, {message: 'O nome do período letivo contém caracteres inválidos.',})
   periodosLetivos: string;
 
-  @IsDateString()
+  @IsDateString( {} ,{ message: 'A data final deve estar no formato YYYY-MM-DD.' } )
   @IsNotEmpty( { message: 'A data inicial não pode ser vazia.' })
-  @Type(() => Date)
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'A data final deve estar no formato YYYY-MM-DD.' })
-  dataInicial: Date;
+  dataInicial: string;
 
-  @IsDateString()
+  @IsDateString({} ,{ message: 'A data final deve estar no formato YYYY-MM-DD.' })
   @IsNotEmpty( { message: 'A data final não pode ser vazia.' })
   @Validate(IsAfterStartDate, {
   message: 'A data final deve ser posterior à data inicial.' })
-  @Type(() => Date)
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'A data final deve estar no formato YYYY-MM-DD.' })
-  dataFinal: Date;
+  dataFinal: string;
 }
 
 

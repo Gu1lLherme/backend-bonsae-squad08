@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProcessoImportacaoController = void 0;
 const common_1 = require("@nestjs/common");
 const processo_importacao_service_1 = require("./processo-importacao.service");
+const uuid_1 = require("uuid");
 const periodo_letivo_service_1 = require("../entities/periodo-letivo/periodo-letivo.service");
 const import_periodo_letivo_dto_1 = require("../entities/periodo-letivo/dto/import-periodo-letivo.dto");
 let ProcessoImportacaoController = class ProcessoImportacaoController {
@@ -25,8 +26,9 @@ let ProcessoImportacaoController = class ProcessoImportacaoController {
         this.periodoLetivoService = periodoLetivoService;
     }
     async iniciarProcessoImportacao(dto, req) {
-        const { processId, periodos } = dto;
-        await this.periodoLetivoService.createBatch({ processId, periodos: Array.isArray(periodos) ? periodos : [periodos] });
+        const processId = (0, uuid_1.v4)();
+        await this.periodoLetivoService.createBatch({ processId,
+            periodos: dto.periodos });
         await this.processoImportacaoService.createProcesso(processId, 'periodo-letivo');
         return {
             message: 'Processo de importação iniciado com sucesso!',

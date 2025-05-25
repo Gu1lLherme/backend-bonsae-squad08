@@ -3,7 +3,7 @@ export type ProcessoImportacaoDocument = ProcessoImportacao & Document;
 export declare class ProcessoImportacao {
     tipo: 'Periodo-Letivo' | 'Disciplina' | 'Turmas' | 'Usuario';
     status: 'criado' | 'arquivo-enviado' | 'validando' | 'concluido';
-    usuario: string;
+    usuario?: string;
     nomeArquivo?: string;
     totalRegistros?: number;
 }

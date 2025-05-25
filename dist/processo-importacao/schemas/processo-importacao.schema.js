@@ -28,7 +28,7 @@ __decorate([
     __metadata("design:type", String)
 ], ProcessoImportacao.prototype, "status", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], ProcessoImportacao.prototype, "usuario", void 0);
 __decorate([
