@@ -25,6 +25,9 @@ export class Turma {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Usuario' }] ,default: [] })
   usuarios?: Types.ObjectId[]; // Referência a usuários (alunos ou professores) associados à turma
 
+  @Prop({required: true})
+  processId: string; // ID do processo de importação
+
   @Prop({ required: true }) batchId: string; // Identificador do lote
 
   @Prop({ default: false }) valid: boolean;
