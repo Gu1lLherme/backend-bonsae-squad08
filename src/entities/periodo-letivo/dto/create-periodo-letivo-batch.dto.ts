@@ -9,5 +9,5 @@ export class CreatePeriodoLetivoBatchDto {
 @ArrayMinSize(1, { message: 'Deve haver pelo menos uma turma.' })
 @ValidateNested({ each: true })
 @Type(() => CreatePeriodoLetivoDto)
-periodosLetivos: CreatePeriodoLetivoDto[];
+periodoLetivo: CreatePeriodoLetivoDto[];
 }

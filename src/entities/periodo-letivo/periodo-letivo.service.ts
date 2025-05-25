@@ -96,7 +96,7 @@ export class PeriodoLetivoService {
 
   async createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<{batchId: string; periodosLetivos: any[]}> {
   const batchId = uuidv4();
-  const periodosLetivos = dto.periodosLetivos;
+  const periodosLetivos = dto.periodoLetivo;
 
   const periodosComStatus = periodosLetivos.map((periodo) => {
     const instance = plainToInstance(CreatePeriodoLetivoBatchDto, periodo);

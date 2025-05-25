@@ -13,5 +13,5 @@ export class ImportPeriodoLetivoDto {
 
   @ValidateNested()
   @Type(() => CreatePeriodoLetivoDto)
-  periodosLetivos: CreatePeriodoLetivoDto;
+  periodoLetivo: CreatePeriodoLetivoDto;
 }

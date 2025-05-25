@@ -16,14 +16,14 @@ async iniciarProcessoImportacao(
   @Body() dto: ImportPeriodoLetivoDto,
   @Req () req: any,
 ) {	
-    const { processId, periodo } = dto;
+    const { processId, periodoLetivo } = dto;
 
-    await this.periodoLetivoService.create({periodo});
+    await this.periodoLetivoService.create({periodoLetivo});
 
     await this.processoImportacaoService.createProcesso(
         processId,
         'periodo-letivo', 
-        req.user?.id ?? 'anonimo',
+        
     );
     return {
         message: 'Processo de importação iniciado com sucesso!',
