@@ -127,6 +127,7 @@ await this.disciplinaModel.insertMany(disciplinasComStatus)
     };
 }
 
+
 async updateInvalidDisciplinas(id: string, updateDto: UpdateDisciplinaDto): Promise<any> {
   if (!isValidObjectId(id)) {
     throw new BadRequestException('ID inválido.');

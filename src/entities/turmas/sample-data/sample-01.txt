@@ -1,0 +1,24 @@
+{
+  "turmas": [
+    {
+      "periodoLetivo": "2025.1",
+      "codigoTurma": "TURMA-001",
+      "dataInicial": "2025-01-15T00:00:00.000Z",
+      "dataFinal": "2025-06-15T00:00:00.000Z",
+      "turno": "Manhã",
+      "modalidade": "Presencial",
+      "campus": "Campus Central",
+      "curso": "Engenharia de Software"
+    },
+    {
+      "periodoLetivo": "2025.1",
+      "codigoTurma": "", // Erro Código da turma vazio
+      "dataInicial": "2025-01-15T00:00:00.000Z",
+      "dataFinal": "2025-06-15T00:00:00.000Z",
+      "turno": "Noite",
+      "modalidade": "EAD",
+      "campus": "Campus Norte",
+      "curso": "Ciencia da Computacao"
+    }
+  ]
+}
