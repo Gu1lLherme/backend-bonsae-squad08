@@ -13,5 +13,6 @@ import { ProcessoImportacaoModule } from '../processo-importacao/processo-import
   ],
   controllers: [PeriodoLetivoController],
   providers: [PeriodoLetivoService],
+  exports: [PeriodoLetivoService], // exporta para outros módulos
 })
 export class PeriodoLetivoModule {}
