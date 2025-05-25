@@ -50,6 +50,7 @@ __decorate([
 ], ProcessoImportacaoController.prototype, "iniciarProcessoImportacao", null);
 exports.ProcessoImportacaoController = ProcessoImportacaoController = __decorate([
     (0, common_1.Controller)('processo-importacao'),
-    __metadata("design:paramtypes", [processo_importacao_service_1.ProcessoImportacaoService, periodo_letivo_service_1.PeriodoLetivoService])
+    __metadata("design:paramtypes", [processo_importacao_service_1.ProcessoImportacaoService,
+        periodo_letivo_service_1.PeriodoLetivoService])
 ], ProcessoImportacaoController);
 //# sourceMappingURL=processo-importacao.controller.js.map

@@ -9,7 +9,8 @@ import { ImportPeriodoLetivoDto } from "../periodo-letivo/dto/import-periodo-let
 @Controller('processo-importacao')
 
 export class ProcessoImportacaoController {
-  constructor(private readonly processoImportacaoService: ProcessoImportacaoService, private readonly periodoLetivoService: PeriodoLetivoService) {}
+  constructor(private readonly processoImportacaoService: ProcessoImportacaoService, 
+    private readonly periodoLetivoService: PeriodoLetivoService) {}
 
 @UsePipes(new ValidationPipe({
   whitelist: true,
