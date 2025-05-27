@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-    
+import {
+  Entity,PrimaryGeneratedColumn, Column,CreateDateColumn,UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('turmas')
-export class TurmaSQLEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class Turma {
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   codigoDisciplina: string;
@@ -21,8 +21,21 @@ export class TurmaSQLEntity {
 
   @Column()
   tipo: string;
+  
+  @Column({ type: 'json', nullable: true, default: () => "'[]'" })
+  usuarios?: string[]; 
+  @Column()
+  batchId: string;
 
-  @Column('simple-json', { nullable: true })
-  usuarios: any[];
+  @Column({ default: false })
+  valid: boolean;
+
+  @Column({ type: 'json', nullable: true })
+  validationErrors?: string[];
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
-
