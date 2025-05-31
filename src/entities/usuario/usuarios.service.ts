@@ -27,140 +27,138 @@ export class UsuariosService {
 
     const novoUsuario = new this.usuarioModel(dto);
     return await novoUsuario.save();
-}
+}''
 
+  async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuarios: any[]}> {
+    const batchId = uuidv4();
+    const usuarios = dto.usuarios;
 
+    const usuariosComStatus = usuarios.map((usuario) => {
+      const instance = plainToInstance(CreateUsuarioDto, usuario);
+      const errors = validateSync(instance);
 
-async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuarios: any[]}> {
-  const batchId = uuidv4();
-  const usuarios = dto.usuarios;
+      const validationErrors = errors.map((e) =>
+        Object.values(e.constraints || {}).join (', '));
 
-  const usuariosComStatus = usuarios.map((usuario) => {
-    const instance = plainToInstance(CreateUsuarioDto, usuario);
-    const errors = validateSync(instance);
+      return {
+        ...usuarios,
+        batchId,
+        valid: validationErrors.length === 0,
+        validationErrors,
+      };
+    });
 
-    const validationErrors = errors.map((e) =>
-      Object.values(e.constraints || {}).join (', '));
+    
+
+    await this.usuarioModel.insertMany(usuariosComStatus)
 
     return {
-      ...usuarios,
       batchId,
-      valid: validationErrors.length === 0,
-      validationErrors,
+      usuarios: usuariosComStatus,
     };
-  });
-
-  
-
-  await this.usuarioModel.insertMany(usuariosComStatus)
-
-  return {
-    batchId,
-    usuarios: usuariosComStatus,
-  };
-}
-
-async updateInvalidUsuarios(id: string, updateDto: UpdateUsuarioDto): Promise <any> {
-
-  if (!isValidObjectId(id)) {
-    throw new BadRequestException("ID invalido")
   }
 
-  const instance = plainToInstance(UpdateUsuarioDto, updateDto);
-  const errors = validateSync(instance);
+  async updateInvalidUsuarios(id: string, updateDto: UpdateUsuarioDto): Promise <any> {
 
-  const validationErrors = errors.map((e) => 
-  Object.values(e.constraints || {}).join(', '));
-
-  const valid = validationErrors.length ===0;
-
-  const usuario = await this.usuarioModel.findByIdAndUpdate(
-
-    id,
-    {
-      $set: {
-        ...updateDto,
-        valid,
-        validationErrors,}
-      },
-      { new: true}
-    
-  );
-
-  if (!usuario) {
-    throw new NotFoundException('Usuário não encontrado');
-  }
-  return {
-    message: 'Usuario Atualizado com sucesso',
-    date: usuario,
-  }
-}
-    
-
-  /*async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {
-    if (!Array.isArray(createUsuariosDto) || createUsuariosDto.length === 0) {
-      throw new BadRequestException('Payload precisa ser uma lista de usuários.');
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException("ID invalido")
     }
 
-    const erros: { index: number; error: string }[] = [];
+    const instance = plainToInstance(UpdateUsuarioDto, updateDto);
+    const errors = validateSync(instance);
 
-    // Validar todos os usuários
-    createUsuariosDto.filter((usuario, index) => {
-      const problemas: string[] = [];
+    const validationErrors = errors.map((e) => 
+    Object.values(e.constraints || {}).join(', '));
 
-      if (!usuario.perfil) problemas.push('Perfil é obrigatório.');
-      if (!usuario.nome) problemas.push('Nome é obrigatório.');
-      if (!usuario.email) problemas.push('Email é obrigatório.');
-      if (!usuario.cpf) problemas.push('CPF é obrigatório.');
-      if (!usuario.senha) problemas.push('Senha é obrigatória.');
-      if (!usuario.matriculaIes || usuario.matriculaIes.trim() === '') problemas.push('Matrícula (IES) é obrigatória.');
+    const valid = validationErrors.length ===0;
 
-      if (problemas.length > 0) {
-        erros.push({ index, error: problemas.join(' | ') });
-        return false; // Ignorar este usuário na inserção
+    const usuario = await this.usuarioModel.findByIdAndUpdate(
+
+      id,
+      {
+        $set: {
+          ...updateDto,
+          valid,
+          validationErrors,}
+        },
+        { new: true}
+      
+    );
+
+    if (!usuario) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    return {
+      message: 'Usuario Atualizado com sucesso',
+      date: usuario,
+    }
+  }
+      
+
+    /*async bulkCreate(createUsuariosDto: CreateUsuarioDto[]): Promise<Usuario[]> {
+      if (!Array.isArray(createUsuariosDto) || createUsuariosDto.length === 0) {
+        throw new BadRequestException('Payload precisa ser uma lista de usuários.');
       }
-      return true; // Incluir este usuário na inserção
-    });
-    
-  
 
-    if (erros.length > 0) {
-      throw new BadRequestException({
-        message: 'Erros de validação nos usuários.',
-        erros,
+      const erros: { index: number; error: string }[] = [];
+
+      // Validar todos os usuários
+      createUsuariosDto.filter((usuario, index) => {
+        const problemas: string[] = [];
+
+        if (!usuario.perfil) problemas.push('Perfil é obrigatório.');
+        if (!usuario.nome) problemas.push('Nome é obrigatório.');
+        if (!usuario.email) problemas.push('Email é obrigatório.');
+        if (!usuario.cpf) problemas.push('CPF é obrigatório.');
+        if (!usuario.senha) problemas.push('Senha é obrigatória.');
+        if (!usuario.matriculaIes || usuario.matriculaIes.trim() === '') problemas.push('Matrícula (IES) é obrigatória.');
+
+        if (problemas.length > 0) {
+          erros.push({ index, error: problemas.join(' | ') });
+          return false; // Ignorar este usuário na inserção
+        }
+        return true; // Incluir este usuário na inserção
       });
+      
+    
+
+      if (erros.length > 0) {
+        throw new BadRequestException({
+          message: 'Erros de validação nos usuários.',
+          erros,
+        });
+      }
+
+
+        // Inserir usuários
+        const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto);
+        return usuariosCriados.map(usuario => usuario.toObject() as Usuario);
+      
+    }*/
+
+    async findAll() {
+      return this.usuarioModel.find().exec();
     }
 
+    async findOne(id: string) {
+      const usuario = await this.usuarioModel.findById(id);
+      if (!usuario) throw new NotFoundException('Usuário não encontrado');
+      return usuario;
+    }
 
-      // Inserir usuários
-      const usuariosCriados = await this.usuarioModel.insertMany(createUsuariosDto);
-      return usuariosCriados.map(usuario => usuario.toObject() as Usuario);
-    
-  }*/
+    async update(id: string, dto: UpdateUsuarioDto) {
+      const usuario = await this.usuarioModel.findByIdAndUpdate(id, dto, { new: true });
+      if (!usuario) throw new NotFoundException('Usuário não encontrado');
+      return usuario;
+    }
 
-  async findAll() {
-    return this.usuarioModel.find().exec();
+    async remove(id: string) {
+      const usuario = await this.usuarioModel.findByIdAndDelete(id);
+      if (!usuario) throw new NotFoundException('Usuário não encontrado');
+      return usuario;
+    }
   }
 
-  async findOne(id: string) {
-    const usuario = await this.usuarioModel.findById(id);
-    if (!usuario) throw new NotFoundException('Usuário não encontrado');
-    return usuario;
-  }
 
-  async update(id: string, dto: UpdateUsuarioDto) {
-    const usuario = await this.usuarioModel.findByIdAndUpdate(id, dto, { new: true });
-    if (!usuario) throw new NotFoundException('Usuário não encontrado');
-    return usuario;
-  }
-
-  async remove(id: string) {
-    const usuario = await this.usuarioModel.findByIdAndDelete(id);
-    if (!usuario) throw new NotFoundException('Usuário não encontrado');
-    return usuario;
-  }
-}
-
-
- 
+  
 

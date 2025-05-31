@@ -7,21 +7,22 @@ import { Turma } from './schemas/turmas.schema';
 
 @Controller('turmas')
 export class TurmasController {
+  
   constructor(private readonly turmasService: TurmasService) {}
 
   
 
-@Post('batch')
-async createBatch(@Body() dto: CreateTurmaBatchDto) {
-  return this.turmasService.createBatch(dto);
-}
+  @Post('batch')
+  async createBatch(@Body() dto: CreateTurmaBatchDto) {
+    return this.turmasService.createBatch(dto);
+  }
 
-@Patch(':id/revalidar')
-async revalidarTurma(
-  @Param('id') id: string, @Body() updateDto: UpdateTurmaDto
-) {
-  return this.turmasService.updateInvalidTurmas(id, updateDto);
-}
+  @Patch(':id/revalidar')
+  async revalidarTurma(
+    @Param('id') id: string, @Body() updateDto: UpdateTurmaDto
+  ) {
+    return this.turmasService.updateInvalidTurmas(id, updateDto);
+  }
 
 
 /*Não conecta ao Sql ainda, logo não funciona
@@ -30,9 +31,9 @@ async persistirValidas(@Param('batchId') batchId: string) {
   return this.turmasService.salvarValidasSql(batchId);
 } */
 
-}
 
-/*@Post()
+
+  @Post()
   async create(@Body() createTurmaDto: CreateTurmaDto) {
     const turma = await this.turmasService.create(createTurmaDto);
     return {
@@ -63,7 +64,9 @@ async persistirValidas(@Param('batchId') batchId: string) {
 
   @Patch(':id')
   @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
+  
   async update(@Param('id') id: string, @Body() updateTurmaDto: UpdateTurmaDto) {
+    
     const turmaAtualizada = await this.turmasService.update(id, updateTurmaDto);
     return {
       message: 'Turma atualizada com sucesso!',
@@ -78,6 +81,8 @@ async persistirValidas(@Param('batchId') batchId: string) {
       message: 'Turma excluída com sucesso!',
     };
   }
+
+}
 
   /*@Post('bulk')
   @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))

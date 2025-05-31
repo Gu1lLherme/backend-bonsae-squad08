@@ -37,6 +37,7 @@ let UsuariosService = class UsuariosService {
         const novoUsuario = new this.usuarioModel(dto);
         return await novoUsuario.save();
     }
+    '';
     async createBatch(dto) {
         const batchId = (0, uuid_1.v4)();
         const usuarios = dto.usuarios;

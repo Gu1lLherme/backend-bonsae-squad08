@@ -131,10 +131,6 @@ let TurmasService = class TurmasService {
         if (existentes) {
             errors.push(`O Código ${turma.codigoTurma} já foi registrado no banco`);
         }
-        const disciplina = await this.turmaModel.findOne({ codigoDisciplina: turma.codigoDisciplina });
-        if (!disciplina) {
-            errors.push(`A disciplina ${turma.codigoDisciplina} não existe`);
-        }
         return errors;
     }
     async updateInvalidTurmas(id, updateDto) {
