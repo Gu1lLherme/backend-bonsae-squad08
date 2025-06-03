@@ -1,4 +1,5 @@
-import { IsUUID, IsEnum } from 'class-validator';
+import { IsUUID, IsEnum, IsArray, IsInt, IsOptional, IsString } from 'class-validator';
+import { EtapaImportacao, StatusImportacao } from '../schemas/processo-importacao.schema';
 
 export enum ProcessoStatus {
   EM_ANDAMENTO = 'EM_ANDAMENTO',
@@ -10,6 +11,20 @@ export class UpdateProcessoImportacaoDto {
   @IsUUID()
   processId: string;
 
-  @IsEnum(ProcessoStatus)
-  status: ProcessoStatus;
+  @IsOptional()
+  @IsEnum(EtapaImportacao)
+  etapaAtual?: EtapaImportacao;
+
+  @IsOptional()
+  @IsEnum(StatusImportacao)
+  status?: StatusImportacao;
+
+  @IsOptional()
+  @IsInt()
+  totalRegistros?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  erros?: string[];
 }

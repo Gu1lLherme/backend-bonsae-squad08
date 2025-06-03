@@ -5,15 +5,16 @@ import {
   Get,
   Body,
   Param,
+  NotFoundException,
 } from '@nestjs/common';
-
-import {
-  ProcessoImportacaoService,
-} from './processo-importacao.service';
+import { ProcessoImportacaoService } from './processo-importacao.service';
 import {
   EtapaImportacao,
   StatusImportacao,
+  ProcessoImportacao,
 } from './schemas/processo-importacao.schema';
+import { CreateProcessoImportacaoDto } from './dto/processo-importacao.dto';
+import { UpdateProcessoImportacaoDto } from './dto/update-processo-importacao.dto';
 
 @Controller('processo-importacao')
 export class ProcessoImportacaoController {
@@ -21,55 +22,30 @@ export class ProcessoImportacaoController {
     private readonly processoService: ProcessoImportacaoService,
   ) {}
 
-  /**
-   * POST /processo-importacao/iniciar
-   * Cria um novo processo e retorna { processId }.
-   */
-  @Post('iniciar')
-  async iniciar(): Promise<{ processId: string }> {
-    // Você pode extrair `iniciadoPor` via req.user, se estiver usando auth guard
-    const iniciadoPor = 'anônimo'; // ou req.user.id
-    return this.processoService.createProcesso(iniciadoPor);
+  @Post()
+  async create(@Body() dto: CreateProcessoImportacaoDto): Promise<{ processId: string }> {
+    return await this.processoService.createProcesso(dto);
   }
 
-  /**
-   * GET /processo-importacao/:id
-   * Retorna os detalhes do processo (etapa, status, totalRegistros, erros, timestamps).
-   */
-  @Get(':processId')
-  async getProcesso(@Param('processId') processId: string) {
-    return this.processoService.getProcessoById(processId);
-  }
+  @Patch('status')
+  async updateStatus(@Body() dto: UpdateProcessoImportacaoDto): Promise<ProcessoImportacao> {
+    const { processId, etapaAtual, status, totalRegistros, erros } = dto;
 
-  /**
-   * PATCH /processo-importacao/:id
-   * Atualiza etapa/status/totalRegistros/erros do processo.
-   *
-   * Body possível:
-   * {
-   *   etapa: 'DISCIPLINAS',
-   *   status: 'EM_ANDAMENTO',
-   *   totalRegistros: 100,
-   *   erros: ['erro1', 'erro2']
-   * }
-   */
-  @Patch(':processId')
-  async updateProcesso(
-    @Param('processId') processId: string,
-    @Body()
-    body: {
-      etapa?: EtapaImportacao;
-      status?: StatusImportacao;
-      totalRegistros?: number;
-      erros?: string[];
-    },
-  ) {
-    return this.processoService.updateProcesso(
+    if (!processId) {
+      throw new NotFoundException('processId é obrigatório');
+    }
+
+    return await this.processoService.updateProcesso(
       processId,
-      body.etapa,
-      body.status,
-      body.totalRegistros,
-      body.erros,
+      etapaAtual,
+      status,
+      totalRegistros,
+      erros,
     );
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<ProcessoImportacao> {
+    return await this.processoService.getProcessoById(id);
   }
 }
