@@ -1,22 +1,12 @@
-import { Model, Connection } from 'mongoose';
-import { PeriodoLetivo, PeriodoLetivoDocument } from './schemas/periodo-letivo.schema';
-import { CreatePeriodoLetivoDto } from './dto/create-periodo-letivo.dto';
+import { Model } from 'mongoose';
+import { PeriodoLetivoDocument } from './schemas/periodo-letivo.schema';
 import { UpdatePeriodoLetivoDto } from './dto/update-periodo-letivo.dto';
 import { CreatePeriodoLetivoBatchDto } from './dto/create-periodo-letivo-batch.dto';
+import { ProcessoImportacaoService } from 'src/processo-importacao/processo-importacao.service';
 export declare class PeriodoLetivoService {
     private periodoLetivoModel;
-    private readonly connection;
-    constructor(periodoLetivoModel: Model<PeriodoLetivoDocument>, connection: Connection);
-    create(createPeriodoLetivoDto: CreatePeriodoLetivoDto): Promise<PeriodoLetivo>;
-    bulkCreate(createPeriodosDto: CreatePeriodoLetivoDto[]): Promise<PeriodoLetivo[]>;
-    bulkCreateWithTransaction(createPeriodosDto: CreatePeriodoLetivoDto[]): Promise<PeriodoLetivo[]>;
-    createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<{
-        batchId: string;
-        periodosLetivos: any[];
-    }>;
+    private readonly processoImportacaoService;
+    constructor(periodoLetivoModel: Model<PeriodoLetivoDocument>, processoImportacaoService: ProcessoImportacaoService);
+    createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<any>;
     updateInvalidPeriodos(id: string, updateDto: UpdatePeriodoLetivoDto): Promise<any>;
-    findAll(): Promise<PeriodoLetivo[]>;
-    findOne(id: string): Promise<PeriodoLetivo>;
-    update(id: string, updatePeriodoLetivoDto: UpdatePeriodoLetivoDto): Promise<PeriodoLetivo>;
-    remove(id: string): Promise<void>;
 }

@@ -110,11 +110,10 @@ let TurmasService = class TurmasService {
             const instance = (0, class_transformer_1.plainToInstance)(create_turma_dto_1.CreateTurmaDto, turma);
             const dtoerrors = (0, class_validator_1.validateSync)(instance);
             const validationErrors = dtoerrors.map((e) => Object.values(e.constraints || {}).join(', '));
-            const businessErrors = await this.validateBusinessRules(turma);
-            const allErrors = [...validationErrors, ...businessErrors];
+            const allErrors = [...validationErrors];
             return {
                 ...turma,
-                processID: batchId,
+                batchId,
                 valid: allErrors.length === 0,
                 validationErrors: allErrors,
             };
@@ -124,14 +123,6 @@ let TurmasService = class TurmasService {
             batchId,
             turmas: turmasComStatus,
         };
-    }
-    async validateBusinessRules(turma) {
-        const errors = [];
-        const existentes = await this.turmaModel.findOne({ codigoTurma: turma.codigoTurma });
-        if (existentes) {
-            errors.push(`O Código ${turma.codigoTurma} já foi registrado no banco`);
-        }
-        return errors;
     }
     async updateInvalidTurmas(id, updateDto) {
         if (!(0, mongoose_2.isValidObjectId)(id)) {

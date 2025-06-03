@@ -1,12 +1,16 @@
-import { ProcessoImportacaoService } from "./processo-importacao.service";
-import { PeriodoLetivoService } from "../entities/periodo-letivo/periodo-letivo.service";
-import { ImportPeriodoLetivoDto } from "../entities/periodo-letivo/dto/import-periodo-letivo.dto";
+import { ProcessoImportacaoService } from './processo-importacao.service';
+import { EtapaImportacao, StatusImportacao } from './schemas/processo-importacao.schema';
 export declare class ProcessoImportacaoController {
-    private readonly processoImportacaoService;
-    private readonly periodoLetivoService;
-    constructor(processoImportacaoService: ProcessoImportacaoService, periodoLetivoService: PeriodoLetivoService);
-    iniciarProcessoImportacao(dto: ImportPeriodoLetivoDto, req: any): Promise<{
-        message: string;
+    private readonly processoService;
+    constructor(processoService: ProcessoImportacaoService);
+    iniciar(): Promise<{
         processId: string;
     }>;
+    getProcesso(processId: string): Promise<import("./schemas/processo-importacao.schema").ProcessoImportacao>;
+    updateProcesso(processId: string, body: {
+        etapa?: EtapaImportacao;
+        status?: StatusImportacao;
+        totalRegistros?: number;
+        erros?: string[];
+    }): Promise<import("./schemas/processo-importacao.schema").ProcessoImportacao>;
 }

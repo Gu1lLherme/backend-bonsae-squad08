@@ -9,9 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TurmaSQLEntity = void 0;
+exports.Turma = void 0;
 const typeorm_1 = require("typeorm");
-let TurmaSQLEntity = class TurmaSQLEntity {
+let Turma = class Turma {
     id;
     codigoDisciplina;
     turno;
@@ -19,37 +19,62 @@ let TurmaSQLEntity = class TurmaSQLEntity {
     nomeTurma;
     tipo;
     usuarios;
+    batchId;
+    valid;
+    validationErrors;
+    created_at;
+    updated_at;
 };
-exports.TurmaSQLEntity = TurmaSQLEntity;
+exports.Turma = Turma;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
-], TurmaSQLEntity.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], TurmaSQLEntity.prototype, "codigoDisciplina", void 0);
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], Turma.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], TurmaSQLEntity.prototype, "turno", void 0);
+], Turma.prototype, "codigoDisciplina", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], TurmaSQLEntity.prototype, "codigoTurma", void 0);
+], Turma.prototype, "turno", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], TurmaSQLEntity.prototype, "nomeTurma", void 0);
+], Turma.prototype, "codigoTurma", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], TurmaSQLEntity.prototype, "tipo", void 0);
+], Turma.prototype, "nomeTurma", void 0);
 __decorate([
-    (0, typeorm_1.Column)('simple-json', { nullable: true }),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Turma.prototype, "tipo", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'json', nullable: true, default: () => "'[]'" }),
     __metadata("design:type", Array)
-], TurmaSQLEntity.prototype, "usuarios", void 0);
-exports.TurmaSQLEntity = TurmaSQLEntity = __decorate([
+], Turma.prototype, "usuarios", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Turma.prototype, "batchId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], Turma.prototype, "valid", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'json', nullable: true }),
+    __metadata("design:type", Array)
+], Turma.prototype, "validationErrors", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Turma.prototype, "created_at", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Turma.prototype, "updated_at", void 0);
+exports.Turma = Turma = __decorate([
     (0, typeorm_1.Entity)('turmas')
-], TurmaSQLEntity);
+], Turma);
 //# sourceMappingURL=turma-sql.entity.js.map

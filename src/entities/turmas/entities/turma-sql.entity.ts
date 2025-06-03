@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 
 @Entity('turmas')
-export class Turma {
+export class TurmaSQLEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -18,30 +18,33 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const processo_importacao_schema_1 = require("./schemas/processo-importacao.schema");
 let ProcessoImportacaoService = class ProcessoImportacaoService {
-    processoImportacaoModel;
-    constructor(processoImportacaoModel) {
-        this.processoImportacaoModel = processoImportacaoModel;
+    processoModel;
+    constructor(processoModel) {
+        this.processoModel = processoModel;
     }
-    async createProcesso(tipo, usuario) {
-        const processo = new this.processoImportacaoModel({
-            tipo,
-            status: 'criado',
-            usuario,
-        });
-        return await processo.save();
+    async createProcesso(iniciadoPor = 'anônimo') {
+        const processo = await this.processoModel.create({ iniciadoPor });
+        return { processId: processo.processId };
     }
-    async updateStatus(id, status, extra = {}) {
-        const updated = await this.processoImportacaoModel.findByIdAndUpdate(id, { status, ...extra }, { new: true, runValidators: true }).exec();
-        if (!updated) {
-            throw new Error(`Processo de id ${id} não encontrado`);
-        }
-        return updated;
+    async updateProcesso(processId, etapa, status, totalRegistros, erros) {
+        const update = {};
+        if (etapa)
+            update.etapaAtual = etapa;
+        if (status)
+            update.status = status;
+        if (typeof totalRegistros === 'number')
+            update.totalRegistros = totalRegistros;
+        if (erros)
+            update.erros = erros;
+        const processo = await this.processoModel.findOneAndUpdate({ processId }, update, { new: true });
+        if (!processo)
+            throw new common_1.NotFoundException(`Processo ${processId} não encontrado.`);
+        return processo;
     }
-    async buscarPorId(id) {
-        const processo = await this.processoImportacaoModel.findById(id).exec();
-        if (!processo) {
-            throw new Error(`ProcessoImportacao with id ${id} not found`);
-        }
+    async getProcessoById(processId) {
+        const processo = await this.processoModel.findOne({ processId });
+        if (!processo)
+            throw new common_1.NotFoundException(`Processo ${processId} não encontrado.`);
         return processo;
     }
 };

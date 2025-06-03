@@ -59,4 +59,11 @@ export class ProcessoImportacaoService {
     if (!processo) throw new NotFoundException(`Processo ${processId} não encontrado.`);
     return processo;
   }
+
+  async marcarEtapaConcluida(processId, etapa: string) {
+await this.processoModel.updateOne(
+{ _id: processId },
+{ $addToSet: { etapasConcluidas: etapa } }
+);
+}
 }

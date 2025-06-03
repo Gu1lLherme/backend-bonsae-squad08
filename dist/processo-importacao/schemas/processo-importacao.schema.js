@@ -9,34 +9,62 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProcessoImportacaoSchema = exports.ProcessoImportacao = void 0;
+exports.ProcessoImportacaoSchema = exports.ProcessoImportacao = exports.StatusImportacao = exports.EtapaImportacao = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const uuid_1 = require("uuid");
+var EtapaImportacao;
+(function (EtapaImportacao) {
+    EtapaImportacao["PERIODOS"] = "PERIODOS";
+    EtapaImportacao["DISCIPLINAS"] = "DISCIPLINAS";
+    EtapaImportacao["TURMAS"] = "TURMAS";
+    EtapaImportacao["USUARIOS"] = "USUARIOS";
+    EtapaImportacao["FINALIZADO"] = "FINALIZADO";
+})(EtapaImportacao || (exports.EtapaImportacao = EtapaImportacao = {}));
+var StatusImportacao;
+(function (StatusImportacao) {
+    StatusImportacao["EM_ANDAMENTO"] = "EM_ANDAMENTO";
+    StatusImportacao["CONCLUIDO"] = "CONCLUIDO";
+    StatusImportacao["ERRO"] = "ERRO";
+})(StatusImportacao || (exports.StatusImportacao = StatusImportacao = {}));
 let ProcessoImportacao = class ProcessoImportacao {
-    tipo;
+    processId;
+    etapaAtual;
     status;
-    usuario;
-    nomeArquivo;
+    iniciadoPor;
+    erros;
     totalRegistros;
 };
 exports.ProcessoImportacao = ProcessoImportacao;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ type: String, unique: true, default: () => (0, uuid_1.v4)() }),
     __metadata("design:type", String)
-], ProcessoImportacao.prototype, "tipo", void 0);
+], ProcessoImportacao.prototype, "processId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({
+        type: String,
+        enum: Object.values(EtapaImportacao),
+        default: EtapaImportacao.PERIODOS,
+    }),
+    __metadata("design:type", String)
+], ProcessoImportacao.prototype, "etapaAtual", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: String,
+        enum: Object.values(StatusImportacao),
+        default: StatusImportacao.EM_ANDAMENTO,
+    }),
     __metadata("design:type", String)
 ], ProcessoImportacao.prototype, "status", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ type: String, default: 'anônimo' }),
     __metadata("design:type", String)
-], ProcessoImportacao.prototype, "usuario", void 0);
+], ProcessoImportacao.prototype, "iniciadoPor", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
-    __metadata("design:type", String)
-], ProcessoImportacao.prototype, "nomeArquivo", void 0);
+    (0, mongoose_1.Prop)({ type: Array, default: [] }),
+    __metadata("design:type", Array)
+], ProcessoImportacao.prototype, "erros", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ type: Number, default: 0 }),
     __metadata("design:type", Number)
 ], ProcessoImportacao.prototype, "totalRegistros", void 0);
 exports.ProcessoImportacao = ProcessoImportacao = __decorate([

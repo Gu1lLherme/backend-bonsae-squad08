@@ -15,44 +15,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProcessoImportacaoController = void 0;
 const common_1 = require("@nestjs/common");
 const processo_importacao_service_1 = require("./processo-importacao.service");
-const uuid_1 = require("uuid");
-const periodo_letivo_service_1 = require("../entities/periodo-letivo/periodo-letivo.service");
-const import_periodo_letivo_dto_1 = require("../entities/periodo-letivo/dto/import-periodo-letivo.dto");
 let ProcessoImportacaoController = class ProcessoImportacaoController {
-    processoImportacaoService;
-    periodoLetivoService;
-    constructor(processoImportacaoService, periodoLetivoService) {
-        this.processoImportacaoService = processoImportacaoService;
-        this.periodoLetivoService = periodoLetivoService;
+    processoService;
+    constructor(processoService) {
+        this.processoService = processoService;
     }
-    async iniciarProcessoImportacao(dto, req) {
-        const processId = (0, uuid_1.v4)();
-        await this.periodoLetivoService.createBatch({ processId,
-            periodos: dto.periodos });
-        await this.processoImportacaoService.createProcesso(processId, 'periodo-letivo');
-        return {
-            message: 'Processo de importação iniciado com sucesso!',
-            processId,
-        };
+    async iniciar() {
+        const iniciadoPor = 'anônimo';
+        return this.processoService.createProcesso(iniciadoPor);
+    }
+    async getProcesso(processId) {
+        return this.processoService.getProcessoById(processId);
+    }
+    async updateProcesso(processId, body) {
+        return this.processoService.updateProcesso(processId, body.etapa, body.status, body.totalRegistros, body.erros);
     }
 };
 exports.ProcessoImportacaoController = ProcessoImportacaoController;
 __decorate([
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-    })),
     (0, common_1.Post)('iniciar'),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [import_periodo_letivo_dto_1.ImportPeriodoLetivoDto, Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], ProcessoImportacaoController.prototype, "iniciarProcessoImportacao", null);
+], ProcessoImportacaoController.prototype, "iniciar", null);
+__decorate([
+    (0, common_1.Get)(':processId'),
+    __param(0, (0, common_1.Param)('processId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProcessoImportacaoController.prototype, "getProcesso", null);
+__decorate([
+    (0, common_1.Patch)(':processId'),
+    __param(0, (0, common_1.Param)('processId')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], ProcessoImportacaoController.prototype, "updateProcesso", null);
 exports.ProcessoImportacaoController = ProcessoImportacaoController = __decorate([
     (0, common_1.Controller)('processo-importacao'),
-    __metadata("design:paramtypes", [processo_importacao_service_1.ProcessoImportacaoService,
-        periodo_letivo_service_1.PeriodoLetivoService])
+    __metadata("design:paramtypes", [processo_importacao_service_1.ProcessoImportacaoService])
 ], ProcessoImportacaoController);
 //# sourceMappingURL=processo-importacao.controller.js.map
