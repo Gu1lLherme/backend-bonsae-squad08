@@ -16,7 +16,7 @@ let PeriodoLetivo = class PeriodoLetivo {
     periodoLetivo;
     dataInicial;
     dataFinal;
-    batchId;
+    ProcessId;
     valid;
     validationErrors;
 };
@@ -40,7 +40,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], PeriodoLetivo.prototype, "batchId", void 0);
+], PeriodoLetivo.prototype, "ProcessId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)

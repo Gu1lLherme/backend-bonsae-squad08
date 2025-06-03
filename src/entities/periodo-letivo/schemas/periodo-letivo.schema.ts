@@ -17,7 +17,7 @@ export class PeriodoLetivo {
     @Prop()
     dataFinal: Date;
 
-    @Prop({ required: true }) ProcessId: string; // Identificador do lote
+    @Prop({ required: true }) processId: string; // Identificador do lote
     
     @Prop({ default: false }) valid: boolean;
     
