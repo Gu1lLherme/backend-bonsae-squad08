@@ -11,48 +11,54 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProcessoImportacaoController = void 0;
 const common_1 = require("@nestjs/common");
 const processo_importacao_service_1 = require("./processo-importacao.service");
+const processo_importacao_dto_1 = require("./dto/processo-importacao.dto");
+const update_processo_importacao_dto_1 = require("./dto/update-processo-importacao.dto");
 let ProcessoImportacaoController = class ProcessoImportacaoController {
     processoService;
     constructor(processoService) {
         this.processoService = processoService;
     }
-    async iniciar() {
-        const iniciadoPor = 'anônimo';
-        return this.processoService.createProcesso(iniciadoPor);
+    async create(dto) {
+        return await this.processoService.createProcesso(dto);
     }
-    async getProcesso(processId) {
-        return this.processoService.getProcessoById(processId);
+    async updateStatus(dto) {
+        const { processId, etapaAtual, status, totalRegistros, erros } = dto;
+        if (!processId) {
+            throw new common_1.NotFoundException('processId é obrigatório');
+        }
+        return await this.processoService.updateProcesso(processId, etapaAtual, status, totalRegistros, erros);
     }
-    async updateProcesso(processId, body) {
-        return this.processoService.updateProcesso(processId, body.etapa, body.status, body.totalRegistros, body.erros);
+    async findById(id) {
+        return await this.processoService.getProcessoById(id);
     }
 };
 exports.ProcessoImportacaoController = ProcessoImportacaoController;
 __decorate([
-    (0, common_1.Post)('iniciar'),
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [typeof (_a = typeof processo_importacao_dto_1.CreateProcessoImportacaoDto !== "undefined" && processo_importacao_dto_1.CreateProcessoImportacaoDto) === "function" ? _a : Object]),
     __metadata("design:returntype", Promise)
-], ProcessoImportacaoController.prototype, "iniciar", null);
+], ProcessoImportacaoController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)(':processId'),
-    __param(0, (0, common_1.Param)('processId')),
+    (0, common_1.Patch)('status'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_processo_importacao_dto_1.UpdateProcessoImportacaoDto]),
+    __metadata("design:returntype", Promise)
+], ProcessoImportacaoController.prototype, "updateStatus", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], ProcessoImportacaoController.prototype, "getProcesso", null);
-__decorate([
-    (0, common_1.Patch)(':processId'),
-    __param(0, (0, common_1.Param)('processId')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], ProcessoImportacaoController.prototype, "updateProcesso", null);
+], ProcessoImportacaoController.prototype, "findById", null);
 exports.ProcessoImportacaoController = ProcessoImportacaoController = __decorate([
     (0, common_1.Controller)('processo-importacao'),
     __metadata("design:paramtypes", [processo_importacao_service_1.ProcessoImportacaoService])

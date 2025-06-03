@@ -1,16 +1,13 @@
 import { ProcessoImportacaoService } from './processo-importacao.service';
-import { EtapaImportacao, StatusImportacao } from './schemas/processo-importacao.schema';
+import { ProcessoImportacao } from './schemas/processo-importacao.schema';
+import { CreateProcessoImportacaoDto } from './dto/processo-importacao.dto';
+import { UpdateProcessoImportacaoDto } from './dto/update-processo-importacao.dto';
 export declare class ProcessoImportacaoController {
     private readonly processoService;
     constructor(processoService: ProcessoImportacaoService);
-    iniciar(): Promise<{
+    create(dto: CreateProcessoImportacaoDto): Promise<{
         processId: string;
     }>;
-    getProcesso(processId: string): Promise<import("./schemas/processo-importacao.schema").ProcessoImportacao>;
-    updateProcesso(processId: string, body: {
-        etapa?: EtapaImportacao;
-        status?: StatusImportacao;
-        totalRegistros?: number;
-        erros?: string[];
-    }): Promise<import("./schemas/processo-importacao.schema").ProcessoImportacao>;
+    updateStatus(dto: UpdateProcessoImportacaoDto): Promise<ProcessoImportacao>;
+    findById(id: string): Promise<ProcessoImportacao>;
 }

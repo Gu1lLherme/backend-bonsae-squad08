@@ -25,6 +25,9 @@ export class PeriodoLetivoService {
 async createBatch(dto: CreatePeriodoLetivoBatchDto): Promise<any> {
   // Usa o processId vindo do DTO, ou gera um novo UUID se não enviado
   const processId = dto.processId;
+  if (!processId) {
+    throw new BadRequestException('processId é obrigatório');
+  }
   const processo = await this.processoImportacaoService.getProcessoById(processId);
   if (processo.status !== StatusImportacao.EM_ANDAMENTO) {
     throw new BadRequestException('Processo não está em andamento');

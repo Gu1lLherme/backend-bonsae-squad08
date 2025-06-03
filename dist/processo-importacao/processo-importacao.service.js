@@ -17,13 +17,21 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const processo_importacao_schema_1 = require("./schemas/processo-importacao.schema");
+const uuid_1 = require("uuid");
 let ProcessoImportacaoService = class ProcessoImportacaoService {
     processoModel;
     constructor(processoModel) {
         this.processoModel = processoModel;
     }
-    async createProcesso(iniciadoPor = 'anônimo') {
-        const processo = await this.processoModel.create({ iniciadoPor });
+    async createProcesso(dto) {
+        const processo = new this.processoModel({
+            ...dto,
+            processId: (0, uuid_1.v4)(),
+            status: processo_importacao_schema_1.StatusImportacao.EM_ANDAMENTO,
+            erros: [],
+            etapasConcluidas: [],
+        });
+        await processo.save();
         return { processId: processo.processId };
     }
     async updateProcesso(processId, etapa, status, totalRegistros, erros) {
@@ -37,8 +45,9 @@ let ProcessoImportacaoService = class ProcessoImportacaoService {
         if (erros)
             update.erros = erros;
         const processo = await this.processoModel.findOneAndUpdate({ processId }, update, { new: true });
-        if (!processo)
+        if (!processo) {
             throw new common_1.NotFoundException(`Processo ${processId} não encontrado.`);
+        }
         return processo;
     }
     async getProcessoById(processId) {
@@ -48,7 +57,10 @@ let ProcessoImportacaoService = class ProcessoImportacaoService {
         return processo;
     }
     async marcarEtapaConcluida(processId, etapa) {
-        await this.processoModel.updateOne({ _id: processId }, { $addToSet: { etapasConcluidas: etapa } });
+        const processo = await this.processoModel.findOneAndUpdate({ processId }, { $addToSet: { etapasConcluidas: etapa } }, { new: true });
+        if (!processo)
+            throw new common_1.NotFoundException(`Processo ${processId} não encontrado.`);
+        return processo;
     }
 };
 exports.ProcessoImportacaoService = ProcessoImportacaoService;

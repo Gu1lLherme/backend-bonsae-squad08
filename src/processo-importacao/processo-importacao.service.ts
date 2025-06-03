@@ -18,7 +18,7 @@ export class ProcessoImportacaoService {
     private readonly processoModel: Model<ProcessoImportacaoDocument>,
   ) {}
 
-  async createProcesso(dto: CreateProcessoImportacaoDto): Promise<{ processId: string }> {
+  async createProcesso(dto: CreateProcessoImportacaoDto): Promise<{ processId}> {
     const processo = new this.processoModel({
       ...dto,
       processId: uuidv4(),
@@ -63,7 +63,7 @@ export class ProcessoImportacaoService {
     return processo;
   }
 
-  async marcarEtapaConcluida(processId: string, etapa: string) {
+  async marcarEtapaConcluida(processId, etapa: string) {
     const processo = await this.processoModel.findOneAndUpdate(
       { processId },
       { $addToSet: { etapasConcluidas: etapa } },
