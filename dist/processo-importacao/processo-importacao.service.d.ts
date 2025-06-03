@@ -8,4 +8,5 @@ export declare class ProcessoImportacaoService {
     }>;
     updateProcesso(processId: string, etapa?: EtapaImportacao, status?: StatusImportacao, totalRegistros?: number, erros?: string[]): Promise<ProcessoImportacao>;
     getProcessoById(processId: any): Promise<ProcessoImportacao>;
+    marcarEtapaConcluida(processId: any, etapa: string): Promise<void>;
 }

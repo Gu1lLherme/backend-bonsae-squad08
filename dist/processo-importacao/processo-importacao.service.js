@@ -47,6 +47,9 @@ let ProcessoImportacaoService = class ProcessoImportacaoService {
             throw new common_1.NotFoundException(`Processo ${processId} não encontrado.`);
         return processo;
     }
+    async marcarEtapaConcluida(processId, etapa) {
+        await this.processoModel.updateOne({ _id: processId }, { $addToSet: { etapasConcluidas: etapa } });
+    }
 };
 exports.ProcessoImportacaoService = ProcessoImportacaoService;
 exports.ProcessoImportacaoService = ProcessoImportacaoService = __decorate([

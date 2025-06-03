@@ -1,4 +1,4 @@
-export declare class Turma {
+export declare class TurmaSQLEntity {
     id: number;
     codigoDisciplina: string;
     turno: string;
