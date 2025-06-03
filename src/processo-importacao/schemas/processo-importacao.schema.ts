@@ -1,25 +1,58 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 export type ProcessoImportacaoDocument = ProcessoImportacao & Document;
 
-@Schema({timestamps: true})
+export enum EtapaImportacao {
+  PERIODOS    = 'PERIODOS',
+  DISCIPLINAS = 'DISCIPLINAS',
+  TURMAS      = 'TURMAS',
+  USUARIOS    = 'USUARIOS',
+  FINALIZADO  = 'FINALIZADO',
+}
+
+export enum StatusImportacao {
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+  CONCLUIDO    = 'CONCLUIDO',
+  ERRO         = 'ERRO',
+}
+
+@Schema({ timestamps: true })
 export class ProcessoImportacao {
-    @Prop ({ required: true })
-    tipo: 'Periodo-Letivo' | 'Disciplina' | 'Turmas'  | 'Usuario';
-    
-    @Prop ({ required: true })
-    status: 'criado' | 'arquivo-enviado' | 'validando' | 'concluido';
+  
+  @Prop({ type: String, unique: true, default: () => uuidv4() })
+  processId: string;
 
-    @Prop ()
-    usuario?: string;
+ 
+  @Prop({
+    type: String,
+    enum: Object.values(EtapaImportacao),
+    default: EtapaImportacao.PERIODOS,
+  })
+  etapaAtual: EtapaImportacao;
 
-    @Prop ()
-    nomeArquivo?: string;
+ 
+  @Prop({
+    type: String,
+    enum: Object.values(StatusImportacao),
+    default: StatusImportacao.EM_ANDAMENTO,
+  })
+  status: StatusImportacao;
 
-    @Prop()
-    totalRegistros?: number;
+ 
+  @Prop({ type: String, default: 'anônimo' })
+  iniciadoPor: string;
 
+  
+  @Prop({ type: Array, default: [] })
+  erros: string[];
+
+  
+  @Prop({ type: Number, default: 0 })
+  totalRegistros: number;
+
+  
 }
 
 export const ProcessoImportacaoSchema = SchemaFactory.createForClass(ProcessoImportacao);

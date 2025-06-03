@@ -10,7 +10,10 @@ import {
 import { CreatePeriodoLetivoDto } from './create-periodo-letivo.dto';
 
 export class ImportPeriodoLetivoDto {
-  
+
+  @IsUUID('4', { message: 'O ID do processo deve ser um UUID válido.' })
+  processID: string;
+
   @IsArray()
   @ArrayNotEmpty({ message: 'Deve haver pelo menos um período letivo.' })
   @ValidateNested()

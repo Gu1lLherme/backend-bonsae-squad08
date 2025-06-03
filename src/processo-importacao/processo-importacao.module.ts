@@ -1,20 +1,21 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProcessoImportacao, ProcessoImportacaoSchema } from './schemas/processo-importacao.schema';
 import { ProcessoImportacaoService } from './processo-importacao.service';
 import { ProcessoImportacaoController } from './processo-importacao.controller';
-import { PeriodoLetivoModule } from '../entities/periodo-letivo/periodo-letivo.module';
 
+// Se PeriodoLetivoService for usado aqui, importe com forwardRef:
+import { PeriodoLetivoModule } from "../entities/periodo-letivo/periodo-letivo.module";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: ProcessoImportacao.name, schema: ProcessoImportacaoSchema },
     ]),
-    forwardRef(() => PeriodoLetivoModule),
+    forwardRef(() => PeriodoLetivoModule), // caso haja dependência circular
   ],
   providers: [ProcessoImportacaoService],
   controllers: [ProcessoImportacaoController],
-  exports: [ProcessoImportacaoService],  // exporta para outros módulos
+  exports: [ProcessoImportacaoService],
 })
 export class ProcessoImportacaoModule {}
