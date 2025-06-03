@@ -33,6 +33,9 @@ let PeriodoLetivoService = class PeriodoLetivoService {
     }
     async createBatch(dto) {
         const processId = dto.processId;
+        if (!processId) {
+            throw new common_1.BadRequestException('processId é obrigatório');
+        }
         const processo = await this.processoImportacaoService.getProcessoById(processId);
         if (processo.status !== processo_importacao_schema_1.StatusImportacao.EM_ANDAMENTO) {
             throw new common_1.BadRequestException('Processo não está em andamento');

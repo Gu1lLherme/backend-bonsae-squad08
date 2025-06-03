@@ -5,11 +5,11 @@ export declare class ProcessoImportacaoService {
     private readonly processoModel;
     constructor(processoModel: Model<ProcessoImportacaoDocument>);
     createProcesso(dto: CreateProcessoImportacaoDto): Promise<{
-        processId: string;
+        processId: any;
     }>;
     updateProcesso(processId: string, etapa?: EtapaImportacao, status?: StatusImportacao, totalRegistros?: number, erros?: string[]): Promise<ProcessoImportacao>;
     getProcessoById(processId: string): Promise<ProcessoImportacao>;
-    marcarEtapaConcluida(processId: string, etapa: string): Promise<import("mongoose").Document<unknown, {}, ProcessoImportacaoDocument> & ProcessoImportacao & import("mongoose").Document<unknown, any, any> & Required<{
+    marcarEtapaConcluida(processId: any, etapa: string): Promise<import("mongoose").Document<unknown, {}, ProcessoImportacaoDocument> & ProcessoImportacao & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;
     }> & {
         __v: number;

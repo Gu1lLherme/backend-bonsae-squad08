@@ -13,7 +13,7 @@ import {
   StatusImportacao,
   ProcessoImportacao,
 } from './schemas/processo-importacao.schema';
-import { CreateProcessoImportacaoDto } from './dto/processo-importacao.dto';
+import { CreateProcessoImportacaoDto } from 'src/processo-importacao/dto/processo-importacao.dto';
 import { UpdateProcessoImportacaoDto } from './dto/update-processo-importacao.dto';
 
 @Controller('processo-importacao')
