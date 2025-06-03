@@ -5,7 +5,7 @@ export declare class PeriodoLetivo {
     periodoLetivo: string;
     dataInicial: Date;
     dataFinal: Date;
-    ProcessId: string;
+    processId: string;
     valid: boolean;
     validationErrors?: string[];
 }

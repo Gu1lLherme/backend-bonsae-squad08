@@ -8,27 +8,27 @@ import {
   EtapaImportacao,
   StatusImportacao,
 } from './schemas/processo-importacao.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateProcessoImportacaoDto } from './dto/processo-importacao.dto';
 
 @Injectable()
 export class ProcessoImportacaoService {
   constructor(
-    @InjectModel(ProcessoImportacao.name)
-    private readonly processoModel: Model<ProcessoImportacaoDocument>,
+    @InjectRepository(ProcessoImportacao)
+    private readonly processoRepo: Repository<ProcessoImportacao>,
   ) {}
 
-  /**
-   * Cria um novo processo de importação e retorna o processId.
-   * A etapa inicial do processo será EtapaImportacao.PERIODOS.
-   */
-  async createProcesso(iniciadoPor: string = 'anônimo'): Promise<{ processId: string }> {
-    const processo = await this.processoModel.create({ iniciadoPor });
-    return { processId: processo.processId };
+  
+  async createProcesso(dto: CreateProcessoImportacaoDto): Promise<{ProcessoImportacao}> {
+    const processo = this.processoRepo.create({
+        ...dto,
+        status: StatusImportacao.EM_ANDAMENTO,
+    });
+    return await this.processoRepo.save(processo);
   }
 
-  /**
-   * Atualiza a etapa e/ou o status do processo, além de opcionalmente
-   * ajustar totalRegistros ou registrar mensagens de erro.
-   */
+  
   async updateProcesso(
     processId: string,
     etapa?: EtapaImportacao,
@@ -59,6 +59,11 @@ export class ProcessoImportacaoService {
     if (!processo) throw new NotFoundException(`Processo ${processId} não encontrado.`);
     return processo;
   }
+  async findById(processId: string): Promise<ProcessoImportacao> {
+const processo = await this.processoRepo.findOneBy({ processId });
+if (!processo) throw new NotFoundException(`Processo ${processId} não encontrado.`);
+return processo;
+}
 
   async marcarEtapaConcluida(processId, etapa: string) {
 await this.processoModel.updateOne(
