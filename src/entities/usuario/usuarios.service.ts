@@ -9,13 +9,15 @@ import {v4 as uuidv4} from "uuid";
 import { CreateUsuarioBatchDto } from './dto/create-usuario-batch.dto';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { ProcessoImportacaoService } from 'src/processo-importacao/processo-importacao.service';
+import { StatusImportacao, EtapaImportacao } from 'src/processo-importacao/schemas/processo-importacao.schema';
 
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectModel(Usuario.name) private usuarioModel: Model<UsuarioDocument>,
-    @InjectConnection() private readonly connection: Connection,
+    private readonly processoImportacaoService: ProcessoImportacaoService,
   ) {}
 
   async create(dto: CreateUsuarioDto): Promise<Usuario> {
@@ -31,11 +33,24 @@ export class UsuariosService {
 
 
 
-async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuarios: any[]}> {
-  const batchId = uuidv4();
-  const usuarios = dto.usuarios;
+async createBatch(dto: CreateUsuarioBatchDto): Promise<any> {
+  const processId = dto.processId;
 
-  const usuariosComStatus = usuarios.map((usuario) => {
+
+  if (!processId) {
+          throw new BadRequestException('processId é obrigatório');
+        }
+        const processo = await this.processoImportacaoService.getProcessoById(processId);
+        if (processo.status !== StatusImportacao.EM_ANDAMENTO) {
+          throw new BadRequestException('Processo não está em andamento');
+        }
+      
+        if (processo.etapaAtual !== EtapaImportacao.PERIODOS) {
+          throw new BadRequestException('Processo não está na etapa de PERIODOS');
+        }
+
+
+  const usuariosComStatus = dto.usuarios.map((usuario) => {
     const instance = plainToInstance(CreateUsuarioDto, usuario);
     const errors = validateSync(instance);
 
@@ -43,8 +58,8 @@ async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuario
       Object.values(e.constraints || {}).join (', '));
 
     return {
-      ...usuarios,
-      batchId,
+      ...usuario,
+      processId: processId, // Associa ao processo de importação
       valid: validationErrors.length === 0,
       validationErrors,
     };
@@ -53,9 +68,10 @@ async createBatch(dto: CreateUsuarioBatchDto): Promise<{batchId: string; usuario
   
 
   await this.usuarioModel.insertMany(usuariosComStatus)
+  await this.processoImportacaoService.marcarEtapaConcluida(processId, 'usuarios');
 
   return {
-    batchId,
+    batchId: processId,
     usuarios: usuariosComStatus,
   };
 }
