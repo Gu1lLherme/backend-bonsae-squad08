@@ -40,6 +40,14 @@ services:
       - mysql
     networks:
       - backend-net
+    enviroment:
+    NODE_ENV: development
+    MONGO_URI: mongodb://mongo:27017/ClusterTeste01
+    MYSQL_HOST: mysql
+    MYSQL_PORT: 3306
+    MYSQL_USER: user
+    MYSQL_PASSWORD: userpassword
+    MYSQL_DATABASE: planilhas
 
 volumes:
   mongo_data:
@@ -47,3 +55,5 @@ volumes:
 
 networks:
   backend-net:
+
+
