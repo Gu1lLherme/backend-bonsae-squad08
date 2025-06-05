@@ -13,7 +13,7 @@ export declare class Usuario {
     senha: string;
     periodoCurricular?: string;
     observacoes?: string;
-    batchId: string;
+    processId: string;
     valid: boolean;
     validationErrors?: string[];
 }

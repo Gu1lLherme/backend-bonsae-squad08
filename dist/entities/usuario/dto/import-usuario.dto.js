@@ -9,25 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUsuarioBatchDto = void 0;
+exports.ImportUsuarioDto = void 0;
+const create_usuario_dto_1 = require("./create-usuario.dto");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
-const create_usuario_dto_1 = require("./create-usuario.dto");
-class CreateUsuarioBatchDto {
-    processId;
+class ImportUsuarioDto {
+    processID;
     usuarios;
 }
-exports.CreateUsuarioBatchDto = CreateUsuarioBatchDto;
+exports.ImportUsuarioDto = ImportUsuarioDto;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsUUID)('4', { message: 'ID do lote deve ser um UUID válido.' }),
+    (0, class_validator_1.IsUUID)('4', { message: 'O ID do processo deve ser um UUID válido.' }),
     __metadata("design:type", String)
-], CreateUsuarioBatchDto.prototype, "processId", void 0);
+], ImportUsuarioDto.prototype, "processID", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayMinSize)(1, { message: 'Deve haver pelo menos uma turma.' }),
-    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_validator_1.ArrayNotEmpty)({ message: 'Deve haver pelo menos um usuário.' }),
+    (0, class_validator_1.ValidateNested)(),
     (0, class_transformer_1.Type)(() => create_usuario_dto_1.CreateUsuarioDto),
     __metadata("design:type", Array)
-], CreateUsuarioBatchDto.prototype, "usuarios", void 0);
-//# sourceMappingURL=create-usuario-batch.dto.js.map
+], ImportUsuarioDto.prototype, "usuarios", void 0);
+//# sourceMappingURL=import-usuario.dto.js.map

@@ -24,7 +24,7 @@ let Usuario = class Usuario {
     senha;
     periodoCurricular;
     observacoes;
-    batchId;
+    processId;
     valid;
     validationErrors;
 };
@@ -80,7 +80,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Usuario.prototype, "batchId", void 0);
+], Usuario.prototype, "processId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)

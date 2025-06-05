@@ -1,17 +1,15 @@
-import { Model, Connection } from 'mongoose';
+import { Model } from 'mongoose';
 import { Usuario, UsuarioDocument } from './schemas/usuario.schema';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { CreateUsuarioBatchDto } from './dto/create-usuario-batch.dto';
+import { ProcessoImportacaoService } from 'src/processo-importacao/processo-importacao.service';
 export declare class UsuariosService {
     private usuarioModel;
-    private readonly connection;
-    constructor(usuarioModel: Model<UsuarioDocument>, connection: Connection);
+    private readonly processoImportacaoService;
+    constructor(usuarioModel: Model<UsuarioDocument>, processoImportacaoService: ProcessoImportacaoService);
     create(dto: CreateUsuarioDto): Promise<Usuario>;
-    createBatch(dto: CreateUsuarioBatchDto): Promise<{
-        batchId: string;
-        usuarios: any[];
-    }>;
+    createBatch(dto: CreateUsuarioBatchDto): Promise<any>;
     updateInvalidUsuarios(id: string, updateDto: UpdateUsuarioDto): Promise<any>;
     findAll(): Promise<(import("mongoose").Document<unknown, {}, UsuarioDocument> & Usuario & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;

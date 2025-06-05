@@ -12,6 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const usuarios_service_1 = require("./usuarios.service");
 const usuarios_controller_1 = require("./usuarios.controller");
 const usuario_schema_1 = require("./schemas/usuario.schema");
+const processo_importacao_module_1 = require("../../processo-importacao/processo-importacao.module");
 let UsuarioModule = class UsuarioModule {
 };
 exports.UsuarioModule = UsuarioModule;
@@ -19,6 +20,7 @@ exports.UsuarioModule = UsuarioModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: usuario_schema_1.Usuario.name, schema: usuario_schema_1.UsuarioSchema }]),
+            (0, common_1.forwardRef)(() => processo_importacao_module_1.ProcessoImportacaoModule),
         ],
         controllers: [usuarios_controller_1.UsuariosController],
         providers: [usuarios_service_1.UsuariosService],

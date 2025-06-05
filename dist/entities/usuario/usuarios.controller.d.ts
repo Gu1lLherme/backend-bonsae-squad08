@@ -9,10 +9,7 @@ export declare class UsuariosController {
         message: string;
         data: import("./schemas/usuario.schema").Usuario;
     }>;
-    createBatch(dto: CreateUsuarioBatchDto): Promise<{
-        batchId: string;
-        usuarios: any[];
-    }>;
+    createBatch(dto: CreateUsuarioBatchDto): Promise<any>;
     revalidarUsuario(id: string, updateDto: UpdateUsuarioDto): Promise<any>;
     findAll(): Promise<(import("mongoose").Document<unknown, {}, import("./schemas/usuario.schema").UsuarioDocument> & import("./schemas/usuario.schema").Usuario & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;

@@ -19,15 +19,16 @@ const mongoose_2 = require("mongoose");
 const usuario_schema_1 = require("./schemas/usuario.schema");
 const create_usuario_dto_1 = require("./dto/create-usuario.dto");
 const update_usuario_dto_1 = require("./dto/update-usuario.dto");
-const uuid_1 = require("uuid");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const processo_importacao_service_1 = require("../../processo-importacao/processo-importacao.service");
+const processo_importacao_schema_1 = require("../../processo-importacao/schemas/processo-importacao.schema");
 let UsuariosService = class UsuariosService {
     usuarioModel;
-    connection;
-    constructor(usuarioModel, connection) {
+    processoImportacaoService;
+    constructor(usuarioModel, processoImportacaoService) {
         this.usuarioModel = usuarioModel;
-        this.connection = connection;
+        this.processoImportacaoService = processoImportacaoService;
     }
     async create(dto) {
         const emailExistente = await this.usuarioModel.findOne({ email: dto.email });
@@ -38,22 +39,32 @@ let UsuariosService = class UsuariosService {
         return await novoUsuario.save();
     }
     async createBatch(dto) {
-        const batchId = (0, uuid_1.v4)();
-        const usuarios = dto.usuarios;
-        const usuariosComStatus = usuarios.map((usuario) => {
+        const processId = dto.processId;
+        if (!processId) {
+            throw new common_1.BadRequestException('processId é obrigatório');
+        }
+        const processo = await this.processoImportacaoService.getProcessoById(processId);
+        if (processo.status !== processo_importacao_schema_1.StatusImportacao.EM_ANDAMENTO) {
+            throw new common_1.BadRequestException('Processo não está em andamento');
+        }
+        if (processo.etapaAtual !== processo_importacao_schema_1.EtapaImportacao.PERIODOS) {
+            throw new common_1.BadRequestException('Processo não está na etapa de PERIODOS');
+        }
+        const usuariosComStatus = dto.usuarios.map((usuario) => {
             const instance = (0, class_transformer_1.plainToInstance)(create_usuario_dto_1.CreateUsuarioDto, usuario);
             const errors = (0, class_validator_1.validateSync)(instance);
             const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
             return {
-                ...usuarios,
-                batchId,
+                ...usuario,
+                processId: processId,
                 valid: validationErrors.length === 0,
                 validationErrors,
             };
         });
         await this.usuarioModel.insertMany(usuariosComStatus);
+        await this.processoImportacaoService.marcarEtapaConcluida(processId, 'usuarios');
         return {
-            batchId,
+            batchId: processId,
             usuarios: usuariosComStatus,
         };
     }
@@ -106,8 +117,7 @@ exports.UsuariosService = UsuariosService;
 exports.UsuariosService = UsuariosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(usuario_schema_1.Usuario.name)),
-    __param(1, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Connection])
+        processo_importacao_service_1.ProcessoImportacaoService])
 ], UsuariosService);
 //# sourceMappingURL=usuarios.service.js.map
