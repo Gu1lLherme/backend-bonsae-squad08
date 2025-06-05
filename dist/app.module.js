@@ -17,6 +17,7 @@ const disciplina_module_1 = require("./entities/disciplina/disciplina.module");
 const turmas_module_1 = require("./entities/turmas/turmas.module");
 const usuarios_module_1 = require("./entities/usuario/usuarios.module");
 const processo_importacao_module_1 = require("././processo-importacao/processo-importacao.module");
+require("./processo-importacao/schemas/processo-importacao.schema");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;

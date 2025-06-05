@@ -24,6 +24,7 @@ const class_validator_1 = require("class-validator");
 const uuid_1 = require("uuid");
 const processo_importacao_schema_1 = require("../../processo-importacao/schemas/processo-importacao.schema");
 const processo_importacao_service_1 = require("../../processo-importacao/processo-importacao.service");
+require("../../processo-importacao/schemas/processo-importacao.schema");
 let PeriodoLetivoService = class PeriodoLetivoService {
     periodoLetivoModel;
     processoImportacaoService;

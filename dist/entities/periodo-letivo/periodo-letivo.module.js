@@ -13,6 +13,7 @@ const periodo_letivo_service_1 = require("./periodo-letivo.service");
 const periodo_letivo_controller_1 = require("./periodo-letivo.controller");
 const periodo_letivo_schema_1 = require("./schemas/periodo-letivo.schema");
 const processo_importacao_module_1 = require("../../processo-importacao/processo-importacao.module");
+require("../../processo-importacao/schemas/processo-importacao.schema");
 let PeriodoLetivoModule = class PeriodoLetivoModule {
 };
 exports.PeriodoLetivoModule = PeriodoLetivoModule;
