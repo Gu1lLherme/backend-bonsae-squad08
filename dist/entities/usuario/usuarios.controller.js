@@ -15,20 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsuariosController = void 0;
 const common_1 = require("@nestjs/common");
 const usuarios_service_1 = require("./usuarios.service");
-const create_usuario_dto_1 = require("./dto/create-usuario.dto");
 const update_usuario_dto_1 = require("./dto/update-usuario.dto");
 const create_usuario_batch_dto_1 = require("./dto/create-usuario-batch.dto");
 let UsuariosController = class UsuariosController {
     usuariosService;
     constructor(usuariosService) {
         this.usuariosService = usuariosService;
-    }
-    async create(createUsuarioDto) {
-        const usuario = await this.usuariosService.create(createUsuarioDto);
-        return {
-            message: 'Usuário criado com sucesso!',
-            data: usuario,
-        };
     }
     async createBatch(dto) {
         return this.usuariosService.createBatch(dto);
@@ -50,14 +42,6 @@ let UsuariosController = class UsuariosController {
     }
 };
 exports.UsuariosController = UsuariosController;
-__decorate([
-    (0, common_1.Post)(),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_usuario_dto_1.CreateUsuarioDto]),
-    __metadata("design:returntype", Promise)
-], UsuariosController.prototype, "create", null);
 __decorate([
     (0, common_1.Post)('Batch'),
     __param(0, (0, common_1.Body)()),

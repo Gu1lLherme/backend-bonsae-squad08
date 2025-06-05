@@ -4,12 +4,10 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 require("./processo-importacao/schemas/processo-importacao.schema");
 async function bootstrap() {
+    console.log(' Bootstrap iniciado');
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.enableCors({
-        origin: ['http://localhost:3000'],
-        credentials: true,
-    });
-    await app.listen(process.env.PORT ?? 3000);
+    console.log(' AppModule carregado');
+    await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

@@ -13,7 +13,6 @@ export declare class TurmasService {
     findOne(id: string): Promise<Turma>;
     update(id: string, updateTurmaDto: UpdateTurmaDto): Promise<Turma>;
     remove(id: string): Promise<void>;
-    bulkCreate(createTurmasDto: CreateTurmaDto[]): Promise<Turma[]>;
     createBatch(dto: CreateTurmaBatchDto): Promise<any>;
     updateInvalidTurmas(id: string, updateDto: UpdateTurmaDto): Promise<any>;
 }
