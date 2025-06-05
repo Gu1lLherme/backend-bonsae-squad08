@@ -8,6 +8,8 @@ import { Turma, TurmaDocument, TurmaSchema } from './schemas/turmas.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { ProcessoImportacaoService } from 'src/processo-importacao/processo-importacao.service';
+import { StatusImportacao, EtapaImportacao } from 'src/processo-importacao/schemas/processo-importacao.schema';
 
 
 
@@ -22,7 +24,7 @@ export class TurmasService {
    */
 
   constructor(@InjectModel(Turma.name) private turmaModel: Model<TurmaDocument>, 
-  @InjectConnection() private readonly connection: Connection) {}
+  private readonly processoImportacaoService: ProcessoImportacaoService){}
 
 
   async create(createTurmaDto: CreateTurmaDto): Promise<Turma> {
@@ -162,9 +164,21 @@ return {
   turmas: saved,
 };
 }*/
-  async createBatch(dto: CreateTurmaBatchDto): Promise<{ batchId: string; turmas: any[] }> {
-    const batchId = uuidv4();
+  async createBatch(dto: CreateTurmaBatchDto): Promise<any> {
+    const processId = dto.processId;
     
+    if (!processId) {
+        throw new BadRequestException('processId é obrigatório');
+      }
+      const processo = await this.processoImportacaoService.getProcessoById(processId);
+      if (processo.status !== StatusImportacao.EM_ANDAMENTO) {
+        throw new BadRequestException('Processo não está em andamento');
+      }
+    
+      if (processo.etapaAtual !== EtapaImportacao.PERIODOS) {
+        throw new BadRequestException('Processo não está na etapa de PERIODOS');
+      }
+      
 
     const turmasComStatus = await Promise.all(dto.turmas.map(async(turma) => {
       const instance = plainToInstance(CreateTurmaDto, turma);
@@ -180,7 +194,7 @@ return {
 
       return {
         ...turma,
-        batchId,
+        processId: processId, // Associa ao processo de importação
         valid: allErrors.length === 0,
         validationErrors: allErrors,
       };
@@ -189,9 +203,10 @@ return {
 
     // Salva todas, válidas ou não
     await this.turmaModel.insertMany(turmasComStatus); 
+    await this.processoImportacaoService.marcarEtapaConcluida(processId, 'turmas');
 
     return {
-      batchId,
+      batchId: processId,
       turmas: turmasComStatus,
     };
   }
