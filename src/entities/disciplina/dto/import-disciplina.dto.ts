@@ -7,9 +7,9 @@ import {
   IsArray,
   ArrayNotEmpty,
 } from 'class-validator';
-import { CreateTurmaDto} from './create-turma.dto';
+import { CreateDisciplinaDto} from './create-disciplina.dto';
 
-export class ImportTurmaDto {
+export class ImportDisciplinaDto {
 
   @IsUUID('4', { message: 'O ID do processo deve ser um UUID válido.' })
   processID: string;
@@ -17,6 +17,6 @@ export class ImportTurmaDto {
   @IsArray()
   @ArrayNotEmpty({ message: 'Deve haver pelo menos uma turma' })
   @ValidateNested()
-  @Type(() => CreateTurmaDto)
-  turmas: CreateTurmaDto[];
+  @Type(() => CreateDisciplinaDto)
+  disciplinas: CreateDisciplinaDto[];
 }

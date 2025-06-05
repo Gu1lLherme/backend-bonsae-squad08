@@ -34,7 +34,7 @@ export class Disciplina {
   @Prop()
   campus?: string;
 
-  @Prop({ required: true }) batchId: string; // Identificador do lote
+  @Prop({ required: true }) processId: string; // Identificador do lote
 
   @Prop({ default: false }) valid: boolean;
 
