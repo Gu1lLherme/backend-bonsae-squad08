@@ -10,7 +10,7 @@ export declare class Disciplina {
     periodoCurricular?: string;
     estado?: string;
     campus?: string;
-    batchId: string;
+    processId: string;
     valid: boolean;
     validationErrors?: string[];
 }

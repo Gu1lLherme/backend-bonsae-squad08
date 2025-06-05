@@ -9,24 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImportTurmaDto = void 0;
+exports.ImportDisciplinaDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
-const create_turma_dto_1 = require("./create-turma.dto");
-class ImportTurmaDto {
+const create_disciplina_dto_1 = require("./create-disciplina.dto");
+class ImportDisciplinaDto {
     processID;
-    turmas;
+    disciplinas;
 }
-exports.ImportTurmaDto = ImportTurmaDto;
+exports.ImportDisciplinaDto = ImportDisciplinaDto;
 __decorate([
     (0, class_validator_1.IsUUID)('4', { message: 'O ID do processo deve ser um UUID válido.' }),
     __metadata("design:type", String)
-], ImportTurmaDto.prototype, "processID", void 0);
+], ImportDisciplinaDto.prototype, "processID", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ArrayNotEmpty)({ message: 'Deve haver pelo menos uma turma' }),
     (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => create_turma_dto_1.CreateTurmaDto),
+    (0, class_transformer_1.Type)(() => create_disciplina_dto_1.CreateDisciplinaDto),
     __metadata("design:type", Array)
-], ImportTurmaDto.prototype, "turmas", void 0);
-//# sourceMappingURL=import-turma.dto.js.map
+], ImportDisciplinaDto.prototype, "disciplinas", void 0);
+//# sourceMappingURL=import-disciplina.dto.js.map

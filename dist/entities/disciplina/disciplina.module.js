@@ -12,6 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const disciplina_service_1 = require("./disciplina.service");
 const disciplina_controller_1 = require("./disciplina.controller");
 const disciplina_schema_1 = require("./schemas/disciplina.schema");
+const processo_importacao_module_1 = require("../../processo-importacao/processo-importacao.module");
 let DisciplinaModule = class DisciplinaModule {
 };
 exports.DisciplinaModule = DisciplinaModule;
@@ -19,6 +20,7 @@ exports.DisciplinaModule = DisciplinaModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: disciplina_schema_1.Disciplina.name, schema: disciplina_schema_1.DisciplinaSchema }]),
+            (0, common_1.forwardRef)(() => processo_importacao_module_1.ProcessoImportacaoModule),
         ],
         controllers: [disciplina_controller_1.DisciplinaController],
         providers: [disciplina_service_1.DisciplinaService],

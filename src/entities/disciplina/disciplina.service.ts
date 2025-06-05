@@ -47,9 +47,8 @@ export class DisciplinaService {
             throw new BadRequestException('Processo não está na etapa de PERIODOS');
           }
           
-    const disciplinas = dto.disciplinas;
     
-    const disciplinasComStatus = disciplinas.map((disciplina) => {
+    const disciplinasComStatus = dto.disciplinas.map((disciplina) => {
       const instance = plainToInstance(CreateDisciplinaDto, disciplina);
       const errors = validateSync(instance);
 

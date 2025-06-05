@@ -14,9 +14,15 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const create_disciplina_dto_1 = require("./create-disciplina.dto");
 class CreateDisciplinaBatchDto {
+    processId;
     disciplinas;
 }
 exports.CreateDisciplinaBatchDto = CreateDisciplinaBatchDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUUID)('4', { message: 'ID do lote deve ser um UUID válido.' }),
+    __metadata("design:type", String)
+], CreateDisciplinaBatchDto.prototype, "processId", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ArrayMinSize)(1, { message: 'Deve haver pelo menos uma disciplina.' }),

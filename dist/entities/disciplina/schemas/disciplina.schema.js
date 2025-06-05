@@ -21,7 +21,7 @@ let Disciplina = class Disciplina {
     periodoCurricular;
     estado;
     campus;
-    batchId;
+    processId;
     valid;
     validationErrors;
 };
@@ -65,7 +65,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Disciplina.prototype, "batchId", void 0);
+], Disciplina.prototype, "processId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)

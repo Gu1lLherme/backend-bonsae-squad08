@@ -19,15 +19,16 @@ const update_disciplina_dto_1 = require("./dto/update-disciplina.dto");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const disciplina_schema_1 = require("./schemas/disciplina.schema");
-const uuid_1 = require("uuid");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const processo_importacao_service_1 = require("../../processo-importacao/processo-importacao.service");
+const processo_importacao_schema_1 = require("../../processo-importacao/schemas/processo-importacao.schema");
 let DisciplinaService = class DisciplinaService {
     disciplinaModel;
-    connection;
-    constructor(disciplinaModel, connection) {
+    processoImportacaoService;
+    constructor(disciplinaModel, processoImportacaoService) {
         this.disciplinaModel = disciplinaModel;
-        this.connection = connection;
+        this.processoImportacaoService = processoImportacaoService;
     }
     async create(createDisciplinaDto) {
         const disciplinaExistente = await this.disciplinaModel.findOne({ codigoDisciplina: createDisciplinaDto.codigoDisciplina });
@@ -37,20 +38,18 @@ let DisciplinaService = class DisciplinaService {
         const novaDisciplina = new this.disciplinaModel(createDisciplinaDto);
         return novaDisciplina.save();
     }
-    findAll() {
-        return `This action returns all disciplina`;
-    }
-    findOne(id) {
-        return `This action returns a #${id} disciplina`;
-    }
-    update(id, updateDisciplinaDto) {
-        return `This action updates a #${id} disciplina`;
-    }
-    remove(id) {
-        return `This action removes a #${id} disciplina`;
-    }
     async createBatch(dto) {
-        const batchId = (0, uuid_1.v4)();
+        const processId = dto.processId;
+        if (!processId) {
+            throw new common_1.BadRequestException('processId é obrigatório');
+        }
+        const processo = await this.processoImportacaoService.getProcessoById(processId);
+        if (processo.status !== processo_importacao_schema_1.StatusImportacao.EM_ANDAMENTO) {
+            throw new common_1.BadRequestException('Processo não está em andamento');
+        }
+        if (processo.etapaAtual !== processo_importacao_schema_1.EtapaImportacao.PERIODOS) {
+            throw new common_1.BadRequestException('Processo não está na etapa de PERIODOS');
+        }
         const disciplinas = dto.disciplinas;
         const disciplinasComStatus = disciplinas.map((disciplina) => {
             const instance = (0, class_transformer_1.plainToInstance)(create_disciplina_dto_1.CreateDisciplinaDto, disciplina);
@@ -58,14 +57,15 @@ let DisciplinaService = class DisciplinaService {
             const validationErrors = errors.map((e) => Object.values(e.constraints || {}).join(', '));
             return {
                 ...disciplina,
-                batchId,
+                processId: processId,
                 valid: validationErrors.length === 0,
                 validationErrors,
             };
         });
         await this.disciplinaModel.insertMany(disciplinasComStatus);
+        await this.processoImportacaoService.marcarEtapaConcluida(processId, 'disciplinas');
         return {
-            batchId,
+            batchId: processId,
             disciplinas: disciplinasComStatus,
         };
     }
@@ -97,8 +97,7 @@ exports.DisciplinaService = DisciplinaService;
 exports.DisciplinaService = DisciplinaService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(disciplina_schema_1.Disciplina.name)),
-    __param(1, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Connection])
+        processo_importacao_service_1.ProcessoImportacaoService])
 ], DisciplinaService);
 //# sourceMappingURL=disciplina.service.js.map
