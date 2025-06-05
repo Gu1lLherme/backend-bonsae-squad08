@@ -9,17 +9,6 @@ import { CreateUsuarioBatchDto } from './dto/create-usuario-batch.dto';
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
-  @Post()
-  @UsePipes(new ValidationPipe({  whitelist: true, forbidNonWhitelisted: true }))
-  async create(@Body() createUsuarioDto: CreateUsuarioDto) {
-    const usuario = await this.usuariosService.create(createUsuarioDto);
-    return {
-      message: 'Usuário criado com sucesso!',
-      data: usuario,
-    };
-    
-  }
-
   @Post('Batch')
   async createBatch(@Body() dto: CreateUsuarioBatchDto) {
     return this.usuariosService.createBatch(dto);
