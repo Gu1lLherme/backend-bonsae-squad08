@@ -1,8 +1,5 @@
-version: '3.8'
-
 services:
-
- mongo:
+  mongo:
     image: mongo:6.0
     container_name: mongo
     ports:
@@ -11,6 +8,7 @@ services:
       - mongo_data:/data/db
     networks:
       - backend-net
+
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -20,7 +18,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -36,14 +34,10 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - mysql
       - mongo
+      - mysql
     networks:
       - backend-net
-    env_file:
-      - .env
-    environment:
-      NODE_ENV: development
 
 volumes:
   mongo_data:
