@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+
+ mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend-net
   mysql:
     image: mysql:8.0
     container_name: mysql
