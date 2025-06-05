@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-
+import 'src/processo-importacao/schemas/processo-importacao.schema';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

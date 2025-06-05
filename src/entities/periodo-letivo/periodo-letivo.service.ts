@@ -11,7 +11,7 @@ import {v4 as uuidv4} from "uuid";
 import { UpdateUsuarioDto } from '../usuario/dto/update-usuario.dto';
 import { EtapaImportacao, StatusImportacao } from 'src/processo-importacao/schemas/processo-importacao.schema';
 import { ProcessoImportacaoService } from 'src/processo-importacao/processo-importacao.service';
-
+import 'src/processo-importacao/schemas/processo-importacao.schema'
 @Injectable()
 export class PeriodoLetivoService {
   

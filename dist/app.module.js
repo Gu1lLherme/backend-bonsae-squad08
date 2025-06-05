@@ -16,7 +16,7 @@ const periodo_letivo_module_1 = require("./entities/periodo-letivo/periodo-letiv
 const disciplina_module_1 = require("./entities/disciplina/disciplina.module");
 const turmas_module_1 = require("./entities/turmas/turmas.module");
 const usuarios_module_1 = require("./entities/usuario/usuarios.module");
-const processo_importacao_module_1 = require("./processo-importacao/processo-importacao.module");
+const processo_importacao_module_1 = require("././processo-importacao/processo-importacao.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;

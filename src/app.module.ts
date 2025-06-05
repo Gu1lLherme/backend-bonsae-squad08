@@ -10,7 +10,7 @@ import { DisciplinaModule } from './entities/disciplina/disciplina.module';
 import { TurmasModule } from './entities/turmas/turmas.module';
 import { UsuarioModule } from './entities/usuario/usuarios.module'; // ajuste o path se necessário
 import { ProcessoImportacaoModule } from '././processo-importacao/processo-importacao.module';
-
+import 'src/processo-importacao/schemas/processo-importacao.schema'
 
 
 @Module({
