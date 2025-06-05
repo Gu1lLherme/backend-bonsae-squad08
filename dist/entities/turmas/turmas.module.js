@@ -12,6 +12,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const turmas_service_1 = require("./turmas.service");
 const turmas_controller_1 = require("./turmas.controller");
 const turmas_schema_1 = require("./schemas/turmas.schema");
+const processo_importacao_module_1 = require("../../processo-importacao/processo-importacao.module");
 let TurmasModule = class TurmasModule {
 };
 exports.TurmasModule = TurmasModule;
@@ -19,9 +20,11 @@ exports.TurmasModule = TurmasModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: turmas_schema_1.Turma.name, schema: turmas_schema_1.TurmaSchema }]),
+            (0, common_1.forwardRef)(() => processo_importacao_module_1.ProcessoImportacaoModule),
         ],
         controllers: [turmas_controller_1.TurmasController],
         providers: [turmas_service_1.TurmasService],
+        exports: [turmas_service_1.TurmasService],
     })
 ], TurmasModule);
 //# sourceMappingURL=turmas.module.js.map
