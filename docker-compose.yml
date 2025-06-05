@@ -25,10 +25,13 @@ services:
       - backend-net
 
   nest-app:
+    env_file:
+      - .env
     container_name: nest-app
     build:
       context: .
       dockerfile: Dockerfile
+      
     ports:
       - "3000:3000"
     volumes:
