@@ -41,23 +41,5 @@ export class DisciplinaController {
       return this.disciplinaService.updateInvalidDisciplinas(id, updateDto);
     }
 
-  @Get()
-  findAll() {
-    return this.disciplinaService.findAll();
-  }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.disciplinaService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDisciplinaDto: UpdateDisciplinaDto) {
-    return this.disciplinaService.update(+id, updateDisciplinaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.disciplinaService.remove(+id);
-  }
 }
