@@ -8,13 +8,14 @@ import { CreateDisciplinaBatchDto } from './dto/create-disciplina-batch.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { ProcessoImportacaoService } from 'src/processo-importacao/processo-importacao.service';
+import { StatusImportacao, EtapaImportacao } from 'src/processo-importacao/schemas/processo-importacao.schema';
 
 @Injectable()
 export class DisciplinaService {
   constructor(
     @InjectModel(Disciplina.name) private readonly disciplinaModel: Model<DisciplinaDocument>,
-    @InjectConnection() private readonly connection: Connection,
-  ) {}
+    private readonly processoImportacaoService: ProcessoImportacaoService){}
 
   async create(createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina> {
     // Verifica se a disciplina já existe
@@ -29,80 +30,23 @@ export class DisciplinaService {
     return novaDisciplina.save();
   }
 
-  /*async bulkCreate(createDisciplinasDto: CreateDisciplinaDto[]): Promise<Disciplina[]> {
-    if (!Array.isArray(createDisciplinasDto) || createDisciplinasDto.length === 0) {
-      throw new BadRequestException('Payload precisa ser uma lista de disciplinas.');
-    }
 
-    const erros: { index: number; error: string }[] = [];
 
-     const disciplinasValidas = createDisciplinasDto.filter((disciplina, index) => {
-      const problemas: string[] = [];
-      if (typeof disciplina.codigoDisciplina !== 'string' || disciplina.codigoDisciplina.trim() === '') {
-        problemas.push('Código da disciplina é obrigatório.');}
-      if (!disciplina.dataInicial || isNaN(Date.parse(disciplina.dataInicial.toString()))) problemas.push('Data inicial inválida.');
-      if (!disciplina.dataFinal || isNaN(Date.parse(disciplina.dataFinal.toString()))) problemas.push('Data final inválida.');
-      if (!disciplina.categoria) problemas.push('Categoria é obrigatória.');
+  async createBatch(dto: CreateDisciplinaBatchDto): Promise<any> {
+    const processId = dto.processId;
 
-      if (problemas.length > 0) {
-        erros.push({ index, error: problemas.join(' | ') });
-        return false; // Remove a disciplina da lista se houver erros
-      }
-      return true; // Mantém a disciplina na lista se não houver erros
-    });
-
-    if (erros.length > 0) {
-      throw new BadRequestException({
-        message: 'Erros de validação nas disciplinas.',
-        erros,
-      });
-    }
-
-    if (disciplinasValidas.length === 0) {
-          throw new BadRequestException({
-            message: 'Nenhuma disciplina válida foi enviada.',
-            erros,
-          });
-        }
-    
-        if (erros.length > 0) {
-          throw new BadRequestException({
-            message: 'Algumas disciplinas foram rejeitadas.',
-            erros,
-          });
-        }
-
-        const disciplinasSanitizadas = disciplinasValidas.map(d => ({
-          ...d,
-          codigoDisciplina: d.codigoDisciplina.trim(),
-        }));
-        try {
-        const insertedDisciplinas = await this.disciplinaModel.insertMany(disciplinasSanitizadas);
-        return insertedDisciplinas.map(d => d.toObject() as Disciplina);
-  } catch (error) {
-    console.error('Erro ao inserir disciplinas em lote:', error);
-    throw new InternalServerErrorException('Erro ao salvar disciplinas.');
-  }
-}*/
-
-  findAll() {
-    return `This action returns all disciplina`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} disciplina`;
-  }
-
-  update(id: number, updateDisciplinaDto: UpdateDisciplinaDto) {
-    return `This action updates a #${id} disciplina`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} disciplina`;
-  }
-
-  async createBatch(dto: CreateDisciplinaBatchDto): Promise<{batchId: string; disciplinas: any[]}> {
-    const batchId = uuidv4();
+    if (!processId) {
+            throw new BadRequestException('processId é obrigatório');
+          }
+          const processo = await this.processoImportacaoService.getProcessoById(processId);
+          if (processo.status !== StatusImportacao.EM_ANDAMENTO) {
+            throw new BadRequestException('Processo não está em andamento');
+          }
+        
+          if (processo.etapaAtual !== EtapaImportacao.PERIODOS) {
+            throw new BadRequestException('Processo não está na etapa de PERIODOS');
+          }
+          
     const disciplinas = dto.disciplinas;
     
     const disciplinasComStatus = disciplinas.map((disciplina) => {
@@ -114,15 +58,17 @@ export class DisciplinaService {
       
       return {
         ...disciplina,
-        batchId,
+        processId: processId, // Associa ao processo de importação
         valid: validationErrors.length === 0,
         validationErrors,
       };
     });
-await this.disciplinaModel.insertMany(disciplinasComStatus)
+
+    await this.disciplinaModel.insertMany(disciplinasComStatus)
+    await this.processoImportacaoService.marcarEtapaConcluida(processId, 'disciplinas');
 
     return {
-      batchId,
+      batchId : processId,
       disciplinas: disciplinasComStatus,
     };
 }
