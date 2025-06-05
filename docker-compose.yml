@@ -1,16 +1,6 @@
 version: '3.8'
 
 services:
-  mongo:
-    image: mongo:6.0
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - backend-net
-
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -36,24 +26,16 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - mongo
       - mysql
     networks:
       - backend-net
-    enviroment:
-    NODE_ENV: development
-    MONGO_URI: mongodb://mongo:27017/ClusterTeste01
-    MYSQL_HOST: mysql
-    MYSQL_PORT: 3306
-    MYSQL_USER: user
-    MYSQL_PASSWORD: userpassword
-    MYSQL_DATABASE: planilhas
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
 
 volumes:
-  mongo_data:
   mysql_data:
 
 networks:
   backend-net:
-
-
